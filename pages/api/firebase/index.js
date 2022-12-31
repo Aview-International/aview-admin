@@ -3,12 +3,10 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   getAuth,
-  FacebookAuthProvider,
 } from 'firebase/auth';
 import { getDatabase, set, ref, child, update, get } from 'firebase/database';
 import { baseUrl } from '../../../components/baseUrl';
 import { v4 as uuidv4 } from 'uuid';
-import { toast } from 'react-toastify';
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -45,6 +43,23 @@ export const signInWithGoogle = async () => {
   return response;
 };
 
+// create new user account in the database after signup
+export const createNewSuperAdmin = async (
+  id,
+  firstName,
+  lastName,
+  email,
+  picture
+) => {
+  const data = {
+    id,
+    firstName,
+    lastName,
+    email,
+    picture,
+  };
+  await set(ref(database, `super-admins/${id}`), data);
+};
 // create new user account in the database after signup
 export const createNewAdmin = async (payload) => {
   let chars =
@@ -91,7 +106,6 @@ export const updateAviewUsage = async (role, _id) => {
   });
 };
 
-
 export const updateUserInstagram = async (
   _id,
   ig_username,
@@ -123,7 +137,7 @@ export const updateUserInstagram = async (
 
 // get all user data from the database
 export const getUserProfile = async (_id) => {
-  const res = await get(ref(database, `users/${_id}`)).then((snapshot) => {
+  const res = await get(ref(database, `super-admins/${_id}`)).then((snapshot) => {
     if (snapshot.exists()) return snapshot.val();
     else return null;
   });

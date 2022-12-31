@@ -8,7 +8,6 @@ const UserContextProvider = ({ children }) => {
     firstName: '',
     lastName: '',
     picture: '',
-    youtubeChannelId: '',
   });
 
   return (

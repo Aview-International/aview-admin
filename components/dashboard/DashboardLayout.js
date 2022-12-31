@@ -18,8 +18,6 @@ const DashboardStructure = ({ children }) => {
         picture: res.picture,
         firstName: res.firstName,
         lastName: res.lastName,
-        youtubeChannelId: res.youtubeChannelId,
-        youtubeChannelName: res.youtubeChannelName,
       });
       setIsLoading(false);
     } catch (error) {
