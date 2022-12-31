@@ -17,8 +17,6 @@ module.exports = {
       green: '#00C874',
       red: '#FF3939',
       transparent: 'transparent',
-      facebook: '#0054ff',
-      youtube: '#FF0000',
     },
     fontFamily: {
       overpass: ['Overpass', 'sans-serif'],
