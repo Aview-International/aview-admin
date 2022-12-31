@@ -1,0 +1,146 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .link {
+    @apply text-blue underline;
+  }
+
+  .navigation {
+    @apply mx-s3 md:mx-auto md:w-[95%];
+  }
+
+  .section {
+    @apply mb-s16 md:mb-s24;
+  }
+
+  .m-horizontal {
+    @apply mx-auto w-[90%] max-w-[1240px];
+  }
+
+  .gradient-1 {
+    background: linear-gradient(54deg, #ff00ff 0%, #00ffff 100%);
+  }
+
+  .gradient-2 {
+    background: linear-gradient(108.35deg, #ec11ff 0%, #1be4ff 100%);
+  }
+  .gradient-dark {
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.15) 0%,
+      rgba(255, 255, 255, 0.0726563) 51.56%,
+      rgba(255, 255, 255, 0.045) 100%
+    );
+  }
+  .gradient-text {
+    @apply inline-block bg-clip-text text-transparent;
+  }
+
+  .transition-300 {
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  .title {
+    @apply text-7xl font-bold text-white md:text-8xl;
+  }
+
+  .body {
+    @apply text-lg text-white md:text-xl;
+  }
+  .phone-number input {
+    @apply w-full bg-transparent pl-s2;
+  }
+  .phone-number input:focus {
+    @apply outline-none;
+  }
+  .phone-number > div {
+    @apply p-2;
+  }
+  .phone-number img {
+    @apply max-w-[90%];
+  }
+  .phone-number > div > div > div:last-of-type {
+    @apply ml-s2 mb-s1 h-[11px] w-[11px] border-r-[3px] border-b-[3px] border-white opacity-100;
+  }
+  .h-screen-trick {
+    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
+    @apply min-h-[640px] !important;
+  }
+  /* For Chrome browsers */
+  .slider-thumb::-webkit-slider-thumb {
+    background-color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    height: 25px;
+    width: 25px;
+    pointer-events: all;
+    position: relative;
+    z-index: 1;
+    -webkit-appearance: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* For Firefox browsers */
+  .slider-thumb::-moz-range-thumb {
+    background-color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    height: 25px;
+    width: 25px;
+    pointer-events: all;
+    position: relative;
+    z-index: 1;
+    -moz-appearance: none;
+    -moz-tap-highlight-color: transparent;
+  }
+  .track-background {
+    background: linear-gradient(
+      90deg,
+      rgba(251, 0, 255, 0.215) 1.3%,
+      rgba(0, 255, 255, 0.5) 100%
+    );
+  }
+  .remove-highlight {
+    -webkit-tap-highlight-color: transparent;
+  }
+  .header-animation {
+    animation: fadeInDown 0.95s ease-in-out 0s 1 normal none running;
+    transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  }
+  .instagram {
+    background: radial-gradient(
+          51.8% 49.8% at 36.25% 96.55%,
+          #ffd600 0%,
+          #ff6930 48.44%,
+          #fe3b36 73.44%,
+          rgba(254, 59, 54, 0) 100%
+        )
+        /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */,
+      radial-gradient(
+        182.65% 122.8% at 84.5% 113.5%,
+        #ff1b90 24.39%,
+        #f80261 43.67%,
+        #ed00c0 68.85%,
+        #c500e9 77.68%,
+        #7017ff 89.32%
+      );
+  }
+  @keyframes fadeInDown {
+    0% {
+      opacity: 0;
+      -webkit-transform: translate3d(0, -100%, 0);
+      transform: translate3d(0, -100%, 0);
+    }
+
+    to {
+      opacity: 1;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+    }
+  }
+}
