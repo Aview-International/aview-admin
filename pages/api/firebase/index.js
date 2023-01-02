@@ -1,11 +1,12 @@
 import { initializeApp } from 'firebase/app';
+import { GoogleAuthProvider, signInWithPopup, getAuth } from 'firebase/auth';
 import {
-  GoogleAuthProvider,
-  signInWithPopup,
-  getAuth,
-} from 'firebase/auth';
-import { getDatabase, set, ref, child, update, get } from 'firebase/database';
-import { baseUrl } from '../../../components/baseUrl';
+  getDatabase,
+  set,
+  ref,
+  child,
+  get,
+} from 'firebase/database';
 import { v4 as uuidv4 } from 'uuid';
 
 const firebaseConfig = {
@@ -16,7 +17,7 @@ const firebaseConfig = {
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
-  // databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
+  databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
 };
 
 // Initialize the application
@@ -28,8 +29,10 @@ const database = getDatabase(app);
 // Initialize the auth service
 const auth = getAuth();
 
-export const checkUserEmail = async (uid) => {
-  const res = await get(ref(database, `users/${uid}`)).then((snapshot) => {
+export const getAllAdmins = async () => {
+  // const queryConstraints = [orderByKey('email')];
+  // const res = await get(query(ref(database, 'admins/'), ...queryConstraints));
+  const res = await get(ref(database, `admins/`)).then((snapshot) => {
     if (snapshot.exists()) return snapshot.val();
     else return null;
   });
@@ -60,6 +63,7 @@ export const createNewSuperAdmin = async (
   };
   await set(ref(database, `super-admins/${id}`), data);
 };
+
 // create new user account in the database after signup
 export const createNewAdmin = async (payload) => {
   let chars =
@@ -87,60 +91,14 @@ export const createNewAdmin = async (payload) => {
   });
 };
 
-// update user preferences
-export const updateAviewUsage = async (role, _id) => {
-  get(child(ref(database), `users/${_id}`)).then(async (snapshot) => {
-    if (snapshot.exists()) {
-      const data = snapshot.val();
-      const postData = {
-        ...data,
-        role,
-      };
-      const updates = {
-        [`users/${_id}`]: postData,
-      };
-      await update(ref(database), updates);
-    } else {
-      console.log('No data available');
-    }
-  });
-};
-
-export const updateUserInstagram = async (
-  _id,
-  ig_username,
-  ig_account_id,
-  ig_account_type,
-  ig_access_token,
-  ig_access_token_expiry
-) => {
-  get(child(ref(database), `users/${_id}`)).then(async (snapshot) => {
-    if (snapshot.exists()) {
-      const data = snapshot.val();
-      const postData = {
-        ...data,
-        ig_username,
-        ig_account_id,
-        ig_account_type,
-        ig_access_token,
-        ig_access_token_expiry,
-      };
-      const updates = {
-        [`users/${_id}`]: postData,
-      };
-      await update(ref(database), updates);
-    } else {
-      console.log('No data available');
-    }
-  });
-};
-
 // get all user data from the database
 export const getUserProfile = async (_id) => {
-  const res = await get(ref(database, `super-admins/${_id}`)).then((snapshot) => {
-    if (snapshot.exists()) return snapshot.val();
-    else return null;
-  });
+  const res = await get(ref(database, `super-admins/${_id}`)).then(
+    (snapshot) => {
+      if (snapshot.exists()) return snapshot.val();
+      else return null;
+    }
+  );
   return res;
 };
 
