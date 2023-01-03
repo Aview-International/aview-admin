@@ -16,7 +16,6 @@ const CreateAdmin = () => {
     country: '',
     phone: '',
     role: '',
-    picture: '',
   });
   return (
     <>

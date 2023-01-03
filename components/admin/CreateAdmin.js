@@ -8,6 +8,8 @@ import Border from '../UI/Border';
 import UploadFile from '../FormComponents/UploadFile';
 import { createNewAdmin } from '../../pages/api/firebase';
 import Button from '../UI/Button';
+import axios from 'axios';
+import FormData from 'form-data';
 
 const Admin_Onboarding_Step_1 = ({ setStage, payload, setPayload }) => {
   const [hasSubmitted, setHasSubmitted] = useState(false);
@@ -57,27 +59,29 @@ const Admin_Onboarding_Step_1 = ({ setStage, payload, setPayload }) => {
             onChange={(value) => setPayload({ ...payload, phone: value })}
           />
         </div>
-
-        <DashboardButton
-          onClick={handleClick}
-          disabled={
-            !payload.firstName ||
-            !payload.lastName ||
-            !payload.country ||
-            payload.country === 'Select Country' ||
-            !emailValidator(payload.email) ||
-            payload.phone.length < 10 ||
-            payload.phone.length > 20
-          }
-        >
-          Proceed
-        </DashboardButton>
+        <div className="w-60">
+          <DashboardButton
+            onClick={handleClick}
+            disabled={
+              !payload.firstName ||
+              !payload.lastName ||
+              !payload.country ||
+              payload.country === 'Select Country' ||
+              !emailValidator(payload.email) ||
+              payload.phone.length < 10 ||
+              payload.phone.length > 20
+            }
+          >
+            Proceed
+          </DashboardButton>
+        </div>
       </form>
     </>
   );
 };
 
 const Admin_Onboarding_Step_2 = ({ payload, setPayload, setStage }) => {
+  const [image, setImage] = useState(undefined);
   const [sideEffects, setSideEffects] = useState({
     isLoading: false,
     hasSubmitted: false,
@@ -85,9 +89,22 @@ const Admin_Onboarding_Step_2 = ({ payload, setPayload, setStage }) => {
 
   const handleClick = async (e) => {
     e.preventDefault();
+    let formData = new FormData();
+    formData.append('file', image);
+    formData.append(
+      'upload_preset',
+      process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
+    );
     try {
       setSideEffects({ ...sideEffects, isLoading: true, hasSubmitted: true });
-      await createNewAdmin(payload);
+
+      const res = await axios.post(
+        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+        formData
+      );
+
+      setPayload({ ...payload, picture: res.data.secure_url });
+      await createNewAdmin(payload, res.data.secure_url);
       setStage('success');
     } catch (error) {
       console.log(error);
@@ -104,7 +121,7 @@ const Admin_Onboarding_Step_2 = ({ payload, setPayload, setStage }) => {
             className="w-full border-none bg-black p-s1 text-xl"
             onChange={(e) => setPayload({ ...payload, role: e.target.value })}
           >
-            <option value="Select Country">Choose Role</option>
+            <option value="Choose Role">Choose Role</option>
             {ROLES.map((role, index) => (
               <option value={role} key={`role-${index}`}>
                 {role}
@@ -114,16 +131,21 @@ const Admin_Onboarding_Step_2 = ({ payload, setPayload, setStage }) => {
         </Border>
 
         <div className="mt-s4">
-          <UploadFile desc="Upload Picture" />
+          <UploadFile
+            desc="Upload Profile Picture"
+            file={image}
+            handleChange={(e) => setImage(e.target.files[0])}
+          />
         </div>
-
-        <DashboardButton
-          isLoading={sideEffects.isLoading}
-          disabled={!payload.role}
-          onClick={handleClick}
-        >
-          Proceed
-        </DashboardButton>
+        <div className="mt-s4 w-60">
+          <DashboardButton
+            isLoading={sideEffects.isLoading}
+            disabled={!payload.role || payload.role === 'Choose Role'}
+            onClick={handleClick}
+          >
+            Proceed
+          </DashboardButton>
+        </div>
       </form>
     </>
   );
@@ -136,11 +158,15 @@ const Success = () => {
         <span className="gradient-1 gradient-text">Admin account created!</span>
       </h2>
       <p className={`mb-s4 text-xl text-white`}>Account created successfully</p>
-      <div className='flex gap-6'>
-        <Button type="secondary" purpose="route" route="/">
+      <div className="flex gap-6">
+        <Button type="secondary" purpose="route" route="/admin-accounts">
           Check all admins
         </Button>
-        <Button type="primary" purpose="route" route="/">
+        <Button
+          type="primary"
+          purpose="onClick"
+          onClick={() => window.location.reload()}
+        >
           Add another admin
         </Button>
       </div>
