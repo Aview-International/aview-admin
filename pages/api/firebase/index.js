@@ -1,12 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { GoogleAuthProvider, signInWithPopup, getAuth } from 'firebase/auth';
-import {
-  getDatabase,
-  set,
-  ref,
-  child,
-  get,
-} from 'firebase/database';
+import { getDatabase, set, ref, child, get } from 'firebase/database';
 import { v4 as uuidv4 } from 'uuid';
 
 const firebaseConfig = {
@@ -65,7 +59,7 @@ export const createNewSuperAdmin = async (
 };
 
 // create new user account in the database after signup
-export const createNewAdmin = async (payload) => {
+export const createNewAdmin = async (payload, picture) => {
   let chars =
     '0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   let passwordLength = 10;
@@ -77,6 +71,7 @@ export const createNewAdmin = async (payload) => {
   }
   const data = {
     ...payload,
+    picture,
     uid: uuidv4(),
     password,
     isBlocked: false,

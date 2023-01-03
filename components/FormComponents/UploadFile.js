@@ -8,13 +8,21 @@ const UploadFile = ({ file, handleChange, hasSubmitted, desc }) => {
   return (
     <DottedBorder classes="relative block md:inline-block">
       <label className="flex cursor-pointer flex-col items-center py-s6 md:px-s10">
-        <Image src={UploadIcon} alt="Upload" />
-        <p className="pt-s1 text-xl text-white">{!file ? desc : file.name}</p>
+        <Image
+          src={file ? URL.createObjectURL(file) : UploadIcon}
+          alt="Upload"
+          width={120}
+          height={120}
+        />
+        <p className="pt-s1 text-xl text-white">
+          {!file ? desc : file.name.substring(0, 20)}
+          {file && file.name.length > 20 && '...'}
+        </p>
         <input
           type="file"
           name="resume"
           className="hidden"
-          accept="application/doc, application/docx, application/pdf"
+          accept="image/*"
           onChange={handleChange}
         />
       </label>
