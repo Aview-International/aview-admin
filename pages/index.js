@@ -22,7 +22,7 @@ const Login = () => {
 
   const handleSubmit = async () => {
     const emails = JSON.parse(process.env.NEXT_PUBLIC_ALLOWED_EMAILS);
-
+    console.log('emails', emails);
     setIsLoading(true);
     const { _tokenResponse } = await signInWithGoogle();
     console.log(_tokenResponse);

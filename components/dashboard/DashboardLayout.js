@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { getUserProfile } from '../../pages/api/firebase';
+import { getAdminProfile } from '../../pages/api/firebase';
 import { UserContext } from '../../store/user-profile';
 import FullScreenLoader from '../../public/loaders/FullScreenLoader';
 import DashBoardHeader from './Header';
@@ -11,7 +11,7 @@ const DashboardStructure = ({ children }) => {
   const getProfile = async () => {
     try {
       const _id = localStorage.getItem('uid');
-      const res = await getUserProfile(_id);
+      const res = await getAdminProfile(_id);
       updateUser({
         ...user,
         email: res.email,

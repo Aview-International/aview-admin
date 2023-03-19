@@ -282,6 +282,11 @@ export const DASHBOARD_NAVLINKS = [
     route: '/creator-accounts',
   },
   {
+    text: 'Messages',
+    image: home,
+    route: '/messages',
+  },
+  {
     text: 'Home',
     image: home,
     route: '/dashboard',

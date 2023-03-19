@@ -54,9 +54,7 @@ const UploadVideo = ({ data, setData, isValid, hasSubmitted }) => {
         If you selected Distribution, you acknowledge that you agree to
         Aview&#39;s &nbsp;
         <span className="gradient-1 gradient-text">
-          <Link href="/privacy-policy">
-            <a>Terms of Service</a>
-          </Link>
+          <Link href="/privacy-policy">Terms of Service</Link>
         </span>
         &nbsp;and give us permission to post translated content on your behalf.
       </small>

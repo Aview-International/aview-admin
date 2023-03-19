@@ -33,7 +33,7 @@ const FormInput = ({
   type,
 }) => {
   return (
-    <div className="relative mb-s5 w-full text-xl text-white">
+    <div className="relative w-full text-xl text-white">
       <label htmlFor={_id} className={`mb-s1 block w-full`}>
         {label}
       </label>
