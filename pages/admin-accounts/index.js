@@ -18,16 +18,14 @@ const AdminAccounts = () => {
     getAdminAccount();
   }, []);
   return (
-    <>
-      <div className="text-white">
-        <h2 className="text-6xl">All admins</h2>
-        <div>
-          {accounts.map((account, index) => (
-            <AccountInfo key={`account-${index}`} account={account} />
-          ))}
-        </div>
+    <div>
+      <h2 className="text-6xl">All admins</h2>
+      <div>
+        {accounts.map((account, index) => (
+          <AccountInfo key={`account-${index}`} account={account} />
+        ))}
       </div>
-    </>
+    </div>
   );
 };
 

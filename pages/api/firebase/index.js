@@ -11,43 +11,47 @@ import {
 } from 'firebase/database';
 import { v4 as uuidv4 } from 'uuid';
 
-const admin_firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
-  databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
+const devFirebaseConfig = {
+  apiKey: process.env.NEXT_PUBLIC_DEVELOPMENT_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_DEVELOPMENT_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_DEVELOPMENT_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_DEVELOPMENT_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId:
+    process.env.NEXT_PUBLIC_DEVELOPMENT_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_DEVELOPMENT_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_DEVELOPMENT_FIREBASE_MEASUREMENT_ID,
+  databaseURL: process.env.NEXT_PUBLIC_DEVELOPMENT_FIREBASE_DATABASE_URL,
 };
 
-const user_firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_USER_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_USER_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_USER_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_USER_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_USER_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_USER_FIREBASE_APP_ID,
-  measurementId: process.env.NEXT_PUBLIC_USER_FIREBASE_MEASUREMENT_ID,
-  databaseURL: process.env.NEXT_PUBLIC_USER_FIREBASE_DATABASE_URL,
+const prodFirebaseConfig = {
+  apiKey: process.env.NEXT_PUBLIC_PRODUCTION_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_PRODUCTION_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_PRODUCTION_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_PRODUCTION_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId:
+    process.env.NEXT_PUBLIC_PRODUCTION_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_PRODUCTION_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_PRODUCTION_FIREBASE_MEASUREMENT_ID,
+  databaseURL: process.env.NEXT_PUBLIC_PRODUCTION_FIREBASE_DATABASE_URL,
 };
 
 // Initialize the applications
-const admin_app = initializeApp(admin_firebaseConfig);
-const user_app = initializeApp(user_firebaseConfig, 'users');
+// const admin_app = initializeApp(admin_firebaseConfig);
+const app = initializeApp(
+  process.env.NODE_ENV === 'development'
+    ? devFirebaseConfig
+    : prodFirebaseConfig
+);
 
 // Initialize Realtime Database and get a reference to the service
-const admin_database = getDatabase(admin_app);
-const user_database = getDatabase(user_app);
+// const admin_database = getDatabase(admin_app);
+const database = getDatabase(app);
 
 // Initialize the auth service
 const auth = getAuth();
 
 export const getAllAdmins = async () => {
-  // const queryConstraints = [orderByKey('email')];
-  // const res = await get(query(ref(admin_database, 'admins/'), ...queryConstraints));
-  const res = await get(ref(admin_database, `admins/`)).then((snapshot) => {
+  const res = await get(ref(database, `admins/`)).then((snapshot) => {
     if (snapshot.exists()) return snapshot.val();
     else return null;
   });
@@ -55,9 +59,7 @@ export const getAllAdmins = async () => {
 };
 
 export const getAllCreators = async () => {
-  // const queryConstraints = [orderByKey('email')];
-  // const res = await get(query(ref(admin_database, 'admins/'), ...queryConstraints));
-  const res = await get(ref(user_database, `users/`)).then((snapshot) => {
+  const res = await get(ref(database, `users/`)).then((snapshot) => {
     if (snapshot.exists()) return snapshot.val();
     else return null;
   });
@@ -71,7 +73,7 @@ export const signInWithGoogle = async () => {
   return response;
 };
 
-// create new user account in the admin_database after signup
+// create new user account in the database after signup
 export const createNewSuperAdmin = async (
   id,
   firstName,
@@ -86,10 +88,10 @@ export const createNewSuperAdmin = async (
     email,
     picture,
   };
-  await set(ref(admin_database, `super-admins/${id}`), data);
+  await set(ref(database, `super-admins/${id}`), data);
 };
 
-// create new user account in the admin_database after signup
+// create new admin account in the database after signup
 export const createNewAdmin = async (payload, picture) => {
   let chars =
     '0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -107,19 +109,19 @@ export const createNewAdmin = async (payload, picture) => {
     password,
     isBlocked: false,
   };
-  get(child(ref(admin_database), `admins/${id}`)).then(async (snapshot) => {
+  get(child(ref(database), `admins/${id}`)).then(async (snapshot) => {
     if (snapshot.exists()) {
       let newid = uuidv4();
-      await set(ref(admin_database, `admins/${newid}`), data);
+      await set(ref(database, `admins/${newid}`), data);
     } else {
-      await set(ref(admin_database, `admins/${id}`), data);
+      await set(ref(database, `admins/${id}`), data);
     }
   });
 };
 
-// get all user data from the admin_database
+// get all user data from the database
 export const getAdminProfile = async (_id) => {
-  const res = await get(ref(admin_database, `super-admins/${_id}`)).then(
+  const res = await get(ref(database, `super-admins/${_id}`)).then(
     (snapshot) => {
       if (snapshot.exists()) return snapshot.val();
       else return null;
@@ -137,9 +139,9 @@ export const getUserProfile = async (_id) => {
   return res;
 };
 
-// save video to the admin_database
+// save video to the database
 export const saveVideo = async (channelId, data) => {
-  await set(ref(admin_database, `youtube-videos/${channelId}`), data);
+  await set(ref(database, `youtube-videos/${channelId}`), data);
 };
 
 // save user message to db
@@ -150,15 +152,15 @@ export const sendMessage = async (uid, message) => {
   };
 
   // get message key
-  const dataKey = push(child(ref(user_database), 'chats')).key;
+  const dataKey = push(child(ref(database), 'chats')).key;
   const updates = {};
   updates['/chats/' + uid + '/' + dataKey] = data;
-  return update(ref(user_database), updates);
+  return update(ref(database), updates);
 };
 
 // fetch user messages
 export const fetchMessages = async (uid, callback) => {
-  const messages = ref(user_database, 'chats/' + uid);
+  const messages = ref(database, 'chats/' + uid);
   onValue(messages, (snapshot) => {
     let chats = [];
     snapshot.forEach((el) => {
@@ -169,10 +171,10 @@ export const fetchMessages = async (uid, callback) => {
 };
 
 export const getSenders = async () => {
-  const res = await get(ref(user_database, `chats/`)).then((snapshot) => {
+  const res = await get(ref(database, `chats/`)).then((snapshot) => {
     let chats = [];
     snapshot.forEach((el) => {
-      get(ref(user_database, `users/${el.key}`)).then((snaps) => {
+      get(ref(database, `users/${el.key}`)).then((snaps) => {
         if (snaps.exists()) chats.push(snaps.val());
       });
     });
@@ -182,17 +184,57 @@ export const getSenders = async () => {
 };
 
 export const updateAccountCharge = async (uid, newCharge) => {
-  // const res = await get(ref(user_database, `users/${uid}/charge`)).then((snapshot) => {
-  //   const updates = {};
-  //   updates['/chats/' + uid + '/' + dataKey] = data;
-  //   return update(ref(user_database), updates);
-  //   if (snapshot.exists()) return snapshot.val();
-  //   else return null;
-  // });
-  // return res;
-
   const updates = {};
   updates[`users/${uid}/charge`] = newCharge;
   updates[`users/${uid}/defaultCurrency`] = 'USD';
-  return update(ref(user_database), updates);
+  return update(ref(database), updates);
+};
+
+export const getAllPendingJobs = async () => {
+  const res = await get(ref(database, `admin-jobs/pending`)).then(
+    (snapshot) => {
+      if (snapshot.exists()) return snapshot.val();
+      else return null;
+    }
+  );
+  return res;
+};
+
+export const getAllCompletedJobs = async () => {
+  const res = await get(ref(database, `admin-jobs/completed`)).then(
+    (snapshot) => {
+      if (snapshot.exists()) return snapshot.val();
+      else return null;
+    }
+  );
+  return res;
+};
+
+export const markVideoAsCompleted = async (creatorId, jobId, jobDetails) => {
+  await get(child(ref(database), `users/${creatorId}`)).then(
+    async (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        const newPostData = {
+          ...data,
+          completedVideos: 1,
+          pendingVideos: +data.pendingVideos - 1,
+        };
+        const existingPostData = {
+          ...data,
+          pendingVideos: +data.pendingVideos - 1,
+          completedVideos: +data.completedVideos + 1,
+        };
+        const updates = {
+          [`users/${creatorId}`]: data.completedVideos
+            ? existingPostData
+            : newPostData,
+          [`user-jobs/${creatorId}/${jobId}`]: jobDetails,
+          [`admin-jobs/pending/${jobId}`]: null,
+          [`admin-jobs/completed/${jobId}`]: jobDetails,
+        };
+        await update(ref(database), updates);
+      }
+    }
+  );
 };

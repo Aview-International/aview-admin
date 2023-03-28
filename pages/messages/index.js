@@ -83,9 +83,7 @@ const Messages = ({ children }) => {
             <p className="text-2xl">Messages</p>
             <Image src={Edit} alt="Edit" width={40} height={40} />
           </div>
-          <button onClick={() => console.log(senders, allsenders)}>
-            Check
-          </button>
+
           {allsenders.map((item, index) => (
             <p>{item.email}</p>
             // <Sender key={`sender-${index}`} query={router.query} {...item} />

@@ -25,7 +25,7 @@ const CreatorAccounts = () => {
   }, [reloadTrigger]);
 
   return (
-    <div className="text-white">
+    <div>
       <h2 className="text-6xl">All Creators</h2>
       <div>
         {accounts.map((account, index) => (

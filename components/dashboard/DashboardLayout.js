@@ -34,7 +34,7 @@ const DashboardStructure = ({ children }) => {
       {isLoading ? (
         <FullScreenLoader />
       ) : (
-        <main className="gradient-dark flex min-h-screen w-full">
+        <main className="gradient-dark flex min-h-screen w-full text-white">
           <DashboardSidebar user={user} />
           <div className="ml-auto w-[calc(100%-170px)]">
             <DashBoardHeader user={user} />

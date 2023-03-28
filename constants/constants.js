@@ -267,6 +267,11 @@ export const COUNTRIES = [
 
 export const DASHBOARD_NAVLINKS = [
   {
+    text: 'Dashboard',
+    image: home,
+    route: '/dashboard',
+  },
+  {
     text: 'Add Admin',
     image: home,
     route: '/create-admin',
@@ -287,9 +292,14 @@ export const DASHBOARD_NAVLINKS = [
     route: '/messages',
   },
   {
-    text: 'Home',
+    text: 'Pending Jobs',
     image: home,
-    route: '/dashboard',
+    route: '/pending-jobs',
+  },
+  {
+    text: 'Completed Jobs',
+    image: home,
+    route: '/completed-jobs',
   },
 ];
 

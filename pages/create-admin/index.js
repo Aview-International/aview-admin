@@ -20,7 +20,7 @@ const CreateAdmin = () => {
   return (
     <>
       <PageTitle title="Translation" />
-      <div className="text-white">
+      <div>
         <h2 className="text-6xl">Onboard a new admin</h2>
         {stage === 'stage1' && (
           <Admin_Onboarding_Step_1

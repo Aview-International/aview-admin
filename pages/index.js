@@ -22,10 +22,9 @@ const Login = () => {
 
   const handleSubmit = async () => {
     const emails = JSON.parse(process.env.NEXT_PUBLIC_ALLOWED_EMAILS);
-    console.log('emails', emails);
     setIsLoading(true);
     const { _tokenResponse } = await signInWithGoogle();
-    console.log(_tokenResponse);
+    console.log(_tokenResponse)
     updateUser({
       ...user,
       email: _tokenResponse.email,
@@ -42,6 +41,7 @@ const Login = () => {
         _tokenResponse.photoUrl
       );
       localStorage.setItem('uid', _tokenResponse.localId);
+      localStorage.setItem('token', _tokenResponse.idToken);
       toast.success('Login successful');
       router.push('/dashboard');
     } else {
