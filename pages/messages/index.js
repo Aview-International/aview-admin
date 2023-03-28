@@ -84,8 +84,8 @@ const Messages = ({ children }) => {
             <Image src={Edit} alt="Edit" width={40} height={40} />
           </div>
 
-          {allsenders.map((item, index) => (
-            <p>{item.email}</p>
+          {allsenders.map((item, i) => (
+            <p key={i}>{item.email}</p>
             // <Sender key={`sender-${index}`} query={router.query} {...item} />
           ))}
         </div>
