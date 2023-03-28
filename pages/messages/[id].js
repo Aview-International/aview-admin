@@ -6,11 +6,12 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import SendIcon from '../../public/img/icons/send-message.svg';
 import FormInput from '../../components/FormComponents/FormInput';
+import Cookies from 'js-cookie';
 // import { fetchMessages, sendMessage } from '../../api/onboarding';
 
 const MessageDetails = () => {
   const router = useRouter();
-  const uid = localStorage.getItem('uid');
+  const uid = Cookies.get('uid');
 
   const [message, setMessage] = useState('');
   const [chats, setChats] = useState([]);

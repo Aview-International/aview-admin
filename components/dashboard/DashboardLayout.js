@@ -4,13 +4,14 @@ import { UserContext } from '../../store/user-profile';
 import FullScreenLoader from '../../public/loaders/FullScreenLoader';
 import DashBoardHeader from './Header';
 import DashboardSidebar from './Sidebar';
+import Cookies from 'js-cookie';
 
 const DashboardStructure = ({ children }) => {
   const { user, updateUser } = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(true);
   const getProfile = async () => {
     try {
-      const _id = localStorage.getItem('uid');
+      const _id = Cookies.get('uid');
       const res = await getAdminProfile(_id);
       updateUser({
         ...user,

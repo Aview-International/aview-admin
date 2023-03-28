@@ -14,6 +14,7 @@ import { UserContext } from '../store/user-profile';
 import ButtonLoader from '../public/loaders/ButtonLoader';
 import { toast } from 'react-toastify';
 import PageTitle from '../components/SEO/PageTitle';
+import Cookies from 'js-cookie';
 
 const Login = () => {
   const router = useRouter();
@@ -24,7 +25,7 @@ const Login = () => {
     const emails = JSON.parse(process.env.NEXT_PUBLIC_ALLOWED_EMAILS);
     setIsLoading(true);
     const { _tokenResponse } = await signInWithGoogle();
-    console.log(_tokenResponse)
+    console.log(_tokenResponse);
     updateUser({
       ...user,
       email: _tokenResponse.email,
@@ -40,8 +41,8 @@ const Login = () => {
         _tokenResponse.email,
         _tokenResponse.photoUrl
       );
-      localStorage.setItem('uid', _tokenResponse.localId);
-      localStorage.setItem('token', _tokenResponse.idToken);
+      Cookies.set('uid', _tokenResponse.localId, { expires: 3 });
+      Cookies.set('token', _tokenResponse.idToken, { expires: 3 });
       toast.success('Login successful');
       router.push('/dashboard');
     } else {
