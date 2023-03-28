@@ -5,7 +5,7 @@ import HoverGradientFill from './HoverGradientFill';
 
 const Button = ({ children, type, purpose, route, onClick }) => {
   let button = (
-    <a
+    <span
       className={`
           ${type === 'primary' && `gradient-1 text-black `}
           ${type === 'secondary' && `bg-black text-white hover:text-black `}
@@ -18,7 +18,7 @@ const Button = ({ children, type, purpose, route, onClick }) => {
     >
       {type === 'secondary' && <HoverGradientFill borderRadius="full" />}
       <span className="relative">{children}</span>
-    </a>
+    </span>
   );
 
   if (purpose === 'route') {

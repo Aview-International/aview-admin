@@ -11,14 +11,12 @@ const DashboardSidebar = ({ user }) => {
     <aside className="fixed top-0 left-0 flex max-h-screen w-[170px] flex-col items-center overflow-y-auto py-s4 text-white">
       <div>
         <Link href="/dashboard">
-          <a>
-            <Image
-              src={aviewLogo}
-              alt="AVIEW International logo"
-              width={56}
-              height={56}
-            />
-          </a>
+          <Image
+            src={aviewLogo}
+            alt="AVIEW International logo"
+            width={56}
+            height={56}
+          />
         </Link>
       </div>
       <Profile user={user} />
@@ -56,32 +54,30 @@ const Navlink = () => {
   return (
     <div className="w-full text-sm">
       {DASHBOARD_NAVLINKS.map((link, index) => (
-        <Link href={link.route} key={`sidebar-link-${index}`}>
-          <a
-            className={`hover:gradient-dark group relative mb-s2 flex items-center py-s1 px-s3 ${
-              route === link.route && 'gradient-dark'
+        <Link
+          href={link.route}
+          key={`sidebar-link-${index}`}
+          className={`hover:gradient-dark group relative mb-s2 flex items-center py-s1 px-s3 ${
+            route === link.route && 'gradient-dark'
+          }`}
+        >
+          <span
+            className={`gradient-1 absolute right-0 top-1/4 block h-5 w-1 rounded-md group-hover:animate-dropin ${
+              route === link.route ? 'visible' : 'invisible group-hover:visible'
+            }`}
+          ></span>
+          <span
+            className={`mr-5 group-hover:animate-popup ${
+              route === link.route ? 'animate-popup' : ''
             }`}
           >
-            <span
-              className={`gradient-1 absolute right-0 top-1/4 block h-5 w-1 rounded-md group-hover:animate-dropin ${
-                route === link.route
-                  ? 'visible'
-                  : 'invisible group-hover:visible'
-              }`}
-            ></span>
-            <span
-              className={`mr-5 group-hover:animate-popup ${
-                route === link.route ? 'animate-popup' : ''
-              }`}
-            >
-              <Image src={link.image} alt={link.text} width={20} height={20} />
-            </span>
-            <span
-              className={route === link.route ? 'gradient-text gradient-1' : ''}
-            >
-              {link.text}
-            </span>
-          </a>
+            <Image src={link.image} alt={link.text} width={20} height={20} />
+          </span>
+          <span
+            className={route === link.route ? 'gradient-text gradient-1' : ''}
+          >
+            {link.text}
+          </span>
         </Link>
       ))}
     </div>

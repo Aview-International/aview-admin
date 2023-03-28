@@ -10,14 +10,15 @@ const DashBoardHeader = ({ user }) => {
         <p className="text-lg text-gray-2">Welcome to your Aview dashboard</p>
       </div>
       <div>
-        <Link href="/dashboard/messages">
-          <a className="relative flex items-center rounded-full bg-gray-1 px-s2 py-s1 text-sm">
-            <span className="mr-s1.5 brightness-0 invert">
-              <Image src={messages} alt="Messages" />
-            </span>
-            <span className="absolute -bottom-1 right-0 inline-block h-4 w-4 rounded-full bg-red"></span>
-            Messages
-          </a>
+        <Link
+          href="/dashboard/messages"
+          className="relative flex items-center rounded-full bg-gray-1 px-s2 py-s1 text-sm"
+        >
+          <span className="mr-s1.5 brightness-0 invert">
+            <Image src={messages} alt="Messages" />
+          </span>
+          <span className="absolute -bottom-1 right-0 inline-block h-4 w-4 rounded-full bg-red"></span>
+          Messages
         </Link>
       </div>
     </header>

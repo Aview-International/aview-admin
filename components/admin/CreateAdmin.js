@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import FormInput from '../FormComponents/FormInput';
 import DashboardButton from '../UI/DashboardButton';
 import { emailValidator } from '../../utils/regex';
@@ -26,13 +26,15 @@ const Admin_Onboarding_Step_1 = ({ setStage, payload, setPayload }) => {
       <p className="my-s4 text-2xl">Step 1 : Personal Information</p>
       <form className="block w-3/5">
         {ONBOARD_ADMIN.map((item, index) => (
-          <FormInput
-            key={`input-${index}`}
-            onChange={handleChange}
-            value={payload[item.name]}
-            hasSubmitted={hasSubmitted}
-            {...item}
-          />
+          <Fragment key={index}>
+            <FormInput
+              onChange={handleChange}
+              value={payload[item.name]}
+              hasSubmitted={hasSubmitted}
+              {...item}
+            />
+            <br />
+          </Fragment>
         ))}
 
         <p className="mb-s1 text-xl">Country of residence</p>
