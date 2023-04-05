@@ -7,25 +7,31 @@ import DashboardSidebar from './Sidebar';
 import Cookies from 'js-cookie';
 
 const DashboardStructure = ({ children }) => {
-  const { user, updateUser } = useContext(UserContext);
+  // const { user, updateUser } = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(true);
   const getProfile = async () => {
     try {
       const _id = Cookies.get('uid');
       const res = await getAdminProfile(_id);
-      updateUser({
-        ...user,
-        email: res.email,
-        picture: res.picture,
-        firstName: res.firstName,
-        lastName: res.lastName,
-      });
+      // updateUser({
+      //   ...user,
+      //   email: res.email,
+      //   picture: res.picture,
+      //   firstName: res.firstName,
+      //   lastName: res.lastName,
+      // });
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
       console.log(error);
     }
   };
+  const [user, updateUser] = useState({
+    email: '',
+    firstName: '',
+    lastName: '',
+    picture: '',
+  });
   useEffect(() => {
     getProfile();
   }, []);
