@@ -111,6 +111,7 @@ const JobDetails = ({ setModalIndex, job, creatorData, setReloadTrigger }) => {
   const [showInput, setShowInput] = useState(false);
   const [url, setUrl] = useState('');
 
+  console.log(job);
   const handleSubmit = async () => {
     await markVideoAsCompleted(job.creatorId, job.jobId, {
       ...job,
@@ -171,6 +172,10 @@ const JobDetails = ({ setModalIndex, job, creatorData, setReloadTrigger }) => {
               {service}
             </span>
           ))}
+        </div>
+
+        <div className="my-s8">
+          Additional Notes:{'  '} {job.additionalNote}
         </div>
 
         <div>
