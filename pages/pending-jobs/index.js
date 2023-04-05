@@ -16,7 +16,7 @@ const PendingJobs = () => {
   const [reloadTrigger, setReloadTrigger] = useState(0);
   const [modalIndex, setModalIndex] = useState(undefined);
 
-  const getAdminAccount = async () => {
+  const getPendingJobs = async () => {
     const res = await getAllPendingJobs();
     setJobs(
       res
@@ -29,7 +29,7 @@ const PendingJobs = () => {
   };
 
   useEffect(() => {
-    getAdminAccount();
+    getPendingJobs();
   }, [reloadTrigger]);
 
   return (
@@ -110,7 +110,6 @@ const JobDesc = ({
 const JobDetails = ({ setModalIndex, job, creatorData, setReloadTrigger }) => {
   const [showInput, setShowInput] = useState(false);
   const [url, setUrl] = useState('');
-  const [hasSubmitted, setHasSubmitted] = useState('');
 
   const handleSubmit = async () => {
     await markVideoAsCompleted(job.creatorId, job.jobId, {
