@@ -23,18 +23,7 @@ const VideoEdits = () => {
             <VideoPlayer />
           </div>
           <div className="w-1/2">
-            <TranscriptionVideoFiles />
-            <br />
-            <TranslationVideoFiles />
-            <br />
-            <DubbingVideoFiles />
-            <br />
             <ThumbnailVideoFiles />
-            <br />
-            <p>Press Upload once all files have been checked and approved.</p>
-            <div className="my-s2 w-48">
-              <OnboardingButton theme="light">Upload</OnboardingButton>
-            </div>
           </div>
         </div>
       </div>

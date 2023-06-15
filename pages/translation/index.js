@@ -18,9 +18,6 @@ const Translation = () => {
             <VideoPlayer />
           </div>
           <div className="w-1/2">
-            <TranscriptionVideoFiles />
-            <br />
-            <br />
             <TranslationVideoFiles />
           </div>
         </div>

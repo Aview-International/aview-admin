@@ -19,12 +19,7 @@ const Dubbing = () => {
             <VideoPlayer />
           </div>
           <div className="w-1/2">
-            <TranscriptionVideoFiles />
-            <br />
-            <TranslationVideoFiles />
-            <br />
             <DubbingVideoFiles />
-            <br />
           </div>
         </div>
       </div>

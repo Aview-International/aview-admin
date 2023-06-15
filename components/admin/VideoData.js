@@ -19,8 +19,8 @@ export const TranscriptionVideoFiles = () => {
       <p className="mb-s2 text-2xl">Actions</p>
       <Card borderRadius="2xl" fullWidth="92%">
        <div className='w-full h-full flex flex-col'>
-        <div className='h-[518px]'>
-          <IterateData /> 
+        <div className='h-auto'>
+          <IterateData idValue={1}/> 
         </div>
        </div>
       </Card>
@@ -29,17 +29,17 @@ export const TranscriptionVideoFiles = () => {
 };
 
 
-export const IterateData = () =>{
+export const IterateData = ({idValue}) =>{
   const [isOpen, setIsOpen] = useState(1);
   return (
     <>
        {
-          DASHBOARD_FEATURES.map((feature,index)=>{
+          DASHBOARD_FEATURES.slice(0,idValue).map((feature,index)=>{
             return (
               <>
               <div className='flex flex-col' key={index}>
-               <Border classes={`rounded-tl-2xl rounded-tr-2xl pl-0 pr-0 pb-0 ${feature.id===1&&'pt-0'} ${feature.id===4 && 'rounded-bl-2xl rounded-br-2xl'}`}>
-                 <div className={`w-full text-white flex justify-between rounded-tl-2xl rounded-tr-2xl px-5 bg-black ${ isOpen===feature.id ? 'h-auto items-start py-3' : `h-16 grow-0 items-center`} ${feature.id===4 && 'rounded-bl-2xl rounded-br-2xl'}`}>
+               <Border classes={`rounded-tl-2xl rounded-tr-2xl pl-0 pr-0 pb-0 ${feature.id===1&&'pt-0'} ${feature.id===idValue && 'rounded-bl-2xl rounded-br-2xl'}`}>
+                 <div className={`w-full text-white flex justify-between rounded-tl-2xl rounded-tr-2xl px-5 bg-black ${ isOpen===feature.id ? 'h-auto items-start py-3' : `h-16 grow-0 items-center`} ${feature.id===idValue && 'rounded-bl-2xl rounded-br-2xl'}`}>
                   <div className='flex w-1/2 justify-start gap-5'>
                     <Image src={incorrect} width={30} height={30}/>
                     <p className='font-semibold text-2xl mt-1'>{feature.name}</p>
@@ -60,50 +60,60 @@ export const IterateData = () =>{
             )
           })
        }
-       <div className="mt-s4 flex justify-start">
+       {/* <div className="mt-s4 flex justify-start">
           <div className="w-46 text-xl font-semibold block">
             <OnboardingButton theme="light" disabled={true}>Submit Video</OnboardingButton>
           </div>
-        </div>
+        </div> */}
     </>
   )
 }
 
 export const TranslationVideoFiles = () => {
   const [file, setFile] = useState(undefined);
+  
   return (
     <>
-      <p className="mb-s2 text-2xl">Translation</p>
-      <DownloadFile name="logalpaultranscript.txt" />
-      <div className="mt-s5">
-        <UploadFile file={file} onChange={(e) => setFile(e.target.files[0])} />
-      </div>
+      <p className="mb-s2 text-2xl">Actions</p>
+      <Card borderRadius="2xl" fullWidth="92%">
+       <div className='w-full h-full flex flex-col'>
+        <div className='h-auto'>
+          <IterateData idValue={2}/> 
+        </div>
+       </div>
+      </Card>
     </>
-  );
-};
+  )
+}
 
 export const DubbingVideoFiles = () => {
   const [file, setFile] = useState(undefined);
   return (
     <>
-      <p className="mb-s2 text-2xl">Dubbing</p>
-      <DownloadFile name="logalpaultranscript.txt" />
-      <div className="mt-s5">
-        <UploadFile file={file} onChange={(e) => setFile(e.target.files[0])} />
-      </div>
+      <p className="mb-s2 text-2xl">Actions</p>
+      <Card borderRadius="2xl" fullWidth="92%">
+       <div className='w-full h-full flex flex-col'>
+        <div className='h-auto'>
+          <IterateData idValue={3}/> 
+        </div>
+       </div>
+      </Card>
     </>
-  );
-};
+  )
+}
 
 export const ThumbnailVideoFiles = () => {
   const [file, setFile] = useState(undefined);
   return (
     <>
-      <p className="mb-s2 text-2xl">Thumbnail</p>
-      <DownloadFile name="logalpaultranscript.txt" />
-      <div className="mt-s5">
-        <UploadFile file={file} onChange={(e) => setFile(e.target.files[0])} />
-      </div>
+      <p className="mb-s2 text-2xl">Actions</p>
+      <Card borderRadius="2xl" fullWidth="92%">
+       <div className='w-full h-full flex flex-col'>
+        <div className='h-[565px]'>
+          <IterateData idValue={4}/> 
+        </div>
+       </div>
+      </Card>
     </>
-  );
-};
+  )
+}
