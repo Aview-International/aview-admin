@@ -8,6 +8,7 @@ import Incorrect from '../../public/img/icons/incorrect.svg';
 
 const CustomSelectInput = ({
   text,
+  name,
   options,
   onChange,
   hasSubmitted,
@@ -18,12 +19,13 @@ const CustomSelectInput = ({
 
   return (
     <OutsideClickHandler onOutsideClick={() => setIsOpen(false)}>
-      <div className="relative mb-s4 text-xl text-white">
-        <p className="mb-s1">{text}</p>
+      <div className="relative mb-s2  text-white/60">
+        <p className="mb-1 text-white">{text}</p>
         <Border borderRadius="[5px] w-full">
           <div
             className="flex w-full cursor-pointer items-center justify-between rounded-md bg-black p-s1"
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={() => setIsOpen(!isOpen)
+            }
           >
             <p>{data || 'Select'}</p>
             <span className={`transition-300  ${isOpen && 'rotate-180'}`}>
@@ -43,6 +45,7 @@ const CustomSelectInput = ({
           isOpen={isOpen}
           setData={setData}
           options={options}
+          name={name}
           setIsOpen={setIsOpen}
           onChange={onChange}
         />
@@ -51,7 +54,7 @@ const CustomSelectInput = ({
   );
 };
 
-const Options = ({ isOpen, setData, options, setIsOpen, onChange }) => {
+const Options = ({ isOpen, setData, options, name, setIsOpen, onChange }) => {
   return (
     <Border
       borderRadius="[5px]"
@@ -60,12 +63,12 @@ const Options = ({ isOpen, setData, options, setIsOpen, onChange }) => {
       }`}
     >
       <div className="gradient-1 rounded-[5px]">
-        {options.map((option, i) => (
+        {options && options.map((option, i) => (
           <p
             className="my-[2px] cursor-pointer bg-black p-s1"
             key={`option-${i}`}
             onClick={() => {
-              onChange(option);
+              onChange(name, option);
               setData(option);
               setIsOpen(false);
             }}

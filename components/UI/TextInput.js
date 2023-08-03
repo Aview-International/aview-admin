@@ -1,0 +1,23 @@
+import Border from './Border';
+import Shadow from './Shadow';
+
+const TextInput = ({ placeholder, bgColor, textColor, value, name, setData }) => {
+  return (
+    <div className="w-full">
+      <Shadow classes="w-full">
+        <Border borderRadius="md" classes="w-full">
+          <input
+            value={value}
+            name={name}
+            placeholder={placeholder}
+            className={`w-full rounded-md bg-${bgColor} p-2 text-lg text-${textColor} placeholder:font-light placeholder:text-${textColor} focus:outline-none md:text-xl`}
+            onChange={(e) => setData(name, e.target.value)}
+            
+          />
+        </Border>
+      </Shadow> 
+    </div>
+  );
+};
+
+export default TextInput;

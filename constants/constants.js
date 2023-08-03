@@ -2,6 +2,8 @@ import transcription from '../public/img/icons/transcript.svg';
 import translation from '../public/img/icons/translation.svg';
 import dubbing from '../public/img/icons/dubbing.svg';
 import videoedit from '../public/img/icons/video-edit.svg';
+import creator from '../public/img/icons/creator.svg';
+import permission from '../public/img/icons/permission.svg';
 
 export const LANGUAGES = [
   'English',
@@ -36,7 +38,47 @@ export const DASHBOARD_NAVLINKS = [
     image: videoedit,
     route: '/video-edits',
   },
+  // {
+  //   text: 'Permissions',
+  //   image: permission,
+  //   route: '/permissions',
+  // },
+  {
+    text: 'Creators',
+    image: creator,
+    route: '/creators',
+  },
 ];
+
+
+export const DASHBOARD_CREATORS_PLAYLISTS = [
+  'None',
+  'Videos',
+  'Shorts',
+]
+
+export const DASHBOARD_CREATORS_VIDEO_LANGUAGE = [
+  'Arabic',
+  'Hindi',
+  'Spanish',
+  'French',
+  'German',
+  'Chinese'
+]
+
+export const DASHBOARD_CREATORS_VIDEO_LOCATION = [
+  'Africa',
+  'Europe',
+  'Asia',
+]
+
+export const DASHBOARD_CREATORS_VIDEO_CATEGORY = [
+  'News',
+  'Entertainment',
+  'Music',
+  'Arts'
+]
+
 
 export const DASHBOARD_FEATURES = [
   {
