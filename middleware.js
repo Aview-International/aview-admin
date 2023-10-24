@@ -1,32 +1,24 @@
 import { NextResponse } from 'next/server';
 import { decodeJwt } from 'jose';
-import Cookies from 'js-cookie';
 
-const authStatus = async (token) => {
+const authStatus = (token) => {
   if (!token) return false;
+  const data = decodeJwt(token);
+  if (!data) return false;
+  const newDate = new Date(data.exp) * 1000;
+  if (newDate < new Date().getTime()) return false;
   else {
-    if (await !decodeJwt(token)) console.log(false);
-    // console.log('hereeee');
-    // console.log(data ? true : false);
-    if (!data) return false;
-    const newDate = new Date(data.exp) * 1000;
-    if (newDate < new Date().getTime()) return false;
-    else {
-      const newTime = newDate - new Date().getTime();
-      return {
-        newTime,
-        data,
-      };
-    }
+    const newTime = newDate - new Date().getTime();
+    return {
+      newTime,
+      data,
+    };
   }
 };
 
 export default async function middleware(request) {
   const token = request.cookies.get('token')?.value;
-  // const token = request.cookies.get('token');
-
-  // console.log(token);
-  const status = await authStatus(token);
+  const status = authStatus(token);
   if (!status) {
     request.cookies.delete('token');
     return NextResponse.redirect(new URL('/', request.url));

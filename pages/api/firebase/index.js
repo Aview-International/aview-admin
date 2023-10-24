@@ -1,14 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { GoogleAuthProvider, signInWithPopup, getAuth } from 'firebase/auth';
-import {
-  getDatabase,
-  set,
-  ref,
-  child,
-  get,
-  onValue,
-  update,
-} from 'firebase/database';
+import { getDatabase, set, ref, child, get, update } from 'firebase/database';
 import { v4 as uuidv4 } from 'uuid';
 
 const devFirebaseConfig = {
@@ -139,37 +131,6 @@ export const getUserProfile = async (_id) => {
   return res;
 };
 
-// save video to the database
-export const saveVideo = async (channelId, data) => {
-  await set(ref(database, `youtube-videos/${channelId}`), data);
-};
-
-// save user message to db
-export const sendMessage = async (uid, message) => {
-  const data = {
-    message: message,
-    timeStamp: Date.now(),
-  };
-
-  // get message key
-  const dataKey = push(child(ref(database), 'chats')).key;
-  const updates = {};
-  updates['/chats/' + uid + '/' + dataKey] = data;
-  return update(ref(database), updates);
-};
-
-// fetch user messages
-export const fetchMessages = async (uid, callback) => {
-  const messages = ref(database, 'chats/' + uid);
-  onValue(messages, (snapshot) => {
-    let chats = [];
-    snapshot.forEach((el) => {
-      chats.push(el.val());
-    });
-    callback(chats);
-  });
-};
-
 export const getSenders = async () => {
   const res = await get(ref(database, `chats/`)).then((snapshot) => {
     let chats = [];
@@ -191,7 +152,7 @@ export const updateAccountCharge = async (uid, newCharge) => {
 };
 
 export const getAllPendingJobs = async () => {
-  const res = await get(ref(database, `admin-jobs/pending`)).then(
+  const res = await get(ref(database, `admin-jobs/pending/transcription`)).then(
     (snapshot) => {
       if (snapshot.exists()) return snapshot.val();
       else return null;
@@ -229,8 +190,9 @@ export const markVideoAsCompleted = async (creatorId, jobId, jobDetails) => {
           [`users/${creatorId}`]: data.completedVideos
             ? existingPostData
             : newPostData,
-          [`user-jobs/${creatorId}/${jobId}`]: jobDetails,
+          [`user-jobs/completed/${creatorId}/${jobId}`]: jobDetails,
           [`admin-jobs/pending/${jobId}`]: null,
+          [`user-jobs/pending/${creatorId}/${jobId}`]: null,
           [`admin-jobs/completed/${jobId}`]: jobDetails,
         };
         await update(ref(database), updates);

@@ -30,6 +30,7 @@ const FormInput = ({
   hasSubmitted,
   bgColor,
   textBlack,
+  handleFocus,
   type,
 }) => {
   return (
@@ -44,6 +45,7 @@ const FormInput = ({
             name={name}
             type={type || 'text'}
             placeholder={placeholder}
+            onFocus={handleFocus}
             className={`peer w-full rounded-[5px] px-s2 py-2 text-white focus:outline-none ${
               bgColor ? bgColor : 'bg-black'
             } ${textBlack ? 'text-black' : 'text-white'}`}
