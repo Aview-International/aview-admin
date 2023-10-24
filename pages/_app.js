@@ -7,7 +7,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import store from '../store';
 import { Provider, useDispatch } from 'react-redux';
 import { SocketProvider, useSocket } from '../socket';
-import { setIncomingMessages } from '../store/reducers/messages.reducer';
+import { errorHandler } from '../utils/errorHandler';
+import { setUserMessages } from '../store/reducers/messages.reducer';
+import { getUserMessages } from '../services/api';
+import { useRouter } from 'next/router';
 
 const MyApp = ({ Component, pageProps }) => {
   useEffect(() => {
@@ -47,24 +50,31 @@ const MyApp = ({ Component, pageProps }) => {
 const Layout = ({ Component, pageProps }) => {
   const socket = useSocket();
   const dispatch = useDispatch();
+  const router = useRouter();
+  const { id } = router.query;
   useEffect(() => {
     socket.auth = { userId: 'admin' };
-
     socket.on('connect', () => {
-      console.log('socket connected, id: ' + socket.id, socket.auth);
+      return;
     });
-
     socket.on('disconnect', () => {
-      console.log('socket disconnected, id:' + socket.id);
+      return;
     });
 
-    socket.on('new_user_message', (message) => {
-      dispatch(setIncomingMessages(message));
+    socket.on('new_user_message', async (data) => {
+      console.log(data);
+      try {
+        const res = await getUserMessages(id);
+        dispatch(setUserMessages(res));
+      } catch (error) {
+        errorHandler(error);
+      }
+      // if (id) fetchUserMessages();
     });
 
-    socket.on('new_user_message', (message) => {
-      dispatch(setIncomingMessages(message));
-    });
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 
   if (Component.getLayout) {

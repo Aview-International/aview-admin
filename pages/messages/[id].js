@@ -5,7 +5,6 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import SendIcon from '../../public/img/icons/send-message.svg';
 import FormInput from '../../components/FormComponents/FormInput';
-// import { socket } from '../../socket';
 import { getUserMessages, getUserProfile } from '../../services/api';
 import { errorHandler } from '../../utils/errorHandler';
 import {
@@ -14,6 +13,7 @@ import {
 } from '../../store/reducers/messages.reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSocket } from '../../socket';
+import Logo from '../../public/img/aview/logo.svg';
 
 const MessageDetails = () => {
   const socket = useSocket();
@@ -45,6 +45,13 @@ const MessageDetails = () => {
     if (id) fetchUserMessages();
     if (id && !user.firstName) fetchUserProfile();
   }, [id]);
+
+  useEffect(() => {
+    socket.on('new_message', () => {
+      console.log('new new_message');
+      if (id) fetchUserMessages();
+    });
+  }, []);
 
   const handleTypeEvent = () => {
     // socket.emit('typing', 'admin is typing');
@@ -117,10 +124,14 @@ const MessageDetails = () => {
 MessageDetails.getLayout = MessagesLayout;
 export default MessageDetails;
 
-const SingleMessage = ({ timeStamp, message, picture, name }) => (
-  <div className="my-s3 flex text-sm">
+const SingleMessage = ({ timeStamp, message, picture, name, sender }) => (
+  <div
+    className={`my-s3 flex items-start text-sm ${
+      sender === 'user' ? 'flex-row-reverse' : 'flex-row'
+    }`}
+  >
     <Image
-      src={picture}
+      src={sender === 'admin' ? Logo : picture}
       alt=""
       width={40}
       height={40}
@@ -128,12 +139,9 @@ const SingleMessage = ({ timeStamp, message, picture, name }) => (
     />
     <div className="ml-3">
       <p>
-        {name}{' '}
+        {sender === 'admin' ? 'Julia from Aview' : name}
         <span className="pl-s2">
           {new Date(timeStamp).toLocaleString('en-US', {
-            day: '2-digit',
-            month: 'short',
-            year: 'numeric',
             hour: '2-digit',
             minute: '2-digit',
             hour12: true,

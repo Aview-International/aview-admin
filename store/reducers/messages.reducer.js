@@ -25,18 +25,19 @@ const messagesSlice = createSlice({
 
     setIncomingMessages(state, action) {
       const { payload } = action;
-      const user = state.find((data) => data.userId === payload.userId);
+      console.log(payload);
+      // const user = state.find((data) => data.userId === payload.userId);
 
-      if (user) {
-        user[messages].push(payload);
-      } else {
-        state.push({
-          userId: payload.userId,
-          messages: [
-            { message: payload.message, timeStamp: payload.timeStamp },
-          ],
-        });
-      }
+      // if (user) {
+      //   user[messages].push(payload);
+      // } else {
+      //   state.push({
+      //     userId: payload.userId,
+      //     messages: [
+      //       { message: payload.message, timeStamp: payload.timeStamp },
+      //     ],
+      //   });
+      // }
     },
   },
 });
