@@ -1,46 +1,64 @@
 import { MessagesLayout } from '.';
-// import andrew from '../../../public/img/team/andrew.png';
 import Image from 'next/image';
 import Arrow from '../../public/img/icons/arrow-back.svg';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import SendIcon from '../../public/img/icons/send-message.svg';
 import FormInput from '../../components/FormComponents/FormInput';
-import Cookies from 'js-cookie';
-// import { fetchMessages, sendMessage } from '../../api/onboarding';
+// import { socket } from '../../socket';
+import { getUserMessages, getUserProfile } from '../../services/api';
+import { errorHandler } from '../../utils/errorHandler';
+import {
+  setSenderProfile,
+  setUserMessages,
+} from '../../store/reducers/messages.reducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { useSocket } from '../../socket';
 
 const MessageDetails = () => {
+  const socket = useSocket();
+  const dispatch = useDispatch();
   const router = useRouter();
-  const uid = Cookies.get('uid');
-
+  const { id } = router.query;
   const [message, setMessage] = useState('');
-  const [chats, setChats] = useState([]);
+  const { messages, user } = useSelector((state) => state.userMessages);
 
-  const callback = (e) => setChats(e);
-  // const fetchUserMessages = async () => {
-  //   try {
-  //     const res = await fetchMessages(uid, callback);
-  //     console.log(res);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  const fetchUserMessages = async () => {
+    try {
+      const res = await getUserMessages(id);
+      dispatch(setUserMessages(res));
+    } catch (error) {
+      errorHandler(error);
+    }
+  };
 
-  // useEffect(() => {
-  //   fetchUserMessages();
-  // }, []);
+  const fetchUserProfile = async () => {
+    try {
+      const res = await getUserProfile(id);
+      dispatch(setSenderProfile(res));
+    } catch (error) {
+      errorHandler(error);
+    }
+  };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   console.log(message);
-  //   try {
-  //     const res = await sendMessage(uid, message);
-  //     console.log(res);
-  //     setMessage('');
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  useEffect(() => {
+    if (id) fetchUserMessages();
+    if (id && !user.firstName) fetchUserProfile();
+  }, [id]);
+
+  const handleTypeEvent = () => {
+    // socket.emit('typing', 'admin is typing');
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    socket.emit('admin_message', {
+      userId: id,
+      timeStamp: Date.now(),
+      message,
+    });
+    setMessage('');
+  };
 
   return (
     <div className="relative flex h-full flex-col justify-between">
@@ -52,26 +70,34 @@ const MessageDetails = () => {
           <Image src={Arrow} alt="" with={10} height={20} />
         </button>
         <div>
-          {/* <Image
-            src={andrew}
+          <Image
+            src={user.picture}
             alt="Profile Picture"
             width={32}
             height={32}
             className="rounded-full"
-          /> */}
+          />
         </div>
-        <p className="ml-s1 text-2xl">Andrew Qiao</p>
+        <p className="ml-s1 text-2xl">
+          {user.firstName} {user.lastName}
+        </p>
       </div>
       <div className="">
         <div>
-          {chats.map((item, index) => (
-            <SingleMessage key={`message-${index}`} {...item} />
+          {messages.map((item, index) => (
+            <SingleMessage
+              key={`message-${index}`}
+              picture={user.picture}
+              name={user.firstName + ' ' + user.lastName}
+              {...item}
+            />
           ))}
         </div>
         <form className="relative flex w-full" onSubmit={handleSubmit}>
           <FormInput
             placeholder="Type something..."
             extraClasses="mb-0"
+            handleFocus={handleTypeEvent}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
           />
@@ -91,19 +117,23 @@ const MessageDetails = () => {
 MessageDetails.getLayout = MessagesLayout;
 export default MessageDetails;
 
-const SingleMessage = ({ timeStamp, message }) => (
+const SingleMessage = ({ timeStamp, message, picture, name }) => (
   <div className="my-s3 flex text-sm">
-    <div>
-      <Image src={andrew} alt="" width={40} height={40} />
-    </div>
-    <div>
+    <Image
+      src={picture}
+      alt=""
+      width={40}
+      height={40}
+      className="rounded-full"
+    />
+    <div className="ml-3">
       <p>
-        Andrew Qiao{' '}
+        {name}{' '}
         <span className="pl-s2">
           {new Date(timeStamp).toLocaleString('en-US', {
-            // day: '2-digit',
-            // month: 'short',
-            // year: 'numeric',
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
             hour: '2-digit',
             minute: '2-digit',
             hour12: true,

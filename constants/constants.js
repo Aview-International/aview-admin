@@ -291,16 +291,6 @@ export const DASHBOARD_NAVLINKS = [
     image: home,
     route: '/messages',
   },
-  {
-    text: 'Pending Jobs',
-    image: home,
-    route: '/pending-jobs',
-  },
-  {
-    text: 'Completed Jobs',
-    image: home,
-    route: '/completed-jobs',
-  },
 ];
 
 export const DAHSHBOARD_SERVICES = [
