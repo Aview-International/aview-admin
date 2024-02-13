@@ -82,6 +82,7 @@ const AccountInfo = ({ account, setReloadTrigger }) => {
 };
 
 const AccountDetails = ({ account, setModal, setReloadTrigger }) => {
+  console.log(account);
   const [accountCharge, setAccountCharge] = useState(account.charge ?? 12);
   const [editCharge, setEditCharge] = useState(false);
 
