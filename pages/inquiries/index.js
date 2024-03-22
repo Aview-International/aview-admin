@@ -1,7 +1,6 @@
 import DashboardLayout from '../../components/dashboard/DashboardLayout';
 import PageTitle from '../../components/SEO/PageTitle';
 import Image from 'next/image';
-import { useRouter } from 'next/router';
 import Logo from '../../public/img/aview/logo.svg';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -58,7 +57,7 @@ const Messages = () => {
     <>
       <PageTitle title="Reviewers" />
       <div className="rounded-2xl bg-white-transparent px-s5 py-s4 text-white">
-        <p className="text-2xl">Reviewers Messages</p>
+        <p className="text-2xl">Reviewers Inquiries</p>
         {modalOpen && (
           <MessageDetails
             closeModal={closeModal}
@@ -125,7 +124,7 @@ const MessageDetails = ({
         <p className="mb-s3 rounded-md bg-white-transparent p-s2">
           {messages[index].message}
         </p>
-        <div className='max-w-[13rem] mx-auto'>
+        <div className="mx-auto max-w-[13rem]">
           <DashboardButton onClick={resolve} isLoading={isLoading}>
             Mark as resolved
           </DashboardButton>
@@ -139,7 +138,7 @@ const EmptyState = () => {
   return (
     <div className="flex h-full w-full flex-col items-center justify-center">
       <Image src={Logo} alt="Aview" width={120} height={120} />
-      <p className="mt-s3 text-2xl">No reviewers message yet</p>
+      <p className="mt-s3 text-2xl">No reviewers inquiries yet</p>
     </div>
   );
 };
