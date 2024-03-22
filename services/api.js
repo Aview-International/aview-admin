@@ -30,5 +30,8 @@ export const getReviewerMessages = async () =>
 export const markReviewerConcernAsCompleted = async (id) =>
   (await axiosInstance.put(`/admin/resolve-translator-inquiry/${id}`)).data;
 
+export const getAllAdmins = async () =>
+  (await axiosInstance.get('/admin/all-reviewers')).data;
+
 export const signInWithGoogleAcc = async (token) =>
   await axiosInstance.post(baseUrl + 'auth/login', { token });

@@ -272,11 +272,6 @@ export const DASHBOARD_NAVLINKS = [
     route: '/dashboard',
   },
   {
-    text: 'Add Admin',
-    image: home,
-    route: '/create-admin',
-  },
-  {
     text: 'Admins',
     image: home,
     route: '/admin-accounts',

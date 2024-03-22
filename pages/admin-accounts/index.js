@@ -2,21 +2,26 @@ import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import DashboardLayout from '../../components/dashboard/DashboardLayout';
 import DashboardButton from '../../components/UI/DashboardButton';
-import { getAllAdmins } from '../api/firebase';
 import CopyToClipboard from '../../public/img/icons/copy-to-clipboard.svg';
 import { toast } from 'react-toastify';
+import { errorHandler } from '../../utils/errorHandler';
+import { getAllAdmins } from '../../services/api';
 
 const AdminAccounts = () => {
   const [accounts, setAccounts] = useState([]);
 
-  const getAdminAccount = async () => {
-    const res = await getAllAdmins();
-    setAccounts(Object.values(res));
-  };
-
   useEffect(() => {
-    getAdminAccount();
+    (async () => {
+      try {
+        const res = await getAllAdmins();
+        console.log(res);
+        setAccounts(res);
+      } catch (error) {
+        errorHandler(error);
+      }
+    })();
   }, []);
+
   return (
     <div>
       <h2 className="text-6xl">All admins</h2>
@@ -34,7 +39,7 @@ const AccountInfo = ({ account }) => {
   return (
     <div className="my-s4 flex w-[30rem] items-center gap-12">
       {modal && <AccountDetails account={account} setModal={setModal} />}
-      <div>
+      {/* <div>
         <Image
           loader={() => user.picture}
           unoptimized
@@ -44,8 +49,8 @@ const AccountInfo = ({ account }) => {
           src={account.picture}
           alt={account.lastName}
         />
-      </div>
-      <div className="w-1/2">{account.firstName + ' ' + account.lastName}</div>
+      </div> */}
+      <div className="w-1/2">{account.name}</div>
       <div className="w-1/2">
         <DashboardButton onClick={() => setModal(true)}>
           View Profile
@@ -68,7 +73,7 @@ const AccountDetails = ({ account, setModal }) => {
         >
           x
         </div>
-        <div>
+        {/* <div>
           <Image
             width={100}
             height={100}
@@ -76,12 +81,10 @@ const AccountDetails = ({ account, setModal }) => {
             src={account.picture}
             alt={account.lastName}
           />
-        </div>
+        </div> */}
         <div>
-          Full Name:
-          <span className="pl-s2">
-            {account.firstName + ' ' + account.lastName}
-          </span>
+          Name:
+          <span className="pl-s2">{account.name}</span>
         </div>
 
         <div className="my-s3">
@@ -100,24 +103,6 @@ const AccountDetails = ({ account, setModal }) => {
             />
           </span>
           <CopyText contentRef={emailRef} />
-        </div>
-
-        <div className="my-s3 flex justify-between">
-          Password:
-          <span className="pl-s2">
-            <input
-              type="text"
-              ref={passwwordRef}
-              readOnly
-              value={account.password}
-              className="bg-black focus:outline-none"
-            />
-          </span>
-          <CopyText contentRef={passwwordRef} />
-        </div>
-
-        <div>
-          Role: <span className="pl-s2">{account.role}</span>
         </div>
       </div>
     </div>

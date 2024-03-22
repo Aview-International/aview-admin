@@ -42,14 +42,6 @@ const database = getDatabase(app);
 // Initialize the auth service
 const auth = getAuth();
 
-export const getAllAdmins = async () => {
-  const res = await get(ref(database, `admins/`)).then((snapshot) => {
-    if (snapshot.exists()) return snapshot.val();
-    else return null;
-  });
-  return res;
-};
-
 export const getAllCreators = async () => {
   const res = await get(ref(database, `users/`)).then((snapshot) => {
     if (snapshot.exists()) return snapshot.val();
