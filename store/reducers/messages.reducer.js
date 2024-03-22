@@ -7,6 +7,7 @@ const initialState = {
     id: '',
   },
   messages: [],
+  reviewersMessages: [],
 };
 
 const messagesSlice = createSlice({
@@ -39,12 +40,21 @@ const messagesSlice = createSlice({
       //   });
       // }
     },
+
+    setReviewerMessages(state, action) {
+      const { payload } = action;
+      state.reviewersMessages = payload;
+    },
   },
 });
 
 const messagesReducer = messagesSlice.reducer;
 
-export const { setUserMessages, setIncomingMessages, setSenderProfile } =
-  messagesSlice.actions;
+export const {
+  setUserMessages,
+  setIncomingMessages,
+  setSenderProfile,
+  setReviewerMessages,
+} = messagesSlice.actions;
 
 export default messagesReducer;
