@@ -25,10 +25,10 @@ export const getUserProfile = async (id) => {
 };
 
 export const getReviewerMessages = async () =>
-  (await axiosInstance.get('/admin/reviewer-support')).data;
+  (await axiosInstance.get('/admin/get-all-translator-inquiries')).data;
 
 export const markReviewerConcernAsCompleted = async (id) =>
-  (await axiosInstance.put(`/admin/reviewer-support/${id}`)).data;
+  (await axiosInstance.put(`/admin/resolve-translator-inquiry/${id}`)).data;
 
 export const signInWithGoogleAcc = async (token) =>
   await axiosInstance.post(baseUrl + 'auth/login', { token });
