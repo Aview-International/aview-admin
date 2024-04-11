@@ -291,6 +291,11 @@ export const DASHBOARD_NAVLINKS = [
     image: home,
     route: '/messages',
   },
+  {
+    text: 'Playground',
+    image: home,
+    route: '/playground',
+  },
 ];
 
 export const DAHSHBOARD_SERVICES = [

@@ -26,5 +26,11 @@ export default async function middleware(request) {
 }
 
 export const config = {
-  matcher: ['/messages', '/admin-accounts', '/create-admin', '/dashboard'],
+  matcher: [
+    '/messages',
+    '/admin-accounts',
+    '/create-admin',
+    '/dashboard',
+    '/playground/:path*',
+  ],
 };

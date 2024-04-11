@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import SendIcon from '../../public/img/icons/send-message.svg';
 import FormInput from '../../components/FormComponents/FormInput';
 import { getUserMessages, getUserProfile } from '../../services/api';
-import { errorHandler } from '../../utils/errorHandler';
+import { ErrorHandler } from '../../utils/errorHandler';
 import {
   setSenderProfile,
   setUserMessages,
@@ -28,7 +28,7 @@ const MessageDetails = () => {
       const res = await getUserMessages(id);
       dispatch(setUserMessages(res));
     } catch (error) {
-      errorHandler(error);
+      ErrorHandler(error);
     }
   };
 
@@ -37,7 +37,7 @@ const MessageDetails = () => {
       const res = await getUserProfile(id);
       dispatch(setSenderProfile(res));
     } catch (error) {
-      errorHandler(error);
+      ErrorHandler(error);
     }
   };
 
