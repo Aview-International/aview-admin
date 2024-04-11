@@ -8,7 +8,7 @@ import {
   getReviewerMessages,
   markReviewerConcernAsCompleted,
 } from '../../services/api';
-import { errorHandler } from '../../utils/errorHandler';
+import { ErrorHandler } from '../../utils/errorHandler';
 import { setReviewerMessages } from '../../store/reducers/messages.reducer';
 import CopyToClipboard from '../../public/img/icons/copy-to-clipboard.svg';
 import { toast } from 'react-toastify';
@@ -25,7 +25,7 @@ const Messages = () => {
       const res = await getReviewerMessages();
       dispatch(setReviewerMessages(res));
     } catch (error) {
-      errorHandler(error);
+      ErrorHandler(error);
     }
   };
 
@@ -108,7 +108,7 @@ const MessageDetails = ({
       closeModal();
     } catch (error) {
       setIsLoading(false);
-      errorHandler(error);
+      ErrorHandler(error);
     }
   };
   return (

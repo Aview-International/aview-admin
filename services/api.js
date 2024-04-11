@@ -1,10 +1,14 @@
 import axios from 'axios';
 import { baseUrl } from './baseUrl';
+import FormData from 'form-data';
+import Cookies from 'js-cookie';
 
 // Create an Axios instance with default config
 const axiosInstance = axios.create({
   baseURL: baseUrl,
-  withCredentials: true,
+  headers: {
+    Authorization: 'Bearer ' + Cookies.get('token'),
+  },
 });
 
 export const getSenders = async () => {
@@ -33,5 +37,38 @@ export const markReviewerConcernAsCompleted = async (id) =>
 export const getAllAdmins = async () =>
   (await axiosInstance.get('/admin/all-reviewers')).data;
 
-export const signInWithGoogleAcc = async (token) =>
-  await axiosInstance.post(baseUrl + 'auth/login', { token });
+export const uploadManualTranscription = async (file, setProgress) => {
+  let formData = new FormData();
+  formData.append('file', file);
+  const response = await axiosInstance({
+    method: 'POST',
+    url: baseUrl + 'transcription/manual-transcription',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: formData,
+    onUploadProgress: (progressEvent) =>
+      setProgress(
+        Math.round((progressEvent.loaded * 100) / progressEvent.total)
+      ),
+  });
+  return response.data;
+};
+
+export const manualSeparation = async (file, setProgress) => {
+  let formData = new FormData();
+  formData.append('file', file);
+  const response = await axiosInstance({
+    method: 'POST',
+    url: baseUrl + 'dubbing/manual/separation',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: formData,
+    onUploadProgress: (progressEvent) =>
+      setProgress(
+        Math.round((progressEvent.loaded * 100) / progressEvent.total)
+      ),
+  });
+  return response.data;
+};

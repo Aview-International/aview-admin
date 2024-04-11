@@ -4,14 +4,12 @@ import Edit from '../../public/img/icons/edit.svg';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import useWindowSize from '../../hooks/useWindowSize';
 import Logo from '../../public/img/aview/logo.svg';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setMessageSenders } from '../../store/reducers/senders.reducer';
 import { getSenders } from '../../services/api';
-import { socket } from '../../socket';
-import { errorHandler } from '../../utils/errorHandler';
+import { ErrorHandler } from '../../utils/errorHandler';
 import { setSenderProfile } from '../../store/reducers/messages.reducer';
 
 const Messages = ({ children }) => {
@@ -23,7 +21,7 @@ const Messages = ({ children }) => {
       const response = await getSenders();
       dispatch(setMessageSenders(response));
     } catch (error) {
-      errorHandler(error);
+      ErrorHandler(error);
     }
   };
 

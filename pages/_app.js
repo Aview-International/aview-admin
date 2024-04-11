@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import store from '../store';
 import { Provider, useDispatch } from 'react-redux';
 import { SocketProvider, useSocket } from '../socket';
-import { errorHandler } from '../utils/errorHandler';
+import { ErrorHandler } from '../utils/errorHandler';
 import { setUserMessages } from '../store/reducers/messages.reducer';
 import { getUserMessages } from '../services/api';
 import { useRouter } from 'next/router';
@@ -67,7 +67,7 @@ const Layout = ({ Component, pageProps }) => {
         const res = await getUserMessages(id);
         dispatch(setUserMessages(res));
       } catch (error) {
-        errorHandler(error);
+        ErrorHandler(error);
       }
       // if (id) fetchUserMessages();
     });

@@ -1,12 +1,10 @@
 import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useContext, useState } from 'react';
 import Border from '../components/UI/Border';
 import Shadow from '../components/UI/Shadow';
 import Google from '../public/img/icons/google.svg';
 import {
-  checkUserEmail,
   createNewSuperAdmin,
   signInWithGoogle,
 } from './api/firebase';
@@ -15,7 +13,6 @@ import ButtonLoader from '../public/loaders/ButtonLoader';
 import { toast } from 'react-toastify';
 import PageTitle from '../components/SEO/PageTitle';
 import Cookies from 'js-cookie';
-import { signInWithGoogleAcc } from '../services/api';
 
 const Login = () => {
   const router = useRouter();
@@ -26,7 +23,6 @@ const Login = () => {
     const emails = JSON.parse(process.env.NEXT_PUBLIC_ALLOWED_EMAILS);
     setIsLoading(true);
     const { _tokenResponse } = await signInWithGoogle();
-    console.log(_tokenResponse);
     updateUser({
       ...user,
       email: _tokenResponse.email,
@@ -42,7 +38,6 @@ const Login = () => {
         _tokenResponse.email,
         _tokenResponse.photoUrl
       );
-      await signInWithGoogleAcc(_tokenResponse.idToken);
 
       Cookies.set('uid', _tokenResponse.localId, { expires: 3 });
       Cookies.set('token', _tokenResponse.idToken, { expires: 3 });
