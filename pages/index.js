@@ -4,10 +4,7 @@ import { useContext, useState } from 'react';
 import Border from '../components/UI/Border';
 import Shadow from '../components/UI/Shadow';
 import Google from '../public/img/icons/google.svg';
-import {
-  createNewSuperAdmin,
-  signInWithGoogle,
-} from './api/firebase';
+import { createNewSuperAdmin, signInWithGoogle } from './api/firebase';
 import { UserContext } from '../store/user-profile';
 import ButtonLoader from '../public/loaders/ButtonLoader';
 import { toast } from 'react-toastify';

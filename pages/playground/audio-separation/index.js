@@ -5,9 +5,10 @@ import UploadIcon from '../../../public/img/icons/upload-icon1.svg';
 import Link from 'next/link';
 import Border from '../../../components/UI/Border';
 import { useState } from 'react';
-import { manualSeparation } from '../../../services/api';
+import { completeSeparation, manualSeparation } from '../../../services/api';
 import PageTitle from '../../../components/SEO/PageTitle';
-import { ErrorHandler } from '../../../utils/errorHandler';
+import ErrorHandler from '../../../utils/errorHandler';
+import { subscribeToDB } from '../../api/firebase';
 
 const AudioSeparation = () => {
   const [file, setFile] = useState(null);
@@ -18,8 +19,15 @@ const AudioSeparation = () => {
     try {
       setIsLoading(true);
       const res = await manualSeparation(file, setUploadProgress);
-      setIsLoading(false);
-      //   window.open(res, '_blank');
+      const unsubscribe = subscribeToDB(res.timestamp, async (data) => {
+        if (data.status === 'complete') {
+          window.open(data.background, '_blank');
+          window.open(data.vocals, '_blank');
+          unsubscribe();
+          await completeSeparation(res.timestamp);
+          setIsLoading(false);
+        }
+      });
     } catch (error) {
       setIsLoading(false);
       ErrorHandler(error);
