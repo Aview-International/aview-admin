@@ -1,27 +1,19 @@
 import { NextResponse } from 'next/server';
-import { decodeJwt } from 'jose';
+import { checkTokenExpiry } from './utils/jwtExpiry';
 
-const authStatus = (token) => {
-  if (!token) return false;
-  const data = decodeJwt(token);
-  if (!data) return false;
-  const newDate = new Date(data.exp) * 1000;
-  if (newDate < new Date().getTime()) return false;
-  else {
-    const newTime = newDate - new Date().getTime();
-    return {
-      newTime,
-      data,
-    };
-  }
-};
+export async function middleware(request) {
+  const currentUrl = request.url;
+  const response = NextResponse.redirect(new URL('/?rdr=true', currentUrl));
+  const sessionCookie = request.cookies.get('token')?.value;
 
-export default async function middleware(request) {
-  const token = request.cookies.get('token')?.value;
-  const status = authStatus(token);
-  if (!status) {
-    request.cookies.delete('token');
-    return NextResponse.redirect(new URL('/', request.url));
+  try {
+    if (!checkTokenExpiry(sessionCookie)) {
+      response.cookies.set('redirectUrl', currentUrl);
+      return response;
+    }
+  } catch (error) {
+    response.cookies.set('redirectUrl', currentUrl);
+    return response;
   }
 }
 

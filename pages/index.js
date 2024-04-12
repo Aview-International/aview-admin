@@ -39,7 +39,11 @@ const Login = () => {
       Cookies.set('uid', _tokenResponse.localId);
       Cookies.set('token', _tokenResponse.idToken);
       toast.success('Login successful');
-      router.push('/dashboard');
+      const prevRoute = Cookies.get('redirectUrl');
+      if (prevRoute) {
+        Cookies.remove('redirectUrl');
+        router.push(decodeURIComponent(prevRoute));
+      } else router.push('/dashboard');
     } else {
       toast.error('Authentication failed');
     }
