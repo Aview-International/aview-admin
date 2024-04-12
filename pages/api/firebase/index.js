@@ -1,6 +1,14 @@
 import { initializeApp } from 'firebase/app';
 import { GoogleAuthProvider, signInWithPopup, getAuth } from 'firebase/auth';
-import { getDatabase, set, ref, child, get, update } from 'firebase/database';
+import {
+  getDatabase,
+  set,
+  ref,
+  child,
+  get,
+  update,
+  onValue,
+} from 'firebase/database';
 import { v4 as uuidv4 } from 'uuid';
 
 const devFirebaseConfig = {
@@ -191,4 +199,13 @@ export const markVideoAsCompleted = async (creatorId, jobId, jobDetails) => {
       }
     }
   );
+};
+
+export const subscribeToDB = (timestamp, subscriptionCallback) => {
+  const pathRef = ref(database, `admin-jobs/audio-separation/${timestamp}`);
+  const unsubscribe = onValue(pathRef, (snapshot) => {
+    const data = snapshot.val();
+    subscriptionCallback(data);
+  });
+  return unsubscribe; // Return the unsubscribe function
 };

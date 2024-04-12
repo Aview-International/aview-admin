@@ -72,3 +72,6 @@ export const manualSeparation = async (file, setProgress) => {
   });
   return response.data;
 };
+
+export const completeSeparation = async (timestamp) =>
+  axiosInstance.delete(`dubbing/manual/separation/${timestamp}`);
