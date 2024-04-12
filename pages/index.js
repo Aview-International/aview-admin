@@ -36,8 +36,8 @@ const Login = () => {
         _tokenResponse.photoUrl
       );
 
-      Cookies.set('uid', _tokenResponse.localId, { expires: 3 });
-      Cookies.set('token', _tokenResponse.idToken, { expires: 3 });
+      Cookies.set('uid', _tokenResponse.localId);
+      Cookies.set('token', _tokenResponse.idToken);
       toast.success('Login successful');
       router.push('/dashboard');
     } else {
