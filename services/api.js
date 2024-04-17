@@ -62,6 +62,7 @@ export const manualSeparation = async (file, setProgress) => {
     method: 'POST',
     url: baseUrl + 'dubbing/manual/separation',
     headers: {
+      ...axiosInstance.defaults.headers.common, // spread the existing headers
       'Content-Type': 'multipart/form-data',
     },
     data: formData,
