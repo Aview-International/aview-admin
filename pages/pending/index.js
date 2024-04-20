@@ -145,7 +145,7 @@ const pending = () => {
                 <div className="flex flex-col items-center justify-center">
                 <h2 className="mb-s2 text-2xl text-white">{submitHeader}</h2>
                 <p className="text-white">
-                    Please wait 1-2 business days for payment to process. Thank you.
+                    Payment will be issued out shortly. Thank you.
                 </p>
                 </div>
             </div>
