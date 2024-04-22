@@ -105,12 +105,12 @@ const Dashboard = () => {
 
                 </div>
 
-                <div className="w-full h-[290px] rounded-lg bg-white-transparent mt-s2 p-s3">
+                <div className="w-full h-[300px] rounded-lg bg-white-transparent mt-s2 p-s3">
                     <div className="text-white text-3xl font-bold">
                         How it works
                     </div>
 
-                    <div className="text-lg text-white">
+                    <div className="text-lg text-white mt-s2">
                         Invite other reviewers to AVIEW and earn $5 per 10 referrals. 
                     </div>
 
@@ -119,22 +119,56 @@ const Dashboard = () => {
                     </div>
 
 
-                    <FormInput
-                    label="Share your referrable link by copying and sharing it"
-                    value={1}
-                    placeholder="Your email"
-                    onChange={(e) => {}}
-                    name="title"
-                    labelClasses="text-lg text-white !mb-s2"
-                    valueClasses="text-lg font-light"
-                    classes="!mb-s4"
-                  />
+                    <div className="flex flex-row items-center">
+                      <FormInput
+                      label="Share your referral link by copying and sharing it."
+                      value={1}
+                      placeholder="Your email"
+                      onChange={(e) => {}}
+                      name="title"
+                      labelClasses="text-lg text-white !mb-s3"
+                      valueClasses="text-lg font-light"
+                      classes="!mb-s4"
+                    />
+                     <div className="float-right h-[47px] w-[161px] mt-[12px] ml-s2">
+                      <Button
+                        theme="light"
+                        classes="flex justify-center items-center h-[36px] !px-s2"
+                        onClick={()=>{}}
+                      >
+                        Copy Link
+                      </Button>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="w-full h-[200px] rounded-lg bg-white-transparent mt-s2 p-s3">
-                    <div className="text-white text-3xl font-bold">
+                <div className="w-full h-[190px] rounded-lg bg-white-transparent mt-s2 p-s3">
+                    <div className="text-white text-3xl font-bold mb-s2">
                         Invite a reviewer
                     </div>
+                    <div className="flex flex-row items-center">
+                      <FormInput
+                      label="Invite a reviewer and get 500 credits instantly."
+                      value={1}
+                      placeholder="Your email"
+                      onChange={(e) => {}}
+                      name="title"
+                      labelClasses="text-lg text-white !mb-s3"
+                      valueClasses="text-lg font-light"
+                      classes="!mb-s4"
+                    />
+                     <div className="float-right h-[47px] w-[161px] mt-[12px] ml-s2">
+                      <Button
+                        theme="light"
+                        classes="flex justify-center items-center h-[36px] !px-s2"
+                        onClick={()=>{}}
+                      >
+                        Invite
+                      </Button>
+                    </div>
+                  </div>
+
+                    
                 </div>
 
                 
