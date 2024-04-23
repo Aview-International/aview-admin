@@ -19,11 +19,16 @@ import Button from '../../components/UI/Button';
 import ErrorHandler from '../../utils/errorHandler';
 import Image from 'next/image';
 import FormInput from '../../components/FormComponents/FormInput';
+import UploadImage from '../../components/UI/UploadImage';
+import { baseUrl } from '../../services/baseUrl';
 
 const Dashboard = () => {
   const [translator, setTranslator] = useState(null);
   const [translatorId, setTranslatorId] = useState(null);
   const [settings, setSettings] = useState(false);
+  const [referralVerification, setReferralVerification] = useState(false);
+  const [verificationImage, setVerificationImage] = useState(undefined);
+  const [referralEmail, setReferralEmail] = useState("");
   
 
   const handleTranslator = async () => {
@@ -37,7 +42,10 @@ const Dashboard = () => {
   
   };
 
-  
+  const handleCopy = async (textToCopy) => {
+    await navigator.clipboard.writeText(textToCopy);
+    alert('Text copied to clipboard!');
+  };
 
   useEffect(() => {
     handleTranslator();
@@ -67,6 +75,27 @@ const Dashboard = () => {
             }}
             translator={translator}
           />
+          {referralVerification &&
+            <div className="w-full h-full flex justify-center">
+              <div className="w-[1000px] h-full flex flex-col">
+                <div className="w-full h-[220px] rounded-lg bg-white-transparent mt-s5 p-s3">
+                  <div className="text-white text-3xl font-bold">
+                    Referral Verification
+                  </div>
+
+                  <div className="text-lg text-white mt-s2">
+                    Please take a picture of yourself completing the following prompt: 
+                  </div>
+
+                  <div className="text-lg text-white mt-s2 p-s1 bg-white-transparent rounded-lg w-fit">
+                    stick up two fingers 
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          }
+          {referralVerification==false && 
           <div className="w-full h-full flex justify-center">
             <div className="w-[1000px] h-full flex flex-col">
                 <div className="w-full h-[220px] rounded-lg bg-white-transparent mt-s5 p-s3">
@@ -122,7 +151,7 @@ const Dashboard = () => {
                     <div className="flex flex-row items-center">
                       <FormInput
                       label="Share your referral link by copying and sharing it."
-                      value={1}
+                      value={`${baseUrl.slice(0, -1)}?referralTranslatorId=${translatorId}`}
                       placeholder="Your email"
                       onChange={(e) => {}}
                       name="title"
@@ -134,7 +163,7 @@ const Dashboard = () => {
                       <Button
                         theme="light"
                         classes="flex justify-center items-center h-[36px] !px-s2"
-                        onClick={()=>{}}
+                        onClick={()=>{handleCopy(`${baseUrl.slice(0, -1)}?referralTranslatorId=${translatorId}`)}}
                       >
                         Copy Link
                       </Button>
@@ -149,9 +178,9 @@ const Dashboard = () => {
                     <div className="flex flex-row items-center">
                       <FormInput
                       label="Invite a reviewer and get 500 credits instantly."
-                      value={1}
-                      placeholder="Your email"
-                      onChange={(e) => {}}
+                      value={referralEmail}
+                      placeholder="Email"
+                      onChange={(e) => {setReferralEmail(e.target.value)}}
                       name="title"
                       labelClasses="text-lg text-white !mb-s3"
                       valueClasses="text-lg font-light"
@@ -170,12 +199,10 @@ const Dashboard = () => {
 
                     
                 </div>
-
-                
-                
-
             </div>
-          </div>
+          </div>}
+
+
         </DashboardLayoutNoSidebar>
       </div>
     </>
