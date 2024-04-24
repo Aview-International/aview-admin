@@ -44,6 +44,14 @@
     @apply transition-all duration-300 ease-in-out;
   }
 
+  .border-gradient {
+    display:inline-block;
+    border-radius:3px;
+    background:
+     linear-gradient(#000017 0 0) padding-box,
+     linear-gradient(54deg, #ff00ff 0%, #00ffff 100%) border-box; 
+  }
+
   .title {
     @apply text-7xl font-bold text-white md:text-8xl;
   }

@@ -433,3 +433,7 @@ export const clearOverdueJobFromTimer = async (
 export const getCreatorProfile = async (userId) => {
   return axiosInstance.post('admin/get-creator-profile', { userId });
 };
+
+export const sendReferralEmail = async (email, translatorId, origin) => {
+  return axiosInstance.post('admin/send-referral-email', {email, translatorId, origin});
+}
