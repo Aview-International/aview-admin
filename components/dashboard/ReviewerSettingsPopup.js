@@ -132,7 +132,6 @@ const ReviewerSettingsPopup = ({ show, onClose, translator }) => {
 
   const handleSetValues = () => {
     if (translator) {
-      console.log(translator.profilePicture);
       setName(translator.name);
       setEmail(translator.email);
       setNativeLanguage(translator.nativeLanguage);

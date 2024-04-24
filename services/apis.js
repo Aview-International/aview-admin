@@ -266,7 +266,8 @@ export const createTranslator = async (
   nativeLanguage,
   country,
   paymentMethod,
-  paymentDetails
+  paymentDetails,
+  referralTranslatorId,
 ) => {
   return axiosInstance.post(baseUrl + 'admin/create-translator', {
     name,
@@ -275,6 +276,7 @@ export const createTranslator = async (
     country,
     paymentMethod,
     paymentDetails,
+    referralTranslatorId,
   });
 };
 
@@ -437,3 +439,15 @@ export const getCreatorProfile = async (userId) => {
 export const sendReferralEmail = async (email, translatorId, origin) => {
   return axiosInstance.post('admin/send-referral-email', {email, translatorId, origin});
 }
+
+export const getTranslatorsWithPendingReferrals = async (translatorId) => {
+  return axiosInstance.post('admin/get-translators-with-pending-referrals', {translatorId});
+}
+
+export const uploadReferralVerificationPicture = async (translatorId, picture) => {
+  const formData = new FormData();
+  formData.append('translatorId', translatorId);
+  formData.append('picture', picture);
+
+  return axiosInstance.post('admin/upload-referral-verification-picture', formData);
+};

@@ -172,7 +172,7 @@ const Dashboard = () => {
       <div className="relative min-w-[1300px]">
         <DashboardLayoutNoSidebar
           setSettings={setSettings}
-          profilePicture={translator ? translator.profilePicture : null}
+          profilePicture={translator && translator.profilePicture ? translator.profilePicture : null}
           name={translator ? translator.name : ''}
         >
           <ReviewerSettingsPopup

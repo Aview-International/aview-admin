@@ -4,25 +4,31 @@ import PageTitle from '../../components/SEO/PageTitle';
 import {
   getTranslatorFromUserId,
   sendReferralEmail,
+  getTranslatorsWithPendingReferrals,
+  uploadReferralVerificationPicture,
 } from '../../services/apis';
 import { authStatus } from '../../utils/authStatus';
 import Cookies from 'js-cookie';
 import ReviewerSettingsPopup from '../../components/dashboard/ReviewerSettingsPopup';
 import Button from '../../components/UI/Button';
 import ErrorHandler from '../../utils/errorHandler';
-import Image from 'next/image';
 import FormInput from '../../components/FormComponents/FormInput';
 import UploadImage from '../../components/UI/UploadImage';
 import SuccessHandler from '../../utils/successHandler';
+import FullScreenLoader from '../../public/loaders/FullScreenLoader';
+import Popup from '../../components/UI/PopupWithBorder';
 
 const Dashboard = () => {
   const [translator, setTranslator] = useState(null);
   const [translatorId, setTranslatorId] = useState(null);
   const [settings, setSettings] = useState(false);
-  const [referralVerification, setReferralVerification] = useState(false);
+  const [referralVerification, setReferralVerification] = useState(true);
   const [verificationImage, setVerificationImage] = useState(undefined);
   const [referralEmail, setReferralEmail] = useState("");
   const [origin, setOrigin] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [pending, setPending] = useState(0);
+  const [popupSubmitPicture, setPopupSubmitPicture] = useState(false);
 
   const handleTranslator = async () => {
     const token = Cookies.get('session');
@@ -32,8 +38,38 @@ const Dashboard = () => {
     setTranslator(translatorInfo.data);
     setTranslatorId(translatorInfo.data._id);
 
+    console.log(translatorInfo.data);
+
+
+    if (translatorInfo.data.referralData.referralStatus == "complete"){
+      setReferralVerification(false);
+      setIsLoading(false);
+      const pending = await getTranslatorsWithPendingReferrals(translatorInfo.data._id);
+      setPending(pending.data);
+      
+    }else if (translatorInfo.data.referralData.referralStatus == "pending"){
+      setReferralVerification(true);
+      setIsLoading(false);
+    }
   
   };
+
+  const handleSubmitImage = async() =>{
+    try{
+      if (verificationImage){
+        await uploadReferralVerificationPicture(translatorId, verificationImage).then(()=>{
+          SuccessHandler("Submitted!");
+          setPopupSubmitPicture(true);
+        });
+      }else{
+        throw new Error("Please upload image!")
+      }
+    }catch(error){
+      ErrorHandler(error);
+    }
+    
+  }
+
 
   const handleCopy = async (textToCopy) => {
     await navigator.clipboard.writeText(textToCopy);
@@ -72,11 +108,24 @@ const Dashboard = () => {
 
   return (
     <>
+      <Popup show={popupSubmitPicture} onClose={()=>{setPopupSubmitPicture(false)}}>
+        <div className="h-full w-full">
+          <div className="w-[500px] rounded-2xl bg-indigo-2 p-s3">
+            <div className="flex flex-col items-center justify-center">
+              <h2 className="mb-s2 text-2xl text-white">Submitted!</h2>
+              <p className="text-white">
+                Please wait a 1-2 days to get verified.
+              </p>
+            </div>
+          </div>
+        </div>
+      </Popup>
       <PageTitle title="Referral" />
+      {isLoading && <FullScreenLoader />}
       <div className="relative min-w-[1300px]">
         <DashboardLayoutNoSidebar
           setSettings={setSettings}
-          profilePicture={translator ? translator.profilePicture : null}
+          profilePicture={translator && translator.profilePicture  ? translator.profilePicture : null}
           name={translator ? translator.name : ''}
         >
           <ReviewerSettingsPopup
@@ -99,7 +148,7 @@ const Dashboard = () => {
                   </div>
 
                   <div className="text-lg text-white mt-s2 p-s1 bg-white-transparent rounded-lg w-fit">
-                    stick up two fingers 
+                    Take a picture of yourself containing both your face as well as a piece of paper that has your name written on it.
                   </div>
 
                   <div className="w-full flex justify-center mt-s3">
@@ -113,7 +162,7 @@ const Dashboard = () => {
                       <Button
                         theme="light"
                         classes="flex justify-center items-center h-[36px] !px-s2"
-                        onClick={()=>{}}
+                        onClick={()=>{handleSubmitImage()}}
                       >
                         Submit
                       </Button>
@@ -133,7 +182,7 @@ const Dashboard = () => {
                     <div className="mt-s5 flex flex-row items-center justify-between">
                         <div className="flex flex-col">
                             <div className="font-bold text-white text-[64px] leading-none">
-                                10
+                                {pending}
                             </div>
                             <div className="text-lg text-white mt-s1">
                                 Referrals pending
@@ -142,7 +191,7 @@ const Dashboard = () => {
 
                         <div className="flex flex-col">
                             <div className="font-bold text-white text-[64px] leading-none">
-                                15
+                                {translator ? translator.referralData.referralsCompleted : 0}
                             </div>
                             <div className="text-lg text-white mt-s1">
                                 Reviewers referred
@@ -151,7 +200,7 @@ const Dashboard = () => {
 
                         <div className="flex flex-col">
                             <div className="font-bold text-white text-[64px] leading-none">
-                                $20
+                                ${formatMoney(translator ?  translator.referralData.referralMoneyEarned: 0)}
                             </div>
                             <div className="text-lg text-white mt-s1">
                                 Earned

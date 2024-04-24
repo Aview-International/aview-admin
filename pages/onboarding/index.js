@@ -20,6 +20,8 @@ import messages from '../../public/img/icons/messages.svg';
 import Textarea from '../../components/FormComponents/Textarea';
 import PageTitle from '../../components/SEO/PageTitle';
 import MultipleSelectInput from '../../components/FormComponents/MultipleSelectInput';
+import { useRouter } from 'next/router';
+
 
 const Onboarding = () => {
   const [name, setName] = useState('');
@@ -39,6 +41,9 @@ const Onboarding = () => {
   const [popupSubmit, setPopupSubmit] = useState(false);
   const [supportEmail, setSupportEmail] = useState('');
   const [supportInquiry, setSupportInquiry] = useState('');
+
+  const router = useRouter();
+  const { referralTranslatorId } = router.query;
 
   const handleCheckBox = (name) => {
     setCheckedState(name);
@@ -70,6 +75,8 @@ const Onboarding = () => {
       } else {
         try {
           localStorage.setItem('emailForSignIn', email);
+          
+
 
           await createTranslator(
             name,
@@ -78,6 +85,7 @@ const Onboarding = () => {
             country,
             checkedState,
             paymentDetails,
+            referralTranslatorId,
           );
 
           setPopupSubmit(true);

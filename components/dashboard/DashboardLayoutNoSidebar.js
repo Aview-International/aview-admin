@@ -7,7 +7,7 @@ const DashboardStructure = ({
   children,
   setSettings,
   name,
-  profilePicture = defaultProfilePicture,
+  profilePicture,
 }) => {
   return (
     <>
