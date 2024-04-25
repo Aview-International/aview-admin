@@ -29,6 +29,7 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [pending, setPending] = useState(0);
   const [popupSubmitPicture, setPopupSubmitPicture] = useState(false);
+  const [loader, setLoader] = useState("");
 
   const handleTranslator = async () => {
     const token = Cookies.get('session');
@@ -57,6 +58,7 @@ const Dashboard = () => {
   const handleSubmitImage = async() =>{
     try{
       if (verificationImage){
+        setLoader("image");
         await uploadReferralVerificationPicture(translatorId, verificationImage).then(()=>{
           SuccessHandler("Submitted!");
           setPopupSubmitPicture(true);
@@ -67,6 +69,7 @@ const Dashboard = () => {
     }catch(error){
       ErrorHandler(error);
     }
+    setLoader("");
     
   }
 
@@ -95,12 +98,16 @@ const Dashboard = () => {
 
   const handleInvite = async() => {
     try{
+      setLoader("invite");
       await sendReferralEmail(referralEmail, translatorId, window.location.origin).then(()=>{
         SuccessHandler("Invite sent!");
       });
     }catch (error){
       ErrorHandler(error);
     }
+
+    setLoader("");
+
    
   }
 
@@ -163,6 +170,7 @@ const Dashboard = () => {
                         theme="light"
                         classes="flex justify-center items-center h-[36px] !px-s2"
                         onClick={()=>{handleSubmitImage()}}
+                        isLoading={loader === 'image'}
                       >
                         Submit
                       </Button>
@@ -268,6 +276,7 @@ const Dashboard = () => {
                         theme="light"
                         classes="flex justify-center items-center h-[36px] !px-s2"
                         onClick={()=>{handleInvite()}}
+                        isLoading={loader === 'invite'}
                       >
                         Invite
                       </Button>

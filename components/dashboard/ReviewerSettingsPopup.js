@@ -14,6 +14,8 @@ import CheckBox from '../../components/FormComponents/CheckBox';
 import Popup from '../../components/UI/PopupNormal';
 import MultipleSelectInput from '../../components/FormComponents/MultipleSelectInput';
 import { toast } from 'react-toastify';
+import Link from 'next/link';
+
 
 const ReviewerSettingsPopup = ({ show, onClose, translator }) => {
   const [name, setName] = useState('');
@@ -320,7 +322,20 @@ const ReviewerSettingsPopup = ({ show, onClose, translator }) => {
               />
             )}
 
-            <div className="float-right mt-s4 h-[47px] w-[134px]">
+
+            <div className="float-right mt-s4 h-[47px] w-fit flex flex-row items-center">
+              <div className="mr-s2">
+              <Link href="/referral">
+              <Button
+                theme="dark"
+                onClick={()=>{}}
+                classes="flex justify-center items-center h-[47px] w-[200px] !px-s2"
+              >
+                Referral program
+              </Button>
+              </Link>
+              </div>
+              <div>
               <Button
                 theme="light"
                 onClick={handleUpdate}
@@ -328,6 +343,7 @@ const ReviewerSettingsPopup = ({ show, onClose, translator }) => {
               >
                 Update
               </Button>
+              </div>
             </div>
           </div>
         </div>
