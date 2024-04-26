@@ -121,7 +121,7 @@ const Dashboard = () => {
             <div className="flex flex-col items-center justify-center">
               <h2 className="mb-s2 text-2xl text-white">Submitted!</h2>
               <p className="text-white">
-                Please wait a 1-2 days to get verified.
+                Please wait a 1-2 days to get verified. You must also complete 5 jobs before getting verified for referrals.
               </p>
             </div>
           </div>
