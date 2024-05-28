@@ -17,7 +17,7 @@ const isTokenExpired = (token) => {
       const data = decodeJwt(token);
       if (!data) return false;
       const newDate = new Date(data.exp) * 1000;
-      if (newDate < new Date().getTime()) return 'token expired';
+      if (newDate < new Date().getTime()) return true;
       else {
         return data;
       }
@@ -32,9 +32,9 @@ axiosInstance.interceptors.request.use(
     const user = auth.currentUser;
     if (!user) return config;
     let token = user.stsTokenManager.accessToken;
-    if (isTokenExpired(token) === 'token expired') {
+    if (isTokenExpired(token) === true || !isTokenExpired(token)) {
       const newToken = await auth.currentUser.getIdToken(true); // force token refresh
-      Cookies.set('token', newToken);
+      Cookies.set('session', newToken);
       token = newToken;
     }
 
