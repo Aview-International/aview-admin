@@ -1,103 +1,76 @@
-import {
-  DAHSHBOARD_SERVICES,
-  DAHSHBOARD_TRANSLATED_LANGUAGES,
-} from '../../constants/constants';
+import { useSelector } from 'react-redux';
 import CheckBox from '../FormComponents/CheckBox';
-import FormInput from '../FormComponents/FormInput';
-import Textarea from '../FormComponents/Textarea';
-import OnboardingButton from '../Onboarding/button';
+import ToggleButton from '../FormComponents/ToggleButton';
+import DashboardButton from '../UI/DashboardButton';
 
 const TranslateOptions = ({
-  handleServices,
-  handleLanguages,
   handleSubmit,
   payload,
   setPayload,
   isLoading,
+  disabled,
+  uploadProgress,
 }) => {
+  const languages = useSelector((state) => state.aview.allLanguages);
+
+  const handleChange = (language) => {
+    let allLanguages = [...payload.languages];
+    if (allLanguages.includes(language))
+      allLanguages.splice(allLanguages.indexOf(language), 1);
+    else allLanguages.push(language);
+    setPayload({ ...payload, languages: allLanguages });
+  };
+
   return (
-    <div>
-      <h3 className="mb-s3 text-2xl">Translate</h3>
-      <p className="mb-s1 text-xl">
-        What languages do you need translations for?
+    <>
+      <h3 className="mb-s3 text-2xl font-bold">Servicing</h3>
+      <p className="mb-s4 text-lg">
+        Which languages do you want these videos serviced in?
       </p>
-      <div className="flex flex-wrap">
-        {DAHSHBOARD_TRANSLATED_LANGUAGES.map((language, index) => (
-          <span
-            className={`mr-s1 mb-s1 cursor-pointer rounded-full py-s1 px-s3 text-lg ${
-              payload.languages.includes(language)
-                ? 'bg-white text-black'
-                : 'bg-gray-1'
-            }`}
-            key={`language-${index}`}
-            onClick={() => handleLanguages(language)}
+      <div className="max-h-[368px] overflow-y-auto overflow-x-hidden pr-s1.5">
+        {languages.map((language, index) => (
+          <div
+            className="min-w-max(100%,360px) gradient-dark mb-s2 flex items-center justify-between rounded-md p-s1.5"
+            key={index}
           >
-            {language}
-          </span>
+            <div className="ml-3">
+              <h2 className="text-lg">{language.dialect}</h2>
+              <p className="text-sm">{language.language}</p>
+            </div>
+            <ToggleButton
+              isChecked={payload.languages.includes(language)}
+              handleChange={() => handleChange(language)}
+            />
+          </div>
         ))}
       </div>
-      {payload.languages.includes('Others') && (
-        <div className="mt-s4">
-          <FormInput
-            label="Please specify language(s), separated with comma"
-            value={payload.otherLanguages}
-            placeholder="Other language(s)"
-            onChange={(e) =>
-              setPayload({
-                ...payload,
-                otherLanguages: e.target.value,
-              })
-            }
-          />
-        </div>
-      )}
-      <p className="mt-s4 text-xl">What services do you need?</p>
-      <div className="mt-s1 mb-s4">
-        {DAHSHBOARD_SERVICES.map((service, index) => (
-          <span
-            className={`mr-s1 mb-s1 cursor-pointer rounded-full py-s1 px-s3 text-lg ${
-              payload.services.includes(service)
-                ? 'bg-white text-black'
-                : 'bg-gray-1'
-            }`}
-            key={`service-${index}`}
-            onClick={() => handleServices(service)}
-          >
-            {service}
-          </span>
-        ))}
-      </div>
-      <Textarea
-        label="Is there anything else you would like us to know?"
-        placeholder="Additional notes"
-        value={payload.additionalNote}
-        onChange={(e) =>
-          setPayload({
-            ...payload,
-            additionalNote: e.target.value,
-          })
-        }
-      />
+      <br />
       <CheckBox
         onChange={(e) =>
-          setPayload({ ...payload, saveSettingsForFuture: e.target.checked })
+          setPayload({ ...payload, saveSettings: e.target.checked })
         }
         label="Save these settings for future translations"
       />
       <br />
-      <CheckBox
-        onChange={(e) =>
-          setPayload({ ...payload, allowUsPostVideo: e.target.checked })
-        }
-        label="Would you like us to post this video as well?"
-      />
-      <br />
-      <div className="w-36">
-        <OnboardingButton isLoading={isLoading} onClick={handleSubmit}>
-          Submit
-        </OnboardingButton>
-      </div>
-    </div>
+      {isLoading &&
+        (uploadProgress < 100 ? (
+          <div className="h-3 w-full rounded-full">
+            <div
+              className="gradient-2 h-full rounded-full"
+              style={{ width: uploadProgress + '%' }}
+            ></div>
+          </div>
+        ) : (
+          <p>Processing video please wait</p>
+        ))}
+      {!isLoading && (
+        <div className="w-full md:w-36">
+          <DashboardButton isLoading={isLoading} onClick={handleSubmit} disabled={disabled}>
+            Submit
+          </DashboardButton>
+        </div>
+      )}
+    </>
   );
 };
 

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { getAdminProfile } from '../../pages/api/firebase';
+import { getAdminProfile } from '../../services/firebase';
 import { UserContext } from '../../store/user-profile';
 import FullScreenLoader from '../../public/loaders/FullScreenLoader';
 import DashBoardHeader from './Header';

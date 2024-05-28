@@ -4,7 +4,7 @@ import DashboardLayout from '../../components/dashboard/DashboardLayout';
 import DashboardButton from '../../components/UI/DashboardButton';
 import CopyToClipboard from '../../public/img/icons/copy-to-clipboard.svg';
 import { toast } from 'react-toastify';
-import { ErrorHandler } from '../../utils/errorHandler';
+import ErrorHandler from '../../utils/errorHandler';
 import { getAllAdmins } from '../../services/api';
 
 const AdminAccounts = () => {
