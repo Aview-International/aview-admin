@@ -17,7 +17,7 @@ import ErrorHandler from '../utils/errorHandler';
 import { setAllLanguages } from '../store/reducers/aview.reducer';
 
 const useUserProfile = () => {
-  const isLoggedIn = useSelector((el) => el.user?.isLoggedIn);
+  const isLoggedIn = useSelector((el) => el.user.isLoggedIn);
   const dispatch = useDispatch();
   const uid = Cookies.get('uid');
   const [isLoading, setIsLoading] = useState(true);
@@ -47,8 +47,10 @@ const useUserProfile = () => {
   };
 
   useEffect(() => {
+    // get all languages from the regions array
     dispatch(setAllLanguages());
 
+    // get all user related information
     (async () => {
       try {
         if (isLoggedIn) {

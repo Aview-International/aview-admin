@@ -29,11 +29,20 @@ const DashboardSidebar = ({ user }) => {
 const Profile = ({ user }) => {
   return (
     <div className="justify-content mt-s8 mb-s5 flex flex-col items-center">
-      {user.picture && (
+      {user?.picture ? (
         <Image
           loader={() => user.picture}
-          src={user.picture ?? Default}
+          src={user.picture}
           alt="Profile Picture"
+          unoptimized
+          width={100}
+          height={100}
+          className="rounded-full"
+        />
+      ) : (
+        <Image
+          src={Default}
+          alt="Default Profile Picture"
           unoptimized
           width={100}
           height={100}
@@ -41,7 +50,7 @@ const Profile = ({ user }) => {
         />
       )}
       <h3 className="mt-s2 mb-s1 text-lg">
-        {user.firstName} {user?.lastName}
+        {user?.firstName} {user?.lastName}
       </h3>
       <p className="text-sm">Super Admin</p>
     </div>

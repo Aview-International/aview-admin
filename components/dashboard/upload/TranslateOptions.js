@@ -27,10 +27,10 @@ const TranslateOptions = ({
   };
 
   useEffect(() => {
-    if (userData.saveSettings)
+    if (userData?.saveSettings)
       setPayload({ ...payload, languages: userData.preferences });
-    else setPayload({ ...payload, languages: userData.languages });
-  }, [userData.languages]);
+    else setPayload({ ...payload, languages: userData?.languages });
+  }, [userData?.languages]);
 
   const handleChange = (language) => {
     let allLanguages = [...payload.languages];
@@ -48,7 +48,7 @@ const TranslateOptions = ({
         additional language? You can create more international channels.
       </p>
       <div className="max-h-[368px] overflow-y-auto overflow-x-hidden pr-s1.5">
-        {userData.languages.map((language, index) => (
+        {userData?.languages.map((language, index) => (
           <div
             className="min-w-max(100%,360px) gradient-dark mb-s2 flex items-center justify-between rounded-md p-s1.5"
             key={index}

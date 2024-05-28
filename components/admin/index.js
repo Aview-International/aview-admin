@@ -12,7 +12,7 @@ import { updateRequiredServices } from '../api/firebase/index.js';
 
 const Upload = () => {
   const router = useRouter();
-  const userId = useSelector((el) => el.user?._id);
+  const userId = useSelector((el) => el.user._id);
   const [video, setVideo] = useState(undefined);
   const [uploadProgress, setUploadProgress] = useState(0); //show uplaod status
   const [isLoading, setIsLoading] = useState(false);
