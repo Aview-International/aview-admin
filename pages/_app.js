@@ -11,6 +11,11 @@ import { ErrorHandler } from '../utils/errorHandler';
 import { setUserMessages } from '../store/reducers/messages.reducer';
 import { getUserMessages } from '../services/api';
 import { useRouter } from 'next/router';
+import { onAuthStateChanged } from 'firebase/auth';
+import Cookies from 'js-cookie';
+import { setAuthState } from '../store/reducers/user.reducer';
+import { setAllLanguages } from '../store/reducers/aview.reducer';
+import { auth } from '../services/firebase';
 
 const MyApp = ({ Component, pageProps }) => {
   useEffect(() => {
@@ -53,6 +58,20 @@ const Layout = ({ Component, pageProps }) => {
   const router = useRouter();
   const { id } = router.query;
   useEffect(() => {
+    // handle auth
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) dispatch(setAuthState(true));
+      else {
+        Cookies.remove('uid');
+        Cookies.remove('session');
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    dispatch(setAllLanguages());
     socket.auth = { userId: 'admin' };
     socket.on('connect', () => {
       return;
@@ -62,14 +81,12 @@ const Layout = ({ Component, pageProps }) => {
     });
 
     socket.on('new_user_message', async (data) => {
-      console.log(data);
       try {
         const res = await getUserMessages(id);
         dispatch(setUserMessages(res));
       } catch (error) {
         ErrorHandler(error);
       }
-      // if (id) fetchUserMessages();
     });
 
     return () => {

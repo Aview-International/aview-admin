@@ -2,7 +2,6 @@ import Image from 'next/image';
 import { Fragment, useEffect, useState } from 'react';
 import DashboardLayout from '../../components/dashboard/DashboardLayout';
 import DashboardButton from '../../components/UI/DashboardButton';
-import { getAllCreators, updateAccountCharge } from '../api/firebase';
 import Youtube from '../../public/img/icons/youtube.svg';
 import Facebook from '../../public/img/icons/facebook.svg';
 import Instagram from '../../public/img/icons/instagram.svg';
@@ -10,6 +9,7 @@ import FormInput from '../../components/FormComponents/FormInput';
 import Check from '../../public/img/icons/check.svg';
 import Cancel from '../../public/img/icons/cancel.svg';
 import Edit from '../../public/img/icons/edit.svg';
+import { getAllCreators, updateAccountCharge } from '../../services/firebase';
 
 const CreatorAccounts = () => {
   const [accounts, setAccounts] = useState([]);

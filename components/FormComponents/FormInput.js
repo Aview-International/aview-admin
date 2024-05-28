@@ -32,10 +32,11 @@ const FormInput = ({
   textBlack,
   handleFocus,
   type,
+  extraClasses = 'mb-s1',
 }) => {
   return (
     <div className="relative w-full text-xl text-white">
-      <label htmlFor={_id} className={`mb-s1 block w-full`}>
+      <label htmlFor={_id} className={`block w-full ${extraClasses}`}>
         {label}
       </label>
       <div>
@@ -49,7 +50,7 @@ const FormInput = ({
             className={`peer w-full rounded-[5px] px-s2 py-2 text-white focus:outline-none ${
               bgColor ? bgColor : 'bg-black'
             } ${textBlack ? 'text-black' : 'text-white'}`}
-            onChange={(e) => onChange(e)}
+            onChange={onChange}
             value={value}
           />
           <div

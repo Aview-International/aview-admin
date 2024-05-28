@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { completeSeparation, manualSeparation } from '../../../services/api';
 import PageTitle from '../../../components/SEO/PageTitle';
 import ErrorHandler from '../../../utils/errorHandler';
-import { subscribeToDB } from '../../api/firebase';
+import { subscribeToDB } from '../../../services/firebase';
 
 const AudioSeparation = () => {
   const [file, setFile] = useState(null);
