@@ -112,6 +112,28 @@ export const manualSeparation = async (file, setProgress) => {
 export const completeSeparation = async (timestamp) =>
   axiosInstance.delete(`dubbing/manual/separation/${timestamp}`);
 
+export const uploadCreatorVideo = async (
+  video,
+  creatorId,
+  languages,
+  additionalNote,
+  setUploadProgress
+) => {
+  let formData = new FormData();
+  formData.append('video', video);
+  formData.append('creatorId', creatorId);
+  formData.append('additionalNote', additionalNote);
+  for (const lang of languages) formData.append('languages', lang);
+
+  await axiosInstance.post('transcription/upload-creator-video', formData, {
+    onUploadProgress: (progressEvent) =>
+      setUploadProgress(
+        Math.round((progressEvent.loaded * 100) / progressEvent.total)
+      ),
+  });
+  return;
+};
+
 export const getSupportedLanguages = async () => {
   const response = await axiosInstance.get(
     baseUrl + 'admin/supported-languages'

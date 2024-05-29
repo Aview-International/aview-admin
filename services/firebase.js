@@ -76,6 +76,25 @@ export const getAdminProfile = async (_id) => {
   return res;
 };
 
+// update user preferences
+export const updateRequiredServices = async (payload, uid) => {
+  get(child(ref(database), `users/${uid}`)).then(async (snapshot) => {
+    if (snapshot.exists()) {
+      const data = snapshot.val();
+      const postData = {
+        ...data,
+        ...payload,
+      };
+      const updates = {
+        [`users/${uid}`]: postData,
+      };
+      await update(ref(database), updates);
+      return;
+    } else throw new Error('User does not exist');
+  });
+  return;
+};
+
 // get all user data from the database
 export const getUserProfile = async (_id) => {
   const res = await get(ref(database, `users/${_id}`)).then((snapshot) => {

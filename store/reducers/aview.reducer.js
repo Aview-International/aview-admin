@@ -3,6 +3,7 @@ import { SUPPORTED_REGIONS } from '../../constants/constants';
 
 const initialState = {
   allLanguages: [],
+  allPlans: [],
 };
 
 const aviewSlice = createSlice({
