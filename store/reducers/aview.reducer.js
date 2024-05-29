@@ -29,13 +29,9 @@ const aviewSlice = createSlice({
       });
       state.allLanguages = langsArray;
     },
-    setAllPlans: (state, action) => {
-      const { payload } = action;
-      state.allPlans = payload;
-    },
   },
 });
 
-export const { setAllLanguages, setAllPlans } = aviewSlice.actions;
+export const { setAllLanguages } = aviewSlice.actions;
 
 export default aviewSlice.reducer;

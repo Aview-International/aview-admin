@@ -1,14 +1,13 @@
 import { useState } from 'react';
-import DashboardLayout from '../../components/dashboard/upload/DashboardLayout'; //from aview-website
-import TranslateOptions from '../../components/dashboard/upload/TranslateOptions'; //from aview-website
-import UploadVideo from '../../components/dashboard/upload/UploadVideo'; //from aview-website
+import TranslateOptions from '../../components/dashboard/TranslateOptions';
+import UploadVideo from '../../components/dashboard/upload/UploadVideo';
 import PageTitle from '../../components/SEO/PageTitle';
 import { uploadCreatorVideo } from '../../services/api.js';
 import ErrorHandler from '../../utils/errorHandler.js';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
-import { updateRequiredServices } from '../api/firebase/index.js';
+import DashboardLayout from '../../components/dashboard/DashboardLayout';
 
 const Upload = () => {
   const router = useRouter();
@@ -30,8 +29,9 @@ const Upload = () => {
 
     try {
       setIsLoading(true);
-      if (payload.saveSettings) updateRequiredServices(preferences, userId);
-      await uploadCreatorVideo( //pushing content to backend
+      // if (payload.saveSettings) updateRequiredServices(preferences, userId);
+      await uploadCreatorVideo(
+        //pushing content to backend
         video,
         userId,
         payload.languages,

@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
-import { getAdminProfile } from '../../pages/api/firebase';
-//import { UserContext } from '../../store/user-profile';     what is this?
+import { getAdminProfile } from '../../services/firebase';
+import { UserContext } from '../../store/user-profile';
 import FullScreenLoader from '../../public/loaders/FullScreenLoader';
 import DashBoardHeader from './Header';
 import DashboardSidebar from './Sidebar';

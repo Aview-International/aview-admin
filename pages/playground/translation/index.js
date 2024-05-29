@@ -9,6 +9,7 @@ import {
   uploadManualSrtTranslation,
 } from '../../../services/api';
 import PageTitle from '../../../components/SEO/PageTitle';
+import ErrorHandler from '../../../utils/errorHandler';
 
 const ManualTranslation = () => {
   const [file, setFile] = useState(null);
@@ -43,7 +44,7 @@ const ManualTranslation = () => {
       setIsLoading(false);
       window.open(res, '_blank');
     } catch (error) {
-      console.log(error);
+      ErrorHandler(error);
     }
   };
 

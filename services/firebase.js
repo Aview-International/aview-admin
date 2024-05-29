@@ -9,7 +9,6 @@ import {
   update,
   onValue,
 } from 'firebase/database';
-import { v4 as uuidv4 } from 'uuid';
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -31,7 +30,7 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
 // Initialize the auth service
-const auth = getAuth();
+export const auth = getAuth();
 
 export const getAllCreators = async () => {
   const res = await get(ref(database, `users/`)).then((snapshot) => {
@@ -64,34 +63,6 @@ export const createNewSuperAdmin = async (
     picture,
   };
   await set(ref(database, `super-admins/${id}`), data);
-};
-
-// create new admin account in the database after signup
-export const createNewAdmin = async (payload, picture) => {
-  let chars =
-    '0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  let passwordLength = 10;
-  let password = '';
-  let id = uuidv4();
-  for (let i = 0; i <= passwordLength; i++) {
-    var randomNumber = Math.floor(Math.random() * chars.length);
-    password += chars.substring(randomNumber, randomNumber + 1);
-  }
-  const data = {
-    ...payload,
-    picture,
-    uid: uuidv4(),
-    password,
-    isBlocked: false,
-  };
-  get(child(ref(database), `admins/${id}`)).then(async (snapshot) => {
-    if (snapshot.exists()) {
-      let newid = uuidv4();
-      await set(ref(database, `admins/${newid}`), data);
-    } else {
-      await set(ref(database, `admins/${id}`), data);
-    }
-  });
 };
 
 // get all user data from the database
@@ -205,6 +176,15 @@ export const markVideoAsCompleted = async (creatorId, jobId, jobDetails) => {
 
 export const subscribeToDB = (timestamp, subscriptionCallback) => {
   const pathRef = ref(database, `admin-jobs/audio-separation/${timestamp}`);
+  const unsubscribe = onValue(pathRef, (snapshot) => {
+    const data = snapshot.val();
+    subscriptionCallback(data);
+  });
+  return unsubscribe; // Return the unsubscribe function
+};
+
+export const subscribeToHistory = (subscriptionCallback) => {
+  const pathRef = ref(database, `user-jobs/pending/admin`);
   const unsubscribe = onValue(pathRef, (snapshot) => {
     const data = snapshot.val();
     subscriptionCallback(data);

@@ -9,12 +9,17 @@ const ManualJobs = () => {
       </h2>
       <div>
         <Link
+          href="/playground/social-media"
+          className="my-s2 block hover:underline"
+        >
+          Go to Social Media Servicing
+        </Link>
+        <Link
           href="/playground/transcription"
           className="my-s2 block hover:underline"
         >
           Go to Transcriptions
         </Link>
-
         <Link
           href="/playground/translation"
           className="my-s2 block hover:underline"
