@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import { DASHBOARD_NAVLINKS } from '../../constants/constants';
 import aviewLogo from '../../public/img/aview/logo.svg';
 import signout from '../../public/img/icons/signout.svg';
-import Default from '../../public/img/people/default.png';
 
 const DashboardSidebar = ({ user }) => {
   return (
@@ -29,26 +28,6 @@ const DashboardSidebar = ({ user }) => {
 const Profile = ({ user }) => {
   return (
     <div className="justify-content mt-s8 mb-s5 flex flex-col items-center">
-      {user?.picture ? (
-        <Image
-          loader={() => user.picture}
-          src={user.picture}
-          alt="Profile Picture"
-          unoptimized
-          width={100}
-          height={100}
-          className="rounded-full"
-        />
-      ) : (
-        <Image
-          src={Default}
-          alt="Default Profile Picture"
-          unoptimized
-          width={100}
-          height={100}
-          className="rounded-full"
-        />
-      )}
       <h3 className="mt-s2 mb-s1 text-lg">
         {user?.firstName} {user?.lastName}
       </h3>
