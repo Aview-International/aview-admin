@@ -63,7 +63,7 @@ const Layout = ({ Component, pageProps }) => {
       if (user) dispatch(setAuthState(true));
       else {
         Cookies.remove('uid');
-        Cookies.remove('session');
+        Cookies.remove('token');
       }
     });
 
