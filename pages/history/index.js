@@ -78,13 +78,15 @@ const Container = ({ pendingJobs, completedJobs }) => {
           </div>
           <div className="text-center text-[#eab221]">{job.status}</div>
           <div>
-            {job.status === 'complete' && (
+            {job.status === 'complete' || job.status === 'review' ? (
               <button
                 onClick={() => handleDownload(job)}
                 className="cursor-pointer text-blue underline"
               >
                 Download
               </button>
+            ) : (
+              'Processing...'
             )}
           </div>
         </div>

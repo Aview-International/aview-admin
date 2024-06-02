@@ -4,43 +4,33 @@ import UploadVideo from '../../components/dashboard/upload/UploadVideo';
 import PageTitle from '../../components/SEO/PageTitle';
 import { uploadCreatorVideo } from '../../services/api.js';
 import ErrorHandler from '../../utils/errorHandler.js';
-import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 import DashboardLayout from '../../components/dashboard/DashboardLayout';
 
 const Upload = () => {
   const router = useRouter();
-  const userId = useSelector((el) => el.user?._id);
   const [video, setVideo] = useState(undefined);
-  const [uploadProgress, setUploadProgress] = useState(0); //show uplaod status
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [payload, setPayload] = useState({
-    languages: '',
+    languages: [],
     saveSettings: false,
     additionalNote: '',
   });
 
   const handleSubmit = async () => {
-    const preferences = {
-      preferences: payload.languages,
-      saveSettings: payload.saveSettings,
-    };
-
     try {
       setIsLoading(true);
-      // if (payload.saveSettings) updateRequiredServices(preferences, userId);
       await uploadCreatorVideo(
-        //pushing content to backend
         video,
-        userId,
         payload.languages,
         payload.additionalNote,
         setUploadProgress
       );
       toast.success('Tasks submitted succesfully 🚀');
       setIsLoading(false);
-      router.push('/dashboard');
+      router.push('/history');
     } catch (error) {
       setIsLoading(false);
       ErrorHandler(error);
@@ -65,6 +55,7 @@ const Upload = () => {
               payload={payload}
               setPayload={setPayload}
               isLoading={isLoading}
+              disabled={payload.languages.length < 1 || !video}
               uploadProgress={uploadProgress}
             />
           </div>

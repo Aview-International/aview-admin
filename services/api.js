@@ -1,9 +1,10 @@
 import axios from 'axios';
-import { baseUrl } from './baseUrl';
 import FormData from 'form-data';
 import Cookies from 'js-cookie';
 import { decodeJwt } from 'jose';
 import { auth } from './firebase';
+
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 // Create an Axios instance with default config
 const axiosInstance = axios.create({
@@ -114,18 +115,16 @@ export const completeSeparation = async (timestamp) =>
 
 export const uploadCreatorVideo = async (
   video,
-  creatorId,
   languages,
   additionalNote,
   setUploadProgress
 ) => {
   let formData = new FormData();
   formData.append('video', video);
-  formData.append('creatorId', creatorId);
   formData.append('additionalNote', additionalNote);
   for (const lang of languages) formData.append('languages', lang);
 
-  await axiosInstance.post('transcription/upload-creator-video', formData, {
+  await axiosInstance.post('transcription/upload-admin-video', formData, {
     onUploadProgress: (progressEvent) =>
       setUploadProgress(
         Math.round((progressEvent.loaded * 100) / progressEvent.total)
