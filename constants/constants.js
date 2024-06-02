@@ -47,6 +47,11 @@ export const DASHBOARD_NAVLINKS = [
     route: '/dashboard',
   },
   {
+    text: 'Upload',
+    image: home,
+    route: '/upload',
+  },
+  {
     text: 'Admins',
     image: home,
     route: '/admin-accounts',

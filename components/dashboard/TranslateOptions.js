@@ -27,7 +27,7 @@ const TranslateOptions = ({
       <p className="mb-s4 text-lg">
         Which languages do you want these videos serviced in?
       </p>
-      <div className="max-h-[368px] overflow-y-auto overflow-x-hidden pr-s1.5">
+      <div className="max-h-[468px] overflow-y-auto overflow-x-hidden pr-s1.5">
         {languages.map((language, index) => (
           <div
             className="min-w-max(100%,360px) gradient-dark mb-s2 flex items-center justify-between rounded-md p-s1.5"
@@ -38,19 +38,19 @@ const TranslateOptions = ({
               <p className="text-sm">{language.language}</p>
             </div>
             <ToggleButton
-              isChecked={payload.languages.includes(language)}
-              handleChange={() => handleChange(language)}
+              isChecked={payload.languages.includes(language.language)}
+              handleChange={() => handleChange(language.language)}
             />
           </div>
         ))}
       </div>
       <br />
-      <CheckBox
+      {/* <CheckBox
         onChange={(e) =>
           setPayload({ ...payload, saveSettings: e.target.checked })
         }
         label="Save these settings for future translations"
-      />
+      /> */}
       <br />
       {isLoading &&
         (uploadProgress < 100 ? (
@@ -65,7 +65,11 @@ const TranslateOptions = ({
         ))}
       {!isLoading && (
         <div className="w-full md:w-36">
-          <DashboardButton isLoading={isLoading} onClick={handleSubmit} disabled={disabled}>
+          <DashboardButton
+            isLoading={isLoading}
+            onClick={handleSubmit}
+            disabled={disabled}
+          >
             Submit
           </DashboardButton>
         </div>
