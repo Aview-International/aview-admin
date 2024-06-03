@@ -65,7 +65,7 @@ const Container = ({ pendingJobs, completedJobs }) => {
         >
           <div>{job.videoData?.caption.replace(/\.mp4$/i, '')}</div>
           <p>{new Date(+job.timestamp).toDateString()}</p>
-          <div className="">
+          <div>
             {job?.translatedLanguage
               ? job.translatedLanguage
               : typeof job?.languages === 'string'
@@ -76,9 +76,13 @@ const Container = ({ pendingJobs, completedJobs }) => {
                   </p>
                 ))}
           </div>
-          <div className="text-center text-[#eab221]">{job.status}</div>
+          <div className="text-center text-[#eab221]">
+            {job.status === 'complete' || job.status === 'under review'
+              ? 'complete'
+              : job.status}
+          </div>
           <div>
-            {job.status === 'complete' || job.status === 'review' ? (
+            {job.status === 'complete' || job.status === 'under review' ? (
               <button
                 onClick={() => handleDownload(job)}
                 className="cursor-pointer text-blue underline"
