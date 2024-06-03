@@ -185,5 +185,6 @@ export const getElevenLabsVoices = async () =>
 export const submitAdminTranscriptionLink = async (data) =>
   (await axiosInstance.post('/transcription/admin-social-link', data)).data;
 
-export const getS3DownloadLink = async (timestamp, lang) =>
-  (await axiosInstance.get(`admin/download/${timestamp}/${lang}`)).data;
+export const getS3DownloadLink = async (creatorId, timestamp, lang) =>
+  (await axiosInstance.get(`admin/download/${creatorId}/${timestamp}/${lang}`))
+    .data;

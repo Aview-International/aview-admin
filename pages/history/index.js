@@ -35,8 +35,9 @@ const History = () => {
 const Container = ({ pendingJobs, completedJobs }) => {
   const handleDownload = async (job) => {
     const downloadLink = await getS3DownloadLink(
+      'admin',
       job.timestamp,
-      job.translatedLanguage
+      'output'
     );
     if (downloadLink) {
       const anchor = document.createElement('a');
