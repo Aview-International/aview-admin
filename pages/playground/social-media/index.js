@@ -13,8 +13,10 @@ import TikTok from '../../../public/img/icons/tiktok.svg';
 import ErrorHandler from '../../../utils/errorHandler';
 import { submitAdminTranscriptionLink } from '../../../services/api';
 import TranslateOptions from '../../../components/dashboard/TranslateOptions';
+import { useRouter } from 'next/router';
 
 const SocialMedia = () => {
+  const router = useRouter();
   const [link, setLink] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [payload, setPayload] = useState({
@@ -47,7 +49,7 @@ const SocialMedia = () => {
     setIsLoading(true);
     try {
       await submitAdminTranscriptionLink({ ...payload, link });
-      setIsLoading(false);
+      router.push('/history');
     } catch (error) {
       setIsLoading(false);
       ErrorHandler(error);

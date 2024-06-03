@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import CheckBox from '../FormComponents/CheckBox';
+// import CheckBox from '../FormComponents/CheckBox';
 import ToggleButton from '../FormComponents/ToggleButton';
 import DashboardButton from '../UI/DashboardButton';
 
@@ -27,7 +27,7 @@ const TranslateOptions = ({
       <p className="mb-s4 text-lg">
         Which languages do you want these videos serviced in?
       </p>
-      <div className="max-h-[468px] overflow-y-auto overflow-x-hidden pr-s1.5">
+      <div className="max-h-[378px] overflow-y-auto overflow-x-hidden pr-s1.5">
         {languages.map((language, index) => (
           <div
             className="min-w-max(100%,360px) gradient-dark mb-s2 flex items-center justify-between rounded-md p-s1.5"
