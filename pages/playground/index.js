@@ -14,6 +14,9 @@ const ManualJobs = () => {
         >
           Go to Social Media Servicing
         </Link>
+        <Link href="/playground/upload" className="my-s2 block hover:underline">
+          Go to Upload
+        </Link>
         <Link
           href="/playground/transcription"
           className="my-s2 block hover:underline"

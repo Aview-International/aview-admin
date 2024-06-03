@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import TranslateOptions from '../../components/dashboard/TranslateOptions';
-import UploadVideo from '../../components/dashboard/upload/UploadVideo';
-import PageTitle from '../../components/SEO/PageTitle';
-import { uploadCreatorVideo } from '../../services/api.js';
-import ErrorHandler from '../../utils/errorHandler.js';
+import TranslateOptions from '../../../components/dashboard/TranslateOptions';
+import UploadVideo from '../../../components/dashboard/upload/UploadVideo';
+import PageTitle from '../../../components/SEO/PageTitle';
+import { uploadCreatorVideo } from '../../../services/api.js';
+import ErrorHandler from '../../../utils/errorHandler.js';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
-import DashboardLayout from '../../components/dashboard/DashboardLayout';
+import DashboardLayout from '../../../components/dashboard/DashboardLayout';
 
 const Upload = () => {
   const router = useRouter();
