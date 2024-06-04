@@ -1,17 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import FullScreenLoader from '../../../public/loaders/FullScreenLoader';
 import DashBoardHeader from '.././Header'; //currently different than aview website
 import DashboardSidebar from '.././Sidebar';
 import useUserProfile from '../../../hooks/useUserProfile';
 import DashboardGradient from '../../UI/DashboardGradient';
-import { useDispatch, useSelector } from 'react-redux';
-import { useSocket } from '../../../socket';
-import Cookies from 'js-cookie';
-import {
-  setIncomingMessages,
-  setNewMessageDot,
-} from '../../../store/reducers/messages.reducer';
-import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
 
 // this component fetches user profile
 export const DashboardContainer = ({ children }) => {
@@ -27,29 +20,6 @@ export const DashboardContainer = ({ children }) => {
 
 // this component renders the dashboard structure
 const DashboardStructure = ({ children }) => {
-  const socket = useSocket();
-  const uid = Cookies.get('uid');
-  const dispatch = useDispatch();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (uid) {
-      socket.auth = { userId: uid };
-      socket.on('connect', () => {
-        return;
-      });
-
-      socket.on('new_message', (message) => {
-        dispatch(setIncomingMessages(message));
-        if (router.pathname !== '/dashboard/messages')
-          dispatch(setNewMessageDot(false));
-      });
-    }
-    return () => {
-      socket.disconnect();
-    };
-  }, [uid]);
-
   const [isOpen, setIsOpen] = useState(true);
   const userInfo = useSelector((state) => state.user);
 

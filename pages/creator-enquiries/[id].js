@@ -1,6 +1,5 @@
 import DashboardLayout from '../../components/dashboard/DashboardLayout';
 import PageTitle from '../../components/SEO/PageTitle';
-import Edit from '../../public/img/icons/edit.svg';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import Logo from '../../public/img/aview/logo.svg';
@@ -18,6 +17,7 @@ import SendIcon from '../../public/img/icons/send-message.svg';
 import Modal from '../../components/UI/Modal';
 import DashboardButton from '../../components/UI/DashboardButton';
 import { toast } from 'react-toastify';
+import Link from 'next/link';
 
 const Messages = () => {
   const enquiries = useSelector((state) => state.creatorEnquiries);
@@ -54,30 +54,16 @@ const Messages = () => {
     }
   }, [router.query, enquiries]);
 
-  const handleClose = () => {
-    router.push('/creator-enquiries');
-  };
-
   return (
     <>
       <PageTitle title="Messages" />
       <div className="flex h-full rounded-2xl bg-white-transparent text-white">
         <div className="w-full rounded-l-2xl md:w-60 md:bg-white-transparent">
-          <div
-            className="flex items-center justify-between px-s2 py-s3"
-            onClick={handleClose}
-          >
+          <div className="flex items-center justify-between px-s2 py-s3">
             <p className="text-2xl">Enquiries</p>
-            <Image src={Edit} alt="Edit" width={40} height={40} />
           </div>
           {enquiries.map((data, i) => (
-            <Sender
-              key={i}
-              router={router}
-              data={data}
-              dispatch={dispatch}
-              setSingleEnquiry={setSingleEnquiry}
-            />
+            <Sender key={i} router={router} data={data} dispatch={dispatch} />
           ))}
         </div>
 
@@ -245,22 +231,10 @@ const SingleMessage = ({
   </div>
 );
 
-const Sender = ({ router, data, width, setSingleEnquiry }) => {
-  const goToMessages = () => {
-    setSingleEnquiry(data);
-    router.push(
-      {
-        pathname: '/creator-enquiries',
-        query: 'id=' + data._id,
-      },
-      undefined,
-      { shallow: true }
-    );
-  };
-
+const Sender = ({ router, data, width }) => {
   return (
-    <div
-      onClick={goToMessages}
+    <Link
+      href={`/creator-enquiries/${data._id}`}
       className={`hover:gradient-1 flex cursor-pointer items-center rounded p-s1 md:my-s1 md:px-s2 ${
         router.query.id && router.query.id === data._id && 'gradient-1'
       }`}
@@ -281,7 +255,7 @@ const Sender = ({ router, data, width, setSingleEnquiry }) => {
           Reply {data.firstName}.
         </span>
       </p>
-    </div>
+    </Link>
   );
 };
 
