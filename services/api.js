@@ -188,3 +188,9 @@ export const submitAdminTranscriptionLink = async (data) =>
 export const getS3DownloadLink = async (creatorId, timestamp, lang) =>
   (await axiosInstance.get(`admin/download/${creatorId}/${timestamp}/${lang}`))
     .data;
+
+export const sendEnquiryMessage = async (message, id) =>
+  axiosInstance.post(`messages/admin/${id}`, { message });
+
+export const markTicketAsResolved = async (id) =>
+  await axiosInstance.patch('/messages/support/' + id);
