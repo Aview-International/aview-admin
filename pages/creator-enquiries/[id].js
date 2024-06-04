@@ -1,147 +1,239 @@
-import { MessagesLayout } from '.';
+import DashboardLayout from '../../components/dashboard/DashboardLayout';
+import PageTitle from '../../components/SEO/PageTitle';
+import Edit from '../../public/img/icons/edit.svg';
 import Image from 'next/image';
-import Arrow from '../../public/img/icons/arrow-back.svg';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import SendIcon from '../../public/img/icons/send-message.svg';
-import FormInput from '../../components/FormComponents/FormInput';
-import { getUserMessages, getUserProfile } from '../../services/api';
-import { ErrorHandler } from '../../utils/errorHandler';
-import {
-  setSenderProfile,
-  setUserMessages,
-} from '../../store/reducers/messages.reducer';
-import { useDispatch, useSelector } from 'react-redux';
-import { useSocket } from '../../socket';
 import Logo from '../../public/img/aview/logo.svg';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCreatorEnquiries } from '../../store/reducers/senders.reducer';
+import {
+  getSenders,
+  markTicketAsResolved,
+  sendEnquiryMessage,
+} from '../../services/api';
+import ErrorHandler from '../../utils/errorHandler';
+import Textarea from '../../components/FormComponents/Textarea';
+import SendIcon from '../../public/img/icons/send-message.svg';
+import Modal from '../../components/UI/Modal';
+import DashboardButton from '../../components/UI/DashboardButton';
+import { toast } from 'react-toastify';
 
-const MessageDetails = () => {
-  const socket = useSocket();
-  const dispatch = useDispatch();
+const Messages = () => {
+  const enquiries = useSelector((state) => state.creatorEnquiries);
+  const [singleEnquiry, setSingleEnquiry] = useState({
+    _id: '',
+    createdAt: '',
+    creatorId: '',
+    creatorPicture: '',
+    firstName: '',
+    lastName: '',
+    messages: [],
+    resolved: false,
+    updatedAt: '',
+  });
   const router = useRouter();
-  const { id } = router.query;
-  const [message, setMessage] = useState('');
-  const { messages, user } = useSelector((state) => state.userMessages);
-
-  const fetchUserMessages = async () => {
+  const dispatch = useDispatch();
+  const fetchAllSenders = async () => {
     try {
-      const res = await getUserMessages(id);
-      dispatch(setUserMessages(res));
-    } catch (error) {
-      ErrorHandler(error);
-    }
-  };
-
-  const fetchUserProfile = async () => {
-    try {
-      const res = await getUserProfile(id);
-      dispatch(setSenderProfile(res));
+      const response = await getSenders();
+      dispatch(setCreatorEnquiries(response));
     } catch (error) {
       ErrorHandler(error);
     }
   };
 
   useEffect(() => {
-    if (id) fetchUserMessages();
-    if (id && !user.firstName) fetchUserProfile();
-  }, [id]);
-
-  useEffect(() => {
-    socket.on('new_message', () => {
-      console.log('new new_message');
-      if (id) fetchUserMessages();
-    });
+    fetchAllSenders();
   }, []);
 
-  const handleTypeEvent = () => {
-    // socket.emit('typing', 'admin is typing');
-  };
+  useEffect(() => {
+    if (router.query.id) {
+      const data = enquiries.find((query) => query._id === router.query.id);
+      setSingleEnquiry(data);
+    }
+  }, [router.query, enquiries]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    socket.emit('admin_message', {
-      userId: id,
-      timeStamp: Date.now(),
-      message,
-    });
-    setMessage('');
+  const handleClose = () => {
+    router.push('/creator-enquiries');
   };
 
   return (
-    <div className="relative flex h-full flex-col justify-between">
-      <div className="flex items-center">
-        <button
-          className="block pr-s2 brightness-0 invert md:hidden"
-          onClick={() => router.back()}
-        >
-          <Image src={Arrow} alt="" with={10} height={20} />
-        </button>
-        <div>
-          <Image
-            src={user.picture}
-            alt="Profile Picture"
-            width={32}
-            height={32}
-            className="rounded-full"
-          />
-        </div>
-        <p className="ml-s1 text-2xl">
-          {user.firstName} {user.lastName}
-        </p>
-      </div>
-      <div className="">
-        <div>
-          {messages.map((item, index) => (
-            <SingleMessage
-              key={`message-${index}`}
-              picture={user.picture}
-              name={user.firstName + ' ' + user.lastName}
-              {...item}
+    <>
+      <PageTitle title="Messages" />
+      <div className="flex h-full rounded-2xl bg-white-transparent text-white">
+        <div className="w-full rounded-l-2xl md:w-60 md:bg-white-transparent">
+          <div
+            className="flex items-center justify-between px-s2 py-s3"
+            onClick={handleClose}
+          >
+            <p className="text-2xl">Enquiries</p>
+            <Image src={Edit} alt="Edit" width={40} height={40} />
+          </div>
+          {enquiries.map((data, i) => (
+            <Sender
+              key={i}
+              router={router}
+              data={data}
+              dispatch={dispatch}
+              setSingleEnquiry={setSingleEnquiry}
             />
           ))}
         </div>
-        <form className="relative flex w-full" onSubmit={handleSubmit}>
-          <FormInput
-            placeholder="Type something..."
-            extraClasses="mb-0"
-            handleFocus={handleTypeEvent}
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-          />
-          <button
-            type="submit"
-            className="mx-s1 flex items-center justify-center
-          p-s1"
-          >
-            <Image src={SendIcon} alt="" width={24} height={24} />
-          </button>
-        </form>
+
+        {router.query.id ? (
+          <div className="w-full p-s2 md:w-[calc(100%-240px)]">
+            <CreatorEnquiry
+              data={singleEnquiry}
+              fetchAllSenders={fetchAllSenders}
+            />
+          </div>
+        ) : (
+          <EmptyState />
+        )}
       </div>
+    </>
+  );
+};
+
+const EmptyState = () => {
+  return (
+    <div className="flex h-full w-full flex-col items-center justify-center">
+      <Image src={Logo} alt="Aview" width={120} height={120} />
+      <p className="mt-s3 text-2xl">Select a message to view the content</p>
     </div>
   );
 };
 
-MessageDetails.getLayout = MessagesLayout;
-export default MessageDetails;
+const CreatorEnquiry = ({ data, fetchAllSenders }) => {
+  const [message, setMessage] = useState('');
+  const [modal, setModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (router.query.id) {
+        await sendEnquiryMessage(message, router.query.id);
+        setMessage('');
+        toast.success('Message sent successfully!');
+        await fetchAllSenders();
+      }
+    } catch (error) {
+      ErrorHandler(error);
+    }
+  };
 
-const SingleMessage = ({ timeStamp, message, picture, name, sender }) => (
+  const handleResolve = async () => {
+    try {
+      setLoading(true);
+      await markTicketAsResolved(router.query.id);
+      setModal(false);
+      await fetchAllSenders();
+    } catch (error) {
+      setLoading(false);
+      ErrorHandler(error);
+    }
+  };
+
+  return (
+    <>
+      <PageTitle title="Messages" />
+      {modal && (
+        <Modal closeModal={() => setModal(false)}>
+          <p className="mb-s4 min-w-[200px]">Mark enquiry as resolved?</p>
+          <DashboardButton onClick={handleResolve} isLoading={loading}>
+            Continue
+          </DashboardButton>
+        </Modal>
+      )}
+      <div className="mx-auto flex h-full w-full max-w-[1200px] rounded-2xl bg-gradient-to-b from-[#ffffff26] to-[#ffffff0D] text-white">
+        <div className="relative h-full w-full p-s2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Image
+                src={Logo}
+                alt="Profile Picture"
+                width={32}
+                height={32}
+                className="rounded-full"
+              />
+              <p className="ml-s1 text-2xl font-bold">
+                {data?.firstName} {data?.lastName}
+              </p>
+            </div>
+            <div>
+              <DashboardButton onClick={() => setModal(true)}>
+                mark as resolved
+              </DashboardButton>
+            </div>
+          </div>
+          <div>
+            <div>
+              {data?.messages &&
+                data?.messages.map((item, i) => (
+                  <SingleMessage
+                    key={i}
+                    lastName={data.lastName}
+                    firstName={data.firstName}
+                    creatorPicture={data.creatorPicture}
+                    {...item}
+                  />
+                ))}
+            </div>
+
+            <form
+              className="relative flex w-full"
+              onSubmit={handleSubmit}
+              // ref={inputRef}
+            >
+              <Textarea
+                placeholder="Type message..."
+                value={message}
+                name="Support Form"
+                onChange={(e) => setMessage(e.target.value)}
+              ></Textarea>
+              <button
+                type="submit"
+                className="mx-s1 flex items-center justify-center p-s1"
+              >
+                <Image src={SendIcon} alt="Send" width={24} height={24} />
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+const SingleMessage = ({
+  message,
+  sender,
+  timestamp,
+  lastName,
+  firstName,
+  creatorPicture,
+}) => (
   <div
     className={`my-s3 flex items-start text-sm ${
-      sender === 'user' ? 'flex-row-reverse' : 'flex-row'
+      sender === 'creator' ? 'flex-row-reverse' : 'flex-row'
     }`}
   >
-    <Image
-      src={sender === 'admin' ? Logo : picture}
-      alt=""
-      width={40}
-      height={40}
-      className="rounded-full"
-    />
-    <div className="ml-3">
+    <div className="mx-s2">
+      <Image
+        src={sender === 'admin' ? Logo : creatorPicture}
+        alt=""
+        width={40}
+        height={40}
+        className="rounded-full"
+      />
+    </div>
+    <div>
       <p>
-        {sender === 'admin' ? 'Julia from Aview' : name}
-        <span className="pl-s2">
-          {new Date(timeStamp).toLocaleString('en-US', {
+        {sender === 'admin' ? 'Julia from Aview' : firstName + ' ' + lastName}
+        <span className="pl-s2 font-light">
+          {new Date(timestamp).toLocaleString('en-US', {
             hour: '2-digit',
             minute: '2-digit',
             hour12: true,
@@ -152,3 +244,50 @@ const SingleMessage = ({ timeStamp, message, picture, name, sender }) => (
     </div>
   </div>
 );
+
+const Sender = ({ router, data, width, setSingleEnquiry }) => {
+  const goToMessages = () => {
+    setSingleEnquiry(data);
+    router.push(
+      {
+        pathname: '/creator-enquiries',
+        query: 'id=' + data._id,
+      },
+      undefined,
+      { shallow: true }
+    );
+  };
+
+  return (
+    <div
+      onClick={goToMessages}
+      className={`hover:gradient-1 flex cursor-pointer items-center rounded p-s1 md:my-s1 md:px-s2 ${
+        router.query.id && router.query.id === data._id && 'gradient-1'
+      }`}
+    >
+      <div className="mr-s1 flex items-center justify-center">
+        <Image
+          src={data.creatorPicture}
+          alt="Profile Photo"
+          width={width > 767 ? 24 : 48}
+          height={width > 767 ? 24 : 48}
+          className="rounded-full"
+        />
+      </div>
+      <p className="w-full border-y border-white-transparent py-s1 text-lg md:border-none">
+        {data.firstName} {data.lastName}
+        <br />
+        <span className="inline text-sm text-gray-2 md:hidden">
+          Reply {data.firstName}.
+        </span>
+      </p>
+    </div>
+  );
+};
+
+Messages.getLayout = DashboardLayout;
+
+export default Messages;
+
+export const MessagesLayout = (page) =>
+  DashboardLayout(<Messages>{page}</Messages>);
