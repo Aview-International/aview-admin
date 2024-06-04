@@ -52,13 +52,6 @@ export const getSenders = async () => {
   return response.data;
 };
 
-export const getUserMessages = async (id) => {
-  const response = await axiosInstance.get(
-    baseUrl + 'messages/convo?userId=' + id
-  );
-  return response.data;
-};
-
 export const getUserProfile = async (id) => {
   const response = await axiosInstance.get(baseUrl + 'auth/user?userId=' + id);
   return response.data;
@@ -188,3 +181,9 @@ export const submitAdminTranscriptionLink = async (data) =>
 export const getS3DownloadLink = async (creatorId, timestamp, lang) =>
   (await axiosInstance.get(`admin/download/${creatorId}/${timestamp}/${lang}`))
     .data;
+
+export const sendEnquiryMessage = async (message, id) =>
+  axiosInstance.post(`messages/admin/${id}`, { message });
+
+export const markTicketAsResolved = async (id) =>
+  await axiosInstance.patch('/messages/support/' + id);

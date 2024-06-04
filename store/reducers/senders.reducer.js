@@ -2,16 +2,16 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = [];
 
-const senderSlice = createSlice({
+const creatorEnquiriesSlice = createSlice({
   initialState,
-  name: 'message-senders',
+  name: 'creator-enquiries',
   reducers: {
-    setMessageSenders(state, action) {
+    setCreatorEnquiries(state, action) {
       const { payload } = action;
       return payload;
     },
   },
 });
 
-export const { setMessageSenders } = senderSlice.actions;
-export default senderSlice.reducer;
+export const { setCreatorEnquiries } = creatorEnquiriesSlice.actions;
+export default creatorEnquiriesSlice.reducer;

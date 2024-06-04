@@ -62,9 +62,9 @@ export const DASHBOARD_NAVLINKS = [
     route: '/inquiries',
   },
   {
-    text: 'Messages',
+    text: 'Creator Enquiries',
     image: home,
-    route: '/messages',
+    route: '/creator-enquiries',
   },
   {
     text: 'History',

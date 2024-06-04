@@ -5,7 +5,7 @@ import { DASHBOARD_NAVLINKS } from '../../constants/constants';
 import aviewLogo from '../../public/img/aview/logo.svg';
 import signout from '../../public/img/icons/signout.svg';
 
-const DashboardSidebar = ({ user }) => {
+const DashboardSidebar = () => {
   return (
     <aside className="fixed top-0 left-0 flex max-h-screen w-[170px] flex-col items-center overflow-y-auto py-s4 text-white">
       <div>
@@ -18,19 +18,16 @@ const DashboardSidebar = ({ user }) => {
           />
         </Link>
       </div>
-      <Profile user={user} />
+      <Profile />
       <Navlink />
       <Signout />
     </aside>
   );
 };
 
-const Profile = ({ user }) => {
+const Profile = () => {
   return (
-    <div className="justify-content mt-s8 mb-s5 flex flex-col items-center">
-      <h3 className="mt-s2 mb-s1 text-lg">
-        {user?.firstName} {user?.lastName}
-      </h3>
+    <div className="justify-content mt-s8 mb-s5">
       <p className="text-sm">Super Admin</p>
     </div>
   );

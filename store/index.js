@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import logger from 'redux-logger';
-import sendersReducer from './reducers/senders.reducer';
+import creatorEnquiriesReducer from './reducers/senders.reducer';
 import messagesReducer from './reducers/messages.reducer';
 import userReducer from './reducers/user.reducer';
 import aviewReducer from './reducers/aview.reducer';
@@ -8,7 +8,7 @@ import historyReducer from './reducers/history.reducer';
 
 const store = configureStore({
   reducer: {
-    messageSenders: sendersReducer,
+    creatorEnquiries: creatorEnquiriesReducer,
     userMessages: messagesReducer,
     user: userReducer,
     aview: aviewReducer,

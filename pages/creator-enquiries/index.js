@@ -1,25 +1,23 @@
 import DashboardLayout from '../../components/dashboard/DashboardLayout';
 import PageTitle from '../../components/SEO/PageTitle';
-import Edit from '../../public/img/icons/edit.svg';
-import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import Logo from '../../public/img/aview/logo.svg';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setMessageSenders } from '../../store/reducers/senders.reducer';
+import { setCreatorEnquiries } from '../../store/reducers/senders.reducer';
 import { getSenders } from '../../services/api';
-import { ErrorHandler } from '../../utils/errorHandler';
-import { setSenderProfile } from '../../store/reducers/messages.reducer';
+import ErrorHandler from '../../utils/errorHandler';
+import Link from 'next/link';
 
-const Messages = ({ children }) => {
-  const senders = useSelector((state) => state.messageSenders);
+const Messages = () => {
+  const enquiries = useSelector((state) => state.creatorEnquiries);
   const router = useRouter();
   const dispatch = useDispatch();
   const fetchAllSenders = async () => {
     try {
       const response = await getSenders();
-      dispatch(setMessageSenders(response));
+      dispatch(setCreatorEnquiries(response));
     } catch (error) {
       ErrorHandler(error);
     }
@@ -35,18 +33,14 @@ const Messages = ({ children }) => {
       <div className="flex h-full rounded-2xl bg-white-transparent text-white">
         <div className="w-full rounded-l-2xl md:w-60 md:bg-white-transparent">
           <div className="flex items-center justify-between px-s2 py-s3">
-            <p className="text-2xl">Messages</p>
-            <Image src={Edit} alt="Edit" width={40} height={40} />
+            <p className="text-2xl">Enquiries</p>
           </div>
-          {senders.map((data, i) => (
+          {enquiries.map((data, i) => (
             <Sender key={i} router={router} data={data} dispatch={dispatch} />
           ))}
         </div>
 
-        {router.query.id && (
-          <div className="w-full p-s2 md:w-[calc(100%-240px)]">{children}</div>
-        )}
-        {/* {width > 768 && !router.query.id && <EmptyState />} */}
+        <EmptyState />
       </div>
     </>
   );
@@ -61,22 +55,17 @@ const EmptyState = () => {
   );
 };
 
-const Sender = ({ router, data, width, dispatch }) => {
-  const goToMessages = () => {
-    dispatch(setSenderProfile(data));
-    router.push(`/messages/${data._id}`);
-  };
-
+const Sender = ({ router, data, width }) => {
   return (
-    <div
-      onClick={goToMessages}
-      className={`hover:gradient-1 flex items-center rounded p-s1 md:my-s1 md:px-s2 ${
+    <Link
+      href={`/creator-enquiries/${data._id}`}
+      className={`hover:gradient-1 flex cursor-pointer items-center rounded p-s1 md:my-s1 md:px-s2 ${
         router.query.id && router.query.id === data._id && 'gradient-1'
       }`}
     >
       <div className="mr-s1 flex items-center justify-center">
         <Image
-          src={data.picture}
+          src={data.creatorPicture}
           alt="Profile Photo"
           width={width > 767 ? 24 : 48}
           height={width > 767 ? 24 : 48}
@@ -87,10 +76,10 @@ const Sender = ({ router, data, width, dispatch }) => {
         {data.firstName} {data.lastName}
         <br />
         <span className="inline text-sm text-gray-2 md:hidden">
-          Start a conversation with David.
+          Reply {data.firstName}.
         </span>
       </p>
-    </div>
+    </Link>
   );
 };
 

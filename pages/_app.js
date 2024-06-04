@@ -6,11 +6,6 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import store from '../store';
 import { Provider, useDispatch } from 'react-redux';
-import { SocketProvider, useSocket } from '../socket';
-import { ErrorHandler } from '../utils/errorHandler';
-import { setUserMessages } from '../store/reducers/messages.reducer';
-import { getUserMessages } from '../services/api';
-import { useRouter } from 'next/router';
 import { onAuthStateChanged } from 'firebase/auth';
 import Cookies from 'js-cookie';
 import { setAuthState } from '../store/reducers/user.reducer';
@@ -43,9 +38,7 @@ const MyApp = ({ Component, pageProps }) => {
             pauseOnHover
             theme="dark"
           />
-          <SocketProvider>
-            <Layout Component={Component} pageProps={pageProps} />
-          </SocketProvider>
+          <Layout Component={Component} pageProps={pageProps} />
         </UserContextProvider>
       </MenuOpenContextProvider>
     </Provider>
@@ -53,12 +46,10 @@ const MyApp = ({ Component, pageProps }) => {
 };
 
 const Layout = ({ Component, pageProps }) => {
-  const socket = useSocket();
   const dispatch = useDispatch();
-  const router = useRouter();
-  const { id } = router.query;
   useEffect(() => {
     // handle auth
+    dispatch(setAllLanguages());
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) dispatch(setAuthState(true));
       else {
@@ -68,30 +59,6 @@ const Layout = ({ Component, pageProps }) => {
     });
 
     return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    dispatch(setAllLanguages());
-    socket.auth = { userId: 'admin' };
-    socket.on('connect', () => {
-      return;
-    });
-    socket.on('disconnect', () => {
-      return;
-    });
-
-    socket.on('new_user_message', async (data) => {
-      try {
-        const res = await getUserMessages(id);
-        dispatch(setUserMessages(res));
-      } catch (error) {
-        ErrorHandler(error);
-      }
-    });
-
-    return () => {
-      socket.disconnect();
-    };
   }, []);
 
   if (Component.getLayout) {

@@ -13,7 +13,7 @@ const Button = ({ children, type, purpose, route, onClick }) => {
             type === 'tertiary' &&
             `border-[3px] border-solid border-white bg-transparent text-white hover:bg-white hover:text-black `
           }
-          transition-300 relative block w-max cursor-pointer rounded-full px-s5 pt-s1.5 pb-s1 text-lg
+          transition-300 relative block w-max cursor-pointer rounded-full px-s2 pt-s1 pb-s1 text-sm
         `}
     >
       {type === 'secondary' && <HoverGradientFill borderRadius="full" />}
