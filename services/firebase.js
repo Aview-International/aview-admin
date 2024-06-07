@@ -104,19 +104,6 @@ export const getUserProfile = async (_id) => {
   return res;
 };
 
-export const getSenders = async () => {
-  const res = await get(ref(database, `chats/`)).then((snapshot) => {
-    let chats = [];
-    snapshot.forEach((el) => {
-      get(ref(database, `users/${el.key}`)).then((snaps) => {
-        if (snaps.exists()) chats.push(snaps.val());
-      });
-    });
-    return chats;
-  });
-  return res;
-};
-
 export const updateAccountCharge = async (uid, newCharge) => {
   const updates = {};
   updates[`users/${uid}/charge`] = newCharge;

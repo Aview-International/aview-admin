@@ -51,17 +51,18 @@ const Container = ({ pendingJobs, completedJobs }) => {
 
   return (
     <div className="w-full rounded-2xl bg-gradient-to-b from-[#ffffff26] to-[#ffffff0D] p-s3">
-      <div className="grid grid-cols-[27%_20%_22%_16%_15%]">
+      <div className="grid grid-cols-[23%_19%_22%_10%_13%_13%]">
         <p>Name</p>
         <p>Date</p>
         <p>Languages</p>
+        <p>Type</p>
         <p className="text-center">Status</p>
         <p>Download Link</p>
       </div>
       <hr className="my-s2 border-[rgba(255,255,255,0.6)]" />
       {[...pendingJobs, ...completedJobs].map((job, i) => (
         <div
-          className="grid grid-cols-[27%_20%_22%_16%_15%] border-b border-[rgba(252,252,252,0.2)] py-s2"
+          className="grid grid-cols-[23%_19%_22%_10%_13%_13%] border-b border-[rgba(252,252,252,0.2)] py-s2"
           key={i}
         >
           <div>{job.videoData?.caption.replace(/\.mp4$/i, '')}</div>
@@ -77,6 +78,7 @@ const Container = ({ pendingJobs, completedJobs }) => {
                   </p>
                 ))}
           </div>
+          <p>{job.videoData.type}</p>
           <div className="text-center text-[#eab221]">
             {job.status === 'complete' || job.status === 'under review'
               ? 'complete'
