@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import DashboardLayout from '../../components/dashboard/DashboardLayout';
-import { getS3DownloadLink } from '../../services/api';
+import { downloadVideoFromS3 } from '../../services/api';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPendingJobs } from '../../store/reducers/history.reducer';
 import PageTitle from '../../components/SEO/PageTitle';
@@ -34,10 +34,10 @@ const History = () => {
 
 const Container = ({ pendingJobs, completedJobs }) => {
   const handleDownload = async (job) => {
-    const downloadLink = await getS3DownloadLink(
-      'admin',
+    const downloadLink = await downloadVideoFromS3(
       job.timestamp,
-      'output'
+      job.videoData.caption,
+      job.translatedLanguage
     );
     if (downloadLink) {
       const anchor = document.createElement('a');
