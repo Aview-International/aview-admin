@@ -10,6 +10,7 @@ import Info from '../../../public/img/icons/info.svg';
 import Instagram from '../../../public/img/icons/instagram-2.svg';
 import Facebook from '../../../public/img/icons/facebook.svg';
 import TikTok from '../../../public/img/icons/tiktok.svg';
+import X from '../../../public/img/icons/x.svg';
 import ErrorHandler from '../../../utils/errorHandler';
 import { submitAdminTranscriptionLink } from '../../../services/api';
 import TranslateOptions from '../../../components/dashboard/TranslateOptions';
@@ -36,6 +37,7 @@ const SocialMedia = () => {
       youtube: /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)/,
       instagram: /(?:https?:\/\/)?(?:www\.)?instagram\.com/,
       tiktok: /(?:https?:\/\/)?(?:www\.)?tiktok\.com/,
+      x: /https:\/\/(?:twitter|x)\.com\/[^/]+\/status\/(\d+)/,
     };
 
     for (const pattern in patterns) {
@@ -61,6 +63,7 @@ const SocialMedia = () => {
     instagram: Instagram,
     tiktok: TikTok,
     facebook: Facebook,
+    x: X,
   };
 
   return (
