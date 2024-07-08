@@ -13,7 +13,7 @@ import { signInWithGoogle, createNewSuperAdmin } from '../services/firebase';
 
 const Login = () => {
   const router = useRouter();
-  const { user, updateUser } = useContext(UserContext);
+  const { user, updateUser } = useContext(UserContext); //error 
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async () => {

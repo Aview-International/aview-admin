@@ -3,7 +3,7 @@ import FormInput from '../../../components/FormComponents/FormInput';
 import PageTitle from '../../../components/SEO/PageTitle';
 import DashboardLayout from '../../../components/dashboard/DashboardLayout';
 import PasteIcon from '../../../public/img/icons/paste.svg';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';  // Add useEffect import
 import { toast } from 'react-toastify';
 import Youtube from '../../../public/img/icons/youtube-red.svg';
 import Info from '../../../public/img/icons/info.svg';
@@ -24,6 +24,7 @@ const SocialMedia = () => {
     link,
     languages: [],
     saveSettings: false,
+    isShorts: false,  // Add isShorts to the payload
   });
 
   const pasteFromClipboard = async () => {
@@ -35,6 +36,7 @@ const SocialMedia = () => {
   const linkType = useMemo(() => {
     const patterns = {
       youtube: /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)/,
+      youtubeShorts: /(?:https?:\/\/)?(?:www\.)?youtube\.com\/shorts\//, // Add pattern for YouTube Shorts
       instagram: /(?:https?:\/\/)?(?:www\.)?instagram\.com/,
       tiktok: /(?:https?:\/\/)?(?:www\.)?tiktok\.com/,
       x: /https:\/\/(?:twitter|x)\.com\/[^/]+\/status\/(\d+)/,
@@ -46,11 +48,20 @@ const SocialMedia = () => {
     }
   }, [link]);
 
+  // Update payload when link changes
+  useEffect(() => {
+    setPayload((prev) => ({
+      ...prev,
+      link,
+      isShorts: linkType === 'youtubeShorts',  // Set isShorts based on link type
+    }));
+  }, [link, linkType]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await submitAdminTranscriptionLink({ ...payload, link });
+      await submitAdminTranscriptionLink(payload);
       router.push('/history');
     } catch (error) {
       setIsLoading(false);
@@ -60,6 +71,7 @@ const SocialMedia = () => {
 
   const linkTypes = {
     youtube: Youtube,
+    youtubeShorts: Youtube,  // Use the same icon for YouTube and YouTube Shorts
     instagram: Instagram,
     tiktok: TikTok,
     facebook: Facebook,
