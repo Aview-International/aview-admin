@@ -50,7 +50,7 @@ const SocialMedia = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await submitAdminTranscriptionLink({ payload, ...link });
+      await submitAdminTranscriptionLink({ ...payload, link });
       router.push('/history');
     } catch (error) {
       setIsLoading(false);
