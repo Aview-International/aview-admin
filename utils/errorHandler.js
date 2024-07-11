@@ -7,12 +7,17 @@ const ErrorHandler = (error, message) => {
   }
 
   if (!error.response?.data) {
-    toast.error(error.message);
+    toast.error(error.message || 'Oops, something went wrong');
     return;
   } else {
-    if (typeof error.response.data.message === 'string') {
-      toast.error(error.response.data.message);
-    } else toast.error(error.response.data.message[0]);
+    const { message } = error.response.data;
+    if (typeof message === 'string') {
+      toast.error(message);
+    } else if (Array.isArray(message)) {
+      toast.error(message[0]);
+    } else {
+      toast.error('An unexpected error occurred.');
+    }
     return;
   }
 };
