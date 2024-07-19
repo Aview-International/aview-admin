@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import Border from '../components/UI/Border';
 import Shadow from '../components/UI/Shadow';
 import Google from '../public/img/icons/google.svg';
@@ -15,7 +15,28 @@ const Login = () => {
   const router = useRouter();
   const { user, updateUser } = useContext(UserContext); //error 
   const [isLoading, setIsLoading] = useState(false);
+  
 
+
+  useEffect(() => {
+    const uid = Cookies.get('uid');
+    const token = Cookies.get('token');
+
+    if (uid && token) {
+      // 
+      updateUser({
+        ...user,
+        email: Cookies.get('email'),
+        firstName: Cookies.get('firstName'),
+        lastName: Cookies.get('lastName'),
+        picture: Cookies.get('picture'),
+      });
+      router.push('/dashboard'); // Redirect to dashboard if already logged in
+    }
+  }, []);
+
+
+  
   const handleSubmit = async () => {
     const emails = JSON.parse(process.env.NEXT_PUBLIC_ALLOWED_EMAILS);
     setIsLoading(true);
