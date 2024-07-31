@@ -115,6 +115,7 @@ const CreatorEnquiry = ({ data, fetchAllSenders }) => {
       setLoading(true);
       await markTicketAsResolved(router.query.id);
       setModal(false);
+      router.push('/creator-enquiries');
       await fetchAllSenders();
     } catch (error) {
       setLoading(false);
@@ -168,11 +169,7 @@ const CreatorEnquiry = ({ data, fetchAllSenders }) => {
                 ))}
             </div>
 
-            <form
-              className="relative flex w-full"
-              onSubmit={handleSubmit}
-              // ref={inputRef}
-            >
+            <form className="relative flex w-full" onSubmit={handleSubmit}>
               <Textarea
                 placeholder="Type message..."
                 value={message}
