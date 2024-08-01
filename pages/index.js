@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import Border from '../components/UI/Border';
 import Shadow from '../components/UI/Shadow';
 import Google from '../public/img/icons/google.svg';
@@ -9,12 +9,25 @@ import ButtonLoader from '../public/loaders/ButtonLoader';
 import { toast } from 'react-toastify';
 import PageTitle from '../components/SEO/PageTitle';
 import Cookies from 'js-cookie';
-import { signInWithGoogle, createNewSuperAdmin } from '../services/firebase';
+import {
+  signInWithGoogle,
+  createNewSuperAdmin,
+  auth,
+} from '../services/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 
 const Login = () => {
   const router = useRouter();
-  const { user, updateUser } = useContext(UserContext); //error 
+  const { user, updateUser } = useContext(UserContext); //error
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) router.push('/dashboard'); // redirect to dashboard if already logged in
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const handleSubmit = async () => {
     const emails = JSON.parse(process.env.NEXT_PUBLIC_ALLOWED_EMAILS);

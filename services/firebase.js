@@ -66,8 +66,8 @@ export const createNewSuperAdmin = async (
 };
 
 // get all user data from the database
-export const getAdminProfile = async (_id) => {
-  const res = await get(ref(database, `super-admins/${_id}`)).then(
+export const getAdminProfile = async (uid) => {
+  const res = await get(ref(database, `super-admins/${uid}`)).then(
     (snapshot) => {
       if (snapshot.exists()) return snapshot.val();
       else return null;
@@ -96,19 +96,12 @@ export const updateRequiredServices = async (payload, uid) => {
 };
 
 // get all user data from the database
-export const getUserProfile = async (_id) => {
-  const res = await get(ref(database, `users/${_id}`)).then((snapshot) => {
+export const getUserProfile = async (uid) => {
+  const res = await get(ref(database, `users/${uid}`)).then((snapshot) => {
     if (snapshot.exists()) return snapshot.val();
     else return null;
   });
   return res;
-};
-
-export const updateAccountCharge = async (uid, newCharge) => {
-  const updates = {};
-  updates[`users/${uid}/charge`] = newCharge;
-  updates[`users/${uid}/defaultCurrency`] = 'USD';
-  return update(ref(database), updates);
 };
 
 export const getAllPendingJobs = async () => {
