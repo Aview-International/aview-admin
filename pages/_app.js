@@ -8,7 +8,7 @@ import store from '../store';
 import { Provider, useDispatch } from 'react-redux';
 import { onAuthStateChanged } from 'firebase/auth';
 import Cookies from 'js-cookie';
-import { setAuthState } from '../store/reducers/user.reducer';
+import { setAuthState, setUser } from '../store/reducers/user.reducer';
 import { setAllLanguages } from '../store/reducers/aview.reducer';
 import { auth } from '../services/firebase';
 
@@ -51,8 +51,17 @@ const Layout = ({ Component, pageProps }) => {
     // handle auth
     dispatch(setAllLanguages());
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) dispatch(setAuthState(true));
-      else {
+      if (user) {
+        dispatch(
+          setUser({
+            email: user.email,
+            firstName: user.displayName,
+            picture: user.photoURL,
+            uid: user.uid,
+          })
+        );
+        dispatch(setAuthState(true));
+      } else {
         Cookies.remove('uid');
         Cookies.remove('token');
       }

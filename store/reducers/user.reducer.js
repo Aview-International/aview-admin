@@ -7,13 +7,16 @@ const initialState = {
   lastName: '',
   picture: '',
   uid: '',
-  _id: '',
 };
 
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
+    setUser(state, action) {
+      const { payload } = action;
+      return { ...initialState, ...payload };
+    },
     setAuthState(state, action) {
       const { payload } = action;
       return { ...state, isLoggedIn: payload };

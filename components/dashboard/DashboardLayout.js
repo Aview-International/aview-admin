@@ -10,8 +10,8 @@ const DashboardStructure = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const getProfile = async () => {
     try {
-      const _id = Cookies.get('uid');
-      await getAdminProfile(_id);
+      const uid = Cookies.get('uid');
+      await getAdminProfile(uid);
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
