@@ -66,7 +66,7 @@ const AccountInfo = ({ account }) => {
 
 const AccountDetails = ({ account, setModal }) => {
   return (
-    <div className="place-contents-center fixed top-0 left-0 z-10 flex flex h-screen w-screen items-center justify-center bg-black text-lg">
+    <div className="place-contents-center fixed top-0 left-0 z-10 flex h-screen w-screen items-center justify-center bg-black text-lg">
       <div>
         <div
           className="cursor-pointer text-right text-8xl"

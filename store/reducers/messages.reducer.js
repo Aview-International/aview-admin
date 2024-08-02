@@ -6,6 +6,7 @@ const initialState = {
   aiThreads: [],
   allAIThreads: [],
   lastUsedAIThread: '',
+  reviewersMessages: [],
 };
 
 const messagesSlice = createSlice({
@@ -66,6 +67,10 @@ const messagesSlice = createSlice({
       const { payload } = action;
       state.allAIThreads = payload;
     },
+    setReviewerMessages(state, action) {
+      const { payload } = action;
+      state.reviewersMessages = payload;
+    },
   },
 });
 
@@ -79,6 +84,7 @@ export const {
   setAiThreads,
   setAllAIThreads,
   setLastUserAIMessage,
+  setReviewerMessages,
 } = messagesSlice.actions;
 
 export default messagesReducer;
