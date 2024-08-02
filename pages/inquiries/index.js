@@ -8,7 +8,7 @@ import {
   getReviewerMessages,
   markReviewerConcernAsCompleted,
 } from '../../services/api';
-import { ErrorHandler } from '../../utils/errorHandler';
+import ErrorHandler from '../../utils/errorHandler';
 import { setReviewerMessages } from '../../store/reducers/messages.reducer';
 import CopyToClipboard from '../../public/img/icons/copy-to-clipboard.svg';
 import { toast } from 'react-toastify';
@@ -68,7 +68,7 @@ const Messages = () => {
           />
         )}
 
-        {messages.length > 0 ? (
+        {messages && messages.length > 0 ? (
           <ol className="list-decimal">
             {messages.map((data, idx) => (
               <li key={idx} className="group my-s3">
