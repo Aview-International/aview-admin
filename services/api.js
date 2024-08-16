@@ -200,7 +200,6 @@ export const rerunStuckJobs = async (
   timestamp,
   translatedLanguage
 ) => {
-  console.log(stage);
   let url = `transcription/rerun/${stage}?`;
   url += `s3Path=dubbing-tasks/${creatorId}/${timestamp}&`;
   url += `translatedLanguage=${translatedLanguage}&`;
