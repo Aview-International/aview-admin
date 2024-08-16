@@ -32,7 +32,7 @@ const DashboardStructure = ({ children }) => {
           <DashboardSidebar />
           <div className="ml-auto w-[calc(100%-170px)]">
             <DashBoardHeader />
-            <div className="h-full max-h-[calc(100%-116px)] overflow-y-auto bg-black p-s4">
+            <div className="h-full max-h-full overflow-y-auto bg-black p-s4">
               {children}
             </div>
           </div>

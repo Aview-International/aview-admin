@@ -193,3 +193,15 @@ export const sendEnquiryMessage = async (message, id) =>
 
 export const markTicketAsResolved = async (id) =>
   await axiosInstance.patch('/messages/support/' + id);
+
+export const rerunStuckJobs = async (
+  stage,
+  creatorId,
+  timestamp,
+  translatedLanguage
+) => {
+  let url = `transcription/rerun/${stage}?`;
+  url += `s3Path=dubbing-tasks/${creatorId}/${timestamp}&`;
+  url += `translatedLanguage=${translatedLanguage}&`;
+  await axiosInstance.get(url);
+};

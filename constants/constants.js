@@ -76,6 +76,11 @@ export const DASHBOARD_NAVLINKS = [
     image: home,
     route: '/playground',
   },
+  {
+    text: 'All Jobs',
+    image: home,
+    route: '/jobs',
+  },
 ];
 
 export const DAHSHBOARD_SERVICES = [
