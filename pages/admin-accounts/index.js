@@ -68,7 +68,6 @@ const AccountDetails = ({ account, setModal }) => {
   const handleApprove = async () => {
     try {
       setLoading(true);
-      console.log(account);
       await approveReviewerAccount(account._id);
       setLoading(false);
     } catch (error) {
