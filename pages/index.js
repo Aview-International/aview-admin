@@ -9,11 +9,7 @@ import ButtonLoader from '../public/loaders/ButtonLoader';
 import { toast } from 'react-toastify';
 import PageTitle from '../components/SEO/PageTitle';
 import Cookies from 'js-cookie';
-import {
-  signInWithGoogle,
-  createNewSuperAdmin,
-  auth,
-} from '../services/firebase';
+import { signInWithGoogle, auth } from '../services/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 
 const Login = () => {
@@ -41,14 +37,6 @@ const Login = () => {
       picture: _tokenResponse.photoUrl,
     });
     if (emails.includes(_tokenResponse.email)) {
-      createNewSuperAdmin(
-        _tokenResponse.localId,
-        _tokenResponse.firstName,
-        _tokenResponse.lastName,
-        _tokenResponse.email,
-        _tokenResponse.photoUrl
-      );
-
       Cookies.set('uid', _tokenResponse.localId);
       Cookies.set('token', _tokenResponse.idToken);
       toast.success('Login successful');

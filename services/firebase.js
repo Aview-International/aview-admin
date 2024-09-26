@@ -47,24 +47,6 @@ export const signInWithGoogle = async () => {
   return response;
 };
 
-// create new user account in the database after signup
-export const createNewSuperAdmin = async (
-  id,
-  firstName,
-  lastName,
-  email,
-  picture
-) => {
-  const data = {
-    id,
-    firstName,
-    lastName,
-    email,
-    picture,
-  };
-  await set(ref(database, `super-admins/${id}`), data);
-};
-
 // get all user data from the database
 export const getAdminProfile = async (uid) => {
   const res = await get(ref(database, `super-admins/${uid}`)).then(

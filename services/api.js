@@ -35,7 +35,7 @@ axiosInstance.interceptors.request.use(
     let token = user.stsTokenManager.accessToken;
     if (isTokenExpired(token) === true || !isTokenExpired(token)) {
       const newToken = await auth.currentUser.getIdToken(true); // force token refresh
-      Cookies.set('session', newToken);
+      Cookies.set('token', newToken);
       token = newToken;
     }
 
@@ -205,3 +205,6 @@ export const rerunStuckJobs = async (
   url += `translatedLanguage=${translatedLanguage}&`;
   await axiosInstance.get(url);
 };
+
+export const approveReviewerAccount = async (uid) =>
+  (await axiosInstance.patch('admin/verify-translator-account/' + uid)).data;
