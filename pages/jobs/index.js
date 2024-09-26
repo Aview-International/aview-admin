@@ -59,7 +59,8 @@ const CreatorJobData = ({ creator, pendingJobs }) => {
   ) => {
     setLoading(timestamp);
     try {
-      await rerunStuckJobs(stage, creatorId, timestamp, translatedLanguage);
+      console.log(stage, creatorId, timestamp, translatedLanguage);
+      // await rerunStuckJobs(stage, creatorId, timestamp, translatedLanguage);
       setLoading(null);
     } catch (error) {
       ErrorHandler(error, 'Something went wrong');
@@ -95,15 +96,14 @@ const CreatorJobData = ({ creator, pendingJobs }) => {
             })}
           </p>
           <button
-            onClick={() =>
-              loading
-                ? null
-                : handleRerunJobs(
-                    job.status,
-                    job.creatorId,
-                    job.timestamp,
-                    job.translatedLanguage
-                  )
+            onClick={
+              () => (loading ? null : console.log(job))
+              // : handleRerunJobs(
+              //     job.status,
+              //     job.creatorId,
+              //     job.timestamp,
+              //     job.translatedLanguage
+              //   )
             }
             className="cursor-pointer text-blue underline"
           >

@@ -5,7 +5,9 @@ import DashboardButton from '../../components/UI/DashboardButton';
 import CopyToClipboard from '../../public/img/icons/copy-to-clipboard.svg';
 import { toast } from 'react-toastify';
 import ErrorHandler from '../../utils/errorHandler';
-import { getAllAdmins } from '../../services/api';
+import { approveReviewerAccount, getAllAdmins } from '../../services/api';
+import defaultPhoto from '../../public/img/people/default.png';
+import OutsideClickHandler from 'react-outside-click-handler';
 
 const AdminAccounts = () => {
   const [accounts, setAccounts] = useState([]);
@@ -38,17 +40,17 @@ const AccountInfo = ({ account }) => {
   return (
     <div className="my-s4 flex w-[30rem] items-center gap-12">
       {modal && <AccountDetails account={account} setModal={setModal} />}
-      {/* <div>
+      <div>
         <Image
           loader={() => user.picture}
           unoptimized
           width={100}
           height={100}
           className="rounded-full"
-          src={account.picture}
+          src={account.picture ?? defaultPhoto}
           alt={account.lastName}
         />
-      </div> */}
+      </div>
       <div className="w-1/2">{account.name}</div>
       <div className="w-1/2">
         <DashboardButton onClick={() => setModal(true)}>
@@ -61,49 +63,60 @@ const AccountInfo = ({ account }) => {
 
 const AccountDetails = ({ account, setModal }) => {
   const emailRef = useRef(null);
-  const passwwordRef = useRef(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleApprove = async () => {
+    try {
+      setLoading(true);
+      console.log(account);
+      await approveReviewerAccount(account._id);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      ErrorHandler(error);
+    }
+  };
 
   return (
-    <div className="place-contents-center fixed top-0 left-0 z-10 flex flex h-screen w-screen items-center justify-center bg-black">
-      <div>
-        <div
-          className="cursor-pointer text-right text-8xl"
-          onClick={() => setModal(false)}
-        >
-          x
-        </div>
-        {/* <div>
-          <Image
-            width={100}
-            height={100}
-            className="rounded-full"
-            src={account.picture}
-            alt={account.lastName}
-          />
-        </div> */}
-        <div>
-          Name:
-          <span className="pl-s2">{account.name}</span>
-        </div>
-
-        <div className="my-s3">
-          Country: <span className="pl-s2">{account.country}</span>
-        </div>
-
-        <div className="flex justify-between">
-          Email:
-          <span className="pl-s2">
-            <input
-              type="text"
-              ref={emailRef}
-              readOnly
-              value={account.email}
-              className="bg-black focus:outline-none"
+    <div className="fixed top-0 left-0 z-10 h-screen w-screen items-center justify-center bg-black/90">
+      <OutsideClickHandler onOutsideClick={() => setModal(false)}>
+        <div className="z-100 fixed top-1/2 left-1/2 max-w-2xl -translate-x-1/2 -translate-y-1/2 rounded-lg bg-gray-1 p-s4">
+          <div>
+            <Image
+              width={100}
+              height={100}
+              className="rounded-full"
+              src={account.picture ?? defaultPhoto}
+              alt={account.lastName}
             />
-          </span>
-          <CopyText contentRef={emailRef} />
+          </div>
+          <div>
+            Name:
+            <span className="pl-s2">{account.name}</span>
+          </div>
+
+          <div className="my-s3">
+            Country: <span className="pl-s2">{account.country}</span>
+          </div>
+
+          <div className="flex justify-between">
+            Email:
+            <span className="pl-s2" ref={emailRef}>
+              {account.email}
+            </span>
+            <CopyText contentRef={emailRef} />
+          </div>
+          <button
+            onClick={handleApprove}
+            className={`rounded-2xl p-s1 text-white ${
+              loading ? 'bg-gray-1' : 'bg-green'
+            }`}
+            disabled={loading}
+          >
+            {loading ? 'Please wait' : 'Approve'}
+          </button>
         </div>
-      </div>
+      </OutsideClickHandler>
     </div>
   );
 };
