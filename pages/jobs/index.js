@@ -59,8 +59,8 @@ const CreatorJobData = ({ creator, pendingJobs }) => {
   ) => {
     setLoading(timestamp);
     try {
-      console.log(stage, creatorId, timestamp, translatedLanguage);
-      // await rerunStuckJobs(stage, creatorId, timestamp, translatedLanguage);
+      // console.log(stage, creatorId, timestamp, translatedLanguage);
+      await rerunStuckJobs(stage, creatorId, timestamp, translatedLanguage);
       setLoading(null);
     } catch (error) {
       ErrorHandler(error, 'Something went wrong');
