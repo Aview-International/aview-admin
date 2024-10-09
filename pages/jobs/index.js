@@ -96,14 +96,15 @@ const CreatorJobData = ({ creator, pendingJobs }) => {
             })}
           </p>
           <button
-            onClick={
-              () => (loading ? null : console.log(job))
-              // : handleRerunJobs(
-              //     job.status,
-              //     job.creatorId,
-              //     job.timestamp,
-              //     job.translatedLanguage
-              //   )
+            onClick={() =>
+              loading
+                ? null
+                : handleRerunJobs(
+                    job.status,
+                    job.creatorId,
+                    job.timestamp,
+                    job.translatedLanguage
+                  )
             }
             className="cursor-pointer text-blue underline"
           >
