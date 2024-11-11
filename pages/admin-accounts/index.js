@@ -9,10 +9,12 @@ import { approveReviewerAccount, getAllAdmins } from '../../services/api';
 import defaultPhoto from '../../public/img/people/default.png';
 import OutsideClickHandler from 'react-outside-click-handler';
 import CustomSelectInput from '../../components/FormComponents/CustomSelectInput';
+import FormInput from '../../components/FormComponents/FormInput';
 
 const AdminAccounts = () => {
   const [accounts, setAccounts] = useState([]);
   const [accountType, setAccountType] = useState('All Accounts');
+  const [email, setEmail] = useState('');
 
   useEffect(() => {
     (async () => {
@@ -29,20 +31,36 @@ const AdminAccounts = () => {
     <div>
       <div>
         <h2 className="text-6xl">All admins</h2>
-        <div className='my-s3 w-1/2'>
-          <CustomSelectInput
-            text={'Accounts to display'}
-            options={['Approved', 'Pending', 'All Accounts']}
-            onChange={(el) => setAccountType(el)}
-            hasSubmitted={false}
-            defaultData={'All Accounts'}
-          />
+        <div className="my-s3 flex items-start justify-between">
+          <div className="mr-s5 flex-1">
+            <p className="text-xl">Find by email</p>
+            <FormInput
+              placeholder={'Email Address'}
+              onChange={(e) => setEmail(e.target.value.toLowerCase())}
+            />
+          </div>
+
+          <div
+            className={`flex-0 transition-all duration-700 ${
+              email ? 'flex-0' : 'flex-1'
+            }`}
+          >
+            <CustomSelectInput
+              text={'Accounts to display'}
+              options={['Approved', 'Pending', 'All Accounts']}
+              onChange={(el) => setAccountType(el)}
+              hasSubmitted={false}
+              defaultData={'All Accounts'}
+            />
+          </div>
         </div>
       </div>
       <div>
         {accounts
           .filter((acct) =>
-            accountType === 'Approved'
+            email
+              ? acct.email.toLowerCase().includes(email)
+              : accountType === 'Approved'
               ? acct.accountVerifiedByAview
               : accountType === 'Pending'
               ? !acct.accountVerifiedByAview
