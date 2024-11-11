@@ -12,6 +12,7 @@ const CustomSelectInput = ({
   onChange,
   hasSubmitted,
   isValid,
+  defaultData = 'Select',
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState('');
@@ -25,7 +26,7 @@ const CustomSelectInput = ({
             className="flex w-full cursor-pointer items-center justify-between rounded-md bg-black p-s1"
             onClick={() => setIsOpen(!isOpen)}
           >
-            <p>{data || 'Select'}</p>
+            <p>{data || defaultData}</p>
             <span className={`transition-300  ${isOpen && 'rotate-180'}`}>
               <Image src={Arrow} alt="arrow" />
             </span>

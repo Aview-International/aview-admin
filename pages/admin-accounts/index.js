@@ -8,9 +8,11 @@ import ErrorHandler from '../../utils/errorHandler';
 import { approveReviewerAccount, getAllAdmins } from '../../services/api';
 import defaultPhoto from '../../public/img/people/default.png';
 import OutsideClickHandler from 'react-outside-click-handler';
+import CustomSelectInput from '../../components/FormComponents/CustomSelectInput';
 
 const AdminAccounts = () => {
   const [accounts, setAccounts] = useState([]);
+  const [accountType, setAccountType] = useState('All Accounts');
 
   useEffect(() => {
     (async () => {
@@ -25,11 +27,30 @@ const AdminAccounts = () => {
 
   return (
     <div>
-      <h2 className="text-6xl">All admins</h2>
       <div>
-        {accounts.map((account, index) => (
-          <AccountInfo key={`account-${index}`} account={account} />
-        ))}
+        <h2 className="text-6xl">All admins</h2>
+        <div className='my-s3 w-1/2'>
+          <CustomSelectInput
+            text={'Accounts to display'}
+            options={['Approved', 'Pending', 'All Accounts']}
+            onChange={(el) => setAccountType(el)}
+            hasSubmitted={false}
+            defaultData={'All Accounts'}
+          />
+        </div>
+      </div>
+      <div>
+        {accounts
+          .filter((acct) =>
+            accountType === 'Approved'
+              ? acct.accountVerifiedByAview
+              : accountType === 'Pending'
+              ? !acct.accountVerifiedByAview
+              : true
+          )
+          .map((account, index) => (
+            <AccountInfo key={`account-${index}`} account={account} />
+          ))}
       </div>
     </div>
   );
@@ -48,7 +69,7 @@ const AccountInfo = ({ account }) => {
           height={100}
           className="rounded-full"
           src={account.picture ?? defaultPhoto}
-          alt={account.lastName}
+          alt=""
         />
       </div>
       <div className="w-1/2">{account.name}</div>
@@ -105,15 +126,20 @@ const AccountDetails = ({ account, setModal }) => {
             </span>
             <CopyText contentRef={emailRef} />
           </div>
-          <button
-            onClick={handleApprove}
-            className={`rounded-2xl p-s1 text-white ${
-              loading ? 'bg-gray-1' : 'bg-green'
-            }`}
-            disabled={loading}
-          >
-            {loading ? 'Please wait' : 'Approve'}
-          </button>
+          <br />
+          {account.accountVerifiedByAview ? (
+            <p className="text-green">Account has been approved</p>
+          ) : (
+            <button
+              onClick={handleApprove}
+              className={`rounded-2xl p-s1 text-white ${
+                loading ? 'bg-gray-1' : 'bg-green'
+              }`}
+              disabled={loading}
+            >
+              {loading ? 'Please wait' : 'Approve'}
+            </button>
+          )}
         </div>
       </OutsideClickHandler>
     </div>
