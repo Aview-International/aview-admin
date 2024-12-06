@@ -17,7 +17,7 @@ const DashboardNoSidebar = ({ children }) => {
         onClose={() => {
           setSettings(false);
         }}
-        translator={translator}
+        user={translator}
       />
       <header className="flex w-full items-center justify-between py-s2 px-s4">
         <div className="flex">
@@ -38,9 +38,12 @@ const DashboardNoSidebar = ({ children }) => {
         </div>
         <Image
           src={
-            translator?.profilePicture ? profilePicture : defaultProfilePicture
+            () => {
+              if(translator.profilePicture) return translator.profilePicture;
+              return defaultProfilePicture
+            }
           }
-          alt="settings button"
+          alt="profile"
           width={52}
           height={52}
           className="cursor-pointer rounded-full"

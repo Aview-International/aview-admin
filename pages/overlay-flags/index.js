@@ -21,7 +21,7 @@ const Subtitling = () => {
   };
 
   useEffect(() => {
-    getPendingJobs();
+    // getPendingJobs();
   }, []);
 
   useEffect(() => {
@@ -64,8 +64,8 @@ const Subtitling = () => {
   return (
     <>
       <PageTitle title="Captions & Subtitles" />
-      <div className="flex w-full flex-col justify-center">
-        <div className="text-4xl text-white">Jobs</div>
+      <div className="flex w-full flex-col justify-center text-white">
+        <p className="text-4xl">Jobs</p>
         <div className="rounded-2xl bg-white-transparent p-4">
           {jobs.length > 0 ? (
             <div>
@@ -77,11 +77,9 @@ const Subtitling = () => {
                   textAlign: 'center',
                 }}
               >
-                <div className="text-left font-bold text-white">Job ID</div>
-                <div className="text-left font-bold text-white">Title</div>
-                <div className="text-left font-bold text-white">
-                  Translated Language
-                </div>
+                <p className="text-left font-bold">Job ID</p>
+                <p className="text-left font-bold">Title</p>
+                <p className="text-left font-bold">Translated Language</p>
               </div>
 
               <div className="mt-s2 mb-s2 h-[1px] w-full bg-white"></div>
@@ -98,15 +96,11 @@ const Subtitling = () => {
                         textAlign: 'left',
                       }}
                     >
-                      <div className="text-left text-white">{job.jobId}</div>
-                      <div className="text-left text-white">
-                        {job.videoData.caption}
-                      </div>
-                      <div className="text-left text-white">
-                        {job.translatedLanguage}
-                      </div>
+                      <p className="text-left">{job.jobId}</p>
+                      <p className="text-left">{job.videoData.caption}</p>
+                      <p className="text-left">{job.translatedLanguage}</p>
                       <div
-                        className="cursor-pointer text-white underline"
+                        className="cursor-pointer underline"
                         onClick={() => {
                           handleDownloadVideo(
                             job.jobId,
@@ -118,7 +112,7 @@ const Subtitling = () => {
                         Video Download
                       </div>
                       <div
-                        className="cursor-pointer text-white underline"
+                        className="cursor-pointer underline"
                         onClick={() => {
                           handleDownloadSrt(
                             job.jobId,
@@ -129,9 +123,7 @@ const Subtitling = () => {
                       >
                         Srt Download
                       </div>
-                      <div className="cursor-pointer text-white underline">
-                        Video Upload
-                      </div>
+                      <p className="cursor-pointer underline">Video Upload</p>
                     </div>
                     <div className="h-[1px] w-full bg-white bg-opacity-25"></div>
                   </div>
@@ -139,7 +131,7 @@ const Subtitling = () => {
               ))}
             </div>
           ) : (
-            <p className="text-white">No jobs available.</p>
+            <p>No jobs available.</p>
           )}
         </div>
       </div>

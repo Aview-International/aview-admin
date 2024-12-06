@@ -40,7 +40,7 @@ const Shorts_subtitling = () => {
   const [job, setJob] = useState(null);
   const [loader, setLoader] = useState('');
   const [popupSubmit, setPopupSubmit] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [popupFlag, setPopupFlag] = useState(false);
   const [flagReason, setFlagReason] = useState(null);
   const [submitHeader, setSubmitHeader] = useState('Submitted!');
@@ -364,7 +364,7 @@ const Shorts_subtitling = () => {
           </div>
         </div>
       </Popup>
-      {isLoading && <FullScreenLoader />}
+      {/* {isLoading && <FullScreenLoader />} */}
       {job && (
         <div className="absolute top-0 left-0 py-s2 px-s5">
           <Timer

@@ -1,4 +1,4 @@
-import OutsideClickHandler from 'react-outside-click-handler';
+ import OutsideClickHandler from 'react-outside-click-handler';
 
 const Popup = ({ show, children, onClose, disableClose }) => {
   return (
@@ -7,7 +7,7 @@ const Popup = ({ show, children, onClose, disableClose }) => {
         show ? '-translate-y-0' : '-translate-y-full'
       } transition-300 duration-300 ease-in-out`}
     >
-      <div className="h-[80vh] w-10/12 max-w-[600px] overflow-y-scroll">
+      <div className="h-[80vh] w-10/12 max-w-[600px]">
         <OutsideClickHandler onOutsideClick={disableClose ? null : onClose}>
           {children}
         </OutsideClickHandler>

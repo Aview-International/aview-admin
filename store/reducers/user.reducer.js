@@ -35,12 +35,20 @@ const userSlice = createSlice({
       const { payload } = action;
       return { ...state, ...payload };
     },
+    updateProfilePicture(state, action) {
+      state.profilePicture = action.payload;
+    },
+    updateUserDetails(state, action) {
+      const { field, value } = action.payload;
+      state[field] = value;
+    },
     logOutUser() {
       return { ...initialState, isLoggedIn: false };
     },
   },
 });
 
-export const { setUser, logOutUser } = userSlice.actions;
+export const { setUser, logOutUser, updateProfilePicture, updateUserDetails } =
+  userSlice.actions;
 
 export default userSlice.reducer;
