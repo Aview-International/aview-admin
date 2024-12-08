@@ -10,7 +10,7 @@ import { Provider, useDispatch } from 'react-redux';
 import store from '../store';
 import { auth } from '../services/firebase';
 import Cookies from 'js-cookie';
-import { logOutUser, setUser } from '../store/reducers/user.reducer';
+import { logOut, setUser } from '../store/reducers/user.reducer';
 import {
   getCountriesAndCodes,
   getSupportedLanguages,
@@ -57,26 +57,43 @@ const MyApp = ({ Component, pageProps }) => {
 const Layout = ({ Component, pageProps }) => {
   const dispatch = useDispatch();
   useEffect(() => {
-    // handle auth
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        try {
+      try {
+        if (user) {
           Cookies.set('uid', user.uid, { sameSite: 'Strict' });
           const userData = await getTranslatorFromUserId();
           Cookies.set('_id', userData.uid, { sameSite: 'Strict' });
           dispatch(
-            setUser({ ...userData, isLoggedIn: true, _id: userData.userId })
+            setUser({
+              ...userData,
+              isLoggedIn: true,
+              _id: userData._id,
+              isAuthChecking: false,
+            })
           );
-        } catch (error) {}
-      } else {
-        Cookies.remove('uid');
-        Cookies.remove('session');
-        dispatch(logOutUser());
+        } else {
+        
+          Cookies.remove('uid');
+          Cookies.remove('session');
+          dispatch(
+            logOut({
+              isAuthChecking: false,
+            })
+          );
+        }
+      } catch (error) {
+      
+        dispatch(
+          logOut({
+            isAuthChecking: false,
+          })
+        );
       }
     });
-
+  
     return () => unsubscribe();
   }, []);
+  
 
   useEffect(() => {
     (async () => {

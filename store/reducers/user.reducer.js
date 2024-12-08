@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   isLoggedIn: false,
+  isAuthChecking: true,
   __v: 0,
   _id: undefined,
   averageVideoDuration: '',
@@ -35,12 +36,20 @@ const userSlice = createSlice({
       const { payload } = action;
       return { ...state, ...payload };
     },
-    logOutUser() {
-      return { ...initialState, isLoggedIn: false };
+    updateProfilePicture(state, action) {
+      state.profilePicture = action.payload;
+    },
+    updateUserDetails(state, action) {
+      const { field, value } = action.payload;
+      state[field] = value;
+    },
+    logOut(state, action) {
+      return { ...initialState, isLoggedIn: false, isAuthChecking: action.payload?.isAuthChecking ?? false };
     },
   },
 });
 
-export const { setUser, logOutUser } = userSlice.actions;
+export const { setUser, logOut, updateProfilePicture, updateUserDetails } =
+  userSlice.actions;
 
 export default userSlice.reducer;

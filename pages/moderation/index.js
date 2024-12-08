@@ -195,8 +195,6 @@ const QA = () => {
           </div>
         </div>
       </Popup>
-      {isLoading && <FullScreenLoader />}
-
       <div className={`flex`}>
         <div
           className={`fixed left-0 top-0 flex h-screen w-1/2 flex-col py-s5 pl-s5 pr-s1`}

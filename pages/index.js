@@ -1,15 +1,21 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PageTitle from '../components/SEO/PageTitle';
 import Button from '../components/UI/Button';
 import FormInput from '../components/FormComponents/FormInput';
 import { emailValidator } from '../utils/regex';
 import ErrorHandler from '../utils/errorHandler';
 import { singleSignOnLogin } from '../services/apis';
+import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
+import CircleLoader from '../public/loaders/CircleLoader';
 
 const Home = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [email, setEmail] = useState('');
+  const [isRedirecting, setIsRedirecting] = useState(true);
+  const { isAuthChecking, isLoggedIn } = useSelector((state) => state.user);
+  const router = useRouter();
 
   const handleSSO = async (e) => {
     e.preventDefault();
@@ -24,6 +30,26 @@ const Home = () => {
       ErrorHandler(error);
     }
   };
+
+  useEffect(() => {
+    if (!isAuthChecking) {
+      if (isLoggedIn) {
+        setIsRedirecting(true);
+        router.push('/dashboard').then(() => setIsRedirecting(false));
+      } else {
+        setIsRedirecting(false);
+      }
+    }
+  }, [isLoggedIn, isAuthChecking, router]);
+
+  if (isAuthChecking || isRedirecting) {
+   
+    return (
+      <div className="fixed top-0 left-0 flex h-screen w-screen items-center justify-center bg-black text-white">
+        <CircleLoader />
+      </div>
+    );
+  }
 
   return (
     <>

@@ -20,7 +20,7 @@ import Textarea from '../../components/FormComponents/Textarea';
 
 const Pending = () => {
   const [job, setJob] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [videoLink, setVideoLink] = useState(null);
   const [originalVideoLink, setOriginalVideoLink] = useState(null);
   const [creatorName, setCreatorName] = useState(null);
@@ -78,7 +78,6 @@ const Pending = () => {
     if (job) {
       const res = await getCreatorProfile(job.creatorId);
       const resData = res.data;
-
       setCreatorName(resData?.firstName + ' ' + resData?.lastName);
 
       const languageCode = SupportedLanguages.find(
@@ -107,11 +106,10 @@ const Pending = () => {
     }
   }, [job]);
 
+  console.log(job);
   return (
     <>
       <PageTitle title="Pending" />
-
-      {isLoading && <FullScreenLoader />}
       <Popup show={popupApprove} disableClose={true}>
         <div className="h-full w-full">
           <div className="w-[500px] rounded-2xl bg-indigo-2 p-s3">

@@ -1,28 +1,38 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import DashboardNoSidebar from '../../components/dashboard/DashboardNoSidebar';
 import PendingJobs from '../../components/dashboard/PendingJobs';
 import OverlayJobs from '../../components/dashboard/OverlayJobs';
 import ModerationJobs from '../../components/dashboard/ModerationJobs';
 import AllJobs from '../../components/dashboard/AllJobs';
 import PageTitle from '../../components/SEO/PageTitle';
-import { getTranslatorLeaderboards, acceptJob } from '../../services/apis';
+import {
+  getTranslatorLeaderboards,
+  acceptJob,
+  getAllJobs,
+} from '../../services/apis';
 import PieChart from '../../components/UI/PieChart';
 import Popup from '../../components/UI/PopupNormal';
 import Button from '../../components/UI/Button';
 import ErrorHandler from '../../utils/errorHandler';
 import Image from 'next/image';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import defaultProfilePicture from '../../public/img/graphics/default.png';
+import { setAllJobs, setJobsLoading } from '../../store/reducers/jobs.reducer';
+import CircleLoader from '../../public/loaders/CircleLoader';
+import { useRouter } from 'next/router';
 
 const Dashboard = () => {
-  const translator = useSelector((data) => data.user);
+  const translator = useSelector((state) => state.user);
+  const { jobs, isLoading } = useSelector((state) => state.jobs);
   const [selectedOption, setSelectedOption] = useState('all');
   const [leaderboards, setLeaderboards] = useState([]);
   const [pieChartData, setPieChartData] = useState(null);
   const [popupPreview, setPopupPreview] = useState(false);
+  const dispatch = useDispatch();
   const [previewJob, setPreviewJob] = useState(null);
   const [previewJobVideoLink, setPreviewJobVideoLink] = useState(null);
   const [previewJobType, setPreviewJobType] = useState(null);
+  const router = useRouter();
 
   const handleTranslator = async () => {
     const data = {
@@ -51,6 +61,25 @@ const Dashboard = () => {
     } else {
       setPieChartData(data);
     }
+  };
+
+  const handleAllJobs = async () => {
+    dispatch(setJobsLoading(true));
+    const res = await getAllJobs();
+    const resData = res.data;
+    const pending = resData
+      ? Object.values(resData).map((item, i) => ({
+          ...item,
+          jobId: Object.keys(resData)[i],
+        }))
+      : [];
+
+    const sortedJobs = pending.sort((a, b) => {
+      return Number(b.timestamp) - Number(a.timestamp);
+    });
+
+    dispatch(setAllJobs(sortedJobs));
+    dispatch(setJobsLoading(false));
   };
 
   const handleAccept = async () => {
@@ -100,10 +129,26 @@ const Dashboard = () => {
     setLeaderboards(leaderboardData);
   };
 
+  const filteredJobs = useMemo(() => {
+    if (selectedOption === 'all') {
+      return jobs;
+    }
+    return jobs.filter((job) => job.status === selectedOption);
+  }, [jobs, selectedOption]);
+
   useEffect(() => {
     handleTranslator();
     handleLeaderboards();
   }, []);
+
+  useEffect(() => {
+    handleAllJobs();
+  }, []);
+
+  if (!translator.isLoggedIn) {
+    router.push('/');
+    return null;
+  }
 
   const formatMoney = (amount) => {
     let dollars = Math.floor(amount / 100);
@@ -121,22 +166,21 @@ const Dashboard = () => {
       title: 'Pending',
       id: 'pending',
       component: PendingJobs,
-      class: 'bg-red',
-      value: translator?.pendingJobsCompleted,
     },
     {
       title: 'Moderation',
       id: 'moderation',
       component: ModerationJobs,
-      class: 'bg-purple',
-      value: translator?.moderationJobsCompleted,
     },
     {
       title: 'Overlay',
       id: 'overlay',
       component: OverlayJobs,
-      class: 'bg-blue',
-      value: translator?.overlayJobsCompleted,
+    },
+    {
+      title: 'Active',
+      id: 'active',
+      component: AllJobs,
     },
   ];
 
@@ -179,13 +223,15 @@ const Dashboard = () => {
                       </video>
                     )}
                   </div>
-                  <div className="mt-s2 w-full">
-                    <div className="float-right h-[47px] w-[170px]">
-                      <Button theme="success" onClick={handleAccept}>
-                        Accept job
-                      </Button>
+                  {previewJobVideoLink && (
+                    <div className="mt-s2 w-full">
+                      <div className="float-right h-[47px] w-[170px]">
+                        <Button theme="success" onClick={handleAccept}>
+                          Accept job
+                        </Button>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -230,7 +276,7 @@ const Dashboard = () => {
                       ></div>
                       <div className="pt-1 text-lg">{job.title}</div>
                       <div className="ml-auto w-[50px] rounded-lg bg-white-transparent px-[8px] pt-[2px] text-center text-base">
-                        {translator ? job.value : ''}
+                        {translator ? translator.pendingJobsCompleted : ''}
                       </div>
                     </div>
                   ))}
@@ -283,12 +329,17 @@ const Dashboard = () => {
           </div>
 
           <div>
-            <ComponentToRender
-              setPopupPreview={setPopupPreview}
-              setPreviewJob={setPreviewJob}
-              setPreviewJobType={setPreviewJobType}
-              setPreviewJobVideoLink={setPreviewJobVideoLink}
-            />
+            {isLoading ? (
+              <CircleLoader />
+            ) : (
+              <ComponentToRender
+                jobs={filteredJobs}
+                setPopupPreview={setPopupPreview}
+                setPreviewJob={setPreviewJob}
+                setPreviewJobType={setPreviewJobType}
+                setPreviewJobVideoLink={setPreviewJobVideoLink}
+              />
+            )}
           </div>
         </div>
       </DashboardNoSidebar>

@@ -1,6 +1,12 @@
 import { initializeApp } from 'firebase/app';
-import { GoogleAuthProvider, signInWithPopup, getAuth } from 'firebase/auth';
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+  getAuth,
+  signOut,
+} from 'firebase/auth';
 import { getDatabase, ref, get, update } from 'firebase/database';
+import Cookies from 'js-cookie';
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -118,4 +124,13 @@ export const getUserProfile = async (_id) => {
 export const flagOverlayJob = async (jobId) => {
   const jobRef = ref(database, `admin-jobs/pending/${jobId}`);
   await update(jobRef, { overlayStatus: 'flagged' });
+};
+
+export const logoutUser = async () => {
+  await signOut(auth).then(() => {
+    Cookies.remove('uid');
+    Cookies.remove('session');
+    Cookies.remove('_id');
+  });
+  window.location.href = '/';
 };

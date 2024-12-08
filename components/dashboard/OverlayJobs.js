@@ -1,41 +1,16 @@
 import { useEffect, useState } from 'react';
 import ErrorHandler from '../../utils/errorHandler';
-import {
-  getAllOverlayJobs,
-  acceptJob,
-  getDownloadLink,
-} from '../../services/apis';
+import { getDownloadLink } from '../../services/apis';
+import { TableHeader } from '../../constants/constants';
+import { formatTimestamp } from '../../utils/formatDate';
 
 const OverlayJobs = ({
+  jobs,
   setPopupPreview,
   setPreviewJob,
   setPreviewJobType,
   setPreviewJobVideoLink,
 }) => {
-  const [jobs, setJobs] = useState([]);
-
-  const getOverlayJobs = async () => {
-    const res = await getAllOverlayJobs();
-    const resData = res.data;
-    const pending = resData
-      ? Object.values(resData).map((item, i) => ({
-          ...item,
-          jobId: Object.keys(resData)[i],
-        }))
-      : [];
-    setJobs(pending);
-  };
-
-  const handleAccept = async (jobId) => {
-    try {
-      await acceptJob(jobId, 'overlay');
-
-      window.open(`/overlays?jobId=${jobId}`, '_blank');
-    } catch (error) {
-      ErrorHandler(error);
-    }
-  };
-
   const handlePreview = async (job) => {
     const videoPath = `dubbing-tasks/${job.creatorId}/${job.jobId}/video.mp4`;
     const downloadLink = await getDownloadLink(videoPath);
@@ -47,81 +22,54 @@ const OverlayJobs = ({
   };
 
   useEffect(() => {
-    getOverlayJobs();
-  }, []);
-
-  useEffect(() => {
     console.log(jobs);
   }, [jobs]);
 
   return (
-    <>
-      <div className="rounded-2xl bg-white-transparent p-4">
-        {jobs.length > 0 ? (
-          <div>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
-                gap: '1rem',
-                textAlign: 'center',
-              }}
-            >
-              <div className="text-left text-lg font-bold text-white">
-                Job ID
-              </div>
-              <div className="text-left text-lg font-bold text-white">
-                Title
-              </div>
-              <div className="text-left text-lg font-bold text-white">
-                Original Language
-              </div>
-              <div className="text-left text-lg font-bold text-white">
-                Translated Language
-              </div>
-            </div>
+    <div className="rounded-2xl bg-black p-4 text-white">
+      {jobs.length > 0 ? (
+        <div className="relative h-auto overflow-y-auto">
+          <div className="sticky top-0">
+            <div className="absolute inset-0 bg-white bg-opacity-20 backdrop-blur-md" />
 
-            <div className="mt-s2 mb-s2 h-[1px] w-full bg-white"></div>
-            {jobs.map((job) => (
-              <div key={job.jobId} className="">
-                <div className="py-s2 hover:bg-white-transparent">
+            <div className="relative grid grid-cols-6 gap-1 py-2 text-center">
+              {TableHeader.map((headerItem, index) => (
+                <div className="text-left text-lg font-bold" key={index}>
+                  {headerItem}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-s2 mb-s2 h-[1px] w-full bg-white"></div>
+          {jobs.map((job) => (
+            <div key={job.jobId} className="">
+              <div className="py-s2 hover:bg-white-transparent">
+                <div className="grid grid-cols-6 gap-1">
+                  <div className="text-left">
+                    {formatTimestamp(job.timestamp)}
+                  </div>
+                  <div className="text-left">{job.videoData.caption}</div>
+                  <div className="text-left">{job.originalLanguage}</div>
+                  <div className="text-left">{job.translatedLanguage}</div>
                   <div
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
-                      gap: '1rem',
-                      textAlign: 'left',
+                    className="cursor-pointer underline"
+                    onClick={() => {
+                      handlePreview(job);
                     }}
                   >
-                    <div className="text-left text-white">{job.jobId}</div>
-                    <div className="text-left text-white">
-                      {job.videoData.caption}
-                    </div>
-                    <div className="text-left text-white">
-                      {job.originalLanguage}
-                    </div>
-                    <div className="text-left text-white">
-                      {job.translatedLanguage}
-                    </div>
-                    <div
-                      className="cursor-pointer text-white underline"
-                      onClick={() => {
-                        handlePreview(job);
-                      }}
-                    >
-                      Preview job
-                    </div>
+                    Preview job
                   </div>
-                  <div className="h-[1px] w-full bg-white bg-opacity-25"></div>
                 </div>
+                <div className="h-[1px] w-full bg-white bg-opacity-25"></div>
               </div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-white">No jobs available.</p>
-        )}
-      </div>
-    </>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p>No jobs available.</p>
+      )}
+    </div>
   );
 };
 

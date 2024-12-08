@@ -240,3 +240,11 @@ export const SupportedLanguages = [
     dubbing: false,
   },
 ];
+
+export const TableHeader = [
+  'Date',
+  'Title',
+  'Original Language',
+  'Translated Language',
+  'Preview Link',
+];

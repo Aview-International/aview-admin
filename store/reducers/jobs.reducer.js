@@ -1,18 +1,24 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = [];
+const initialState = {
+  jobs: [],
+  isLoading: false,
+};
 
 const jobsSlice = createSlice({
-  name: 'user',
+  name: 'jobs',
   initialState,
   reducers: {
-    setAllJobs(_, action) {
-      const { payload } = action;
-      return payload;
+    setAllJobs: (state, action) => {
+      state.jobs = action.payload;
+    },
+    
+    setJobsLoading: (state, action) => {
+      state.isLoading = action.payload;
     },
   },
 });
 
-export const { setAllJobs } = jobsSlice.actions;
+export const { setAllJobs, setJobsLoading } = jobsSlice.actions;
 
 export default jobsSlice.reducer;
