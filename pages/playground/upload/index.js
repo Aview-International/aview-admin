@@ -7,6 +7,9 @@ import ErrorHandler from '../../../utils/errorHandler.js';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 import DashboardLayout from '../../../components/dashboard/DashboardLayout';
+import Arrowback from '../../../public/img/icons/arrow-back.svg';
+import Link from 'next/link';
+import Image from 'next/image';
 
 const Upload = () => {
   const router = useRouter();
@@ -40,6 +43,12 @@ const Upload = () => {
   return (
     <>
       <PageTitle title="Upload Video" />
+
+      <Link href={'/playground'} className="mb-s4 flex items-center text-lg">
+        <Image src={Arrowback} alt="" width={18} height={18} />
+        <span className="pl-s2">Back</span>
+      </Link>
+
       <div className="mx-auto max-w-[1200px]">
         <div className="flex flex-col rounded-xl bg-white-transparent p-s5 text-white lg:flex-row">
           <div className={video ? '' : 'lg:w-full'}>

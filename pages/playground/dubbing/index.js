@@ -13,6 +13,8 @@ import RadioInput from '../../../components/FormComponents/RadioContent';
 import PlayIcon from '../../../public/img/icons/play.svg';
 import ToggleButton from '../../../components/FormComponents/ToggleButton';
 import PageTitle from '../../../components/SEO/PageTitle';
+import Arrowback from '../../../public/img/icons/arrow-back.svg';
+import Link from 'next/link';
 
 const ManualDubbing = () => {
   const audioRef = useRef(null);
@@ -67,6 +69,11 @@ const ManualDubbing = () => {
     <>
       <PageTitle title="Manual Translation" />
 
+      <Link href={'/playground'} className="mb-s4 flex items-center text-lg">
+        <Image src={Arrowback} alt="" width={18} height={18} />
+        <span className="pl-s2">Back</span>
+      </Link>
+ 
       <div className="w-11/12 text-white">
         <DottedBorder classes="relative block md:inline-block w-full">
           {file && (

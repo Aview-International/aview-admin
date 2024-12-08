@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { uploadManualTranscription } from '../../../services/api';
 import PageTitle from '../../../components/SEO/PageTitle';
 import { ErrorHandler } from '../../../utils/errorHandler';
+import Arrowback from '../../../public/img/icons/arrow-back.svg';
 
 const ManualTranscription = () => {
   const [file, setFile] = useState(null);
@@ -29,6 +30,11 @@ const ManualTranscription = () => {
   return (
     <>
       <PageTitle title="Manual Transcription" />
+
+      <Link href={'/playground'} className="mb-s4 flex items-center text-lg">
+        <Image src={Arrowback} alt="" width={18} height={18} />
+        <span className="pl-s2">Back</span>
+      </Link>
 
       <div className="w-11/12 text-white">
         <DottedBorder classes="relative block md:inline-block w-full">

@@ -15,6 +15,8 @@ import ErrorHandler from '../../../utils/errorHandler';
 import { submitAdminTranscriptionLink } from '../../../services/api';
 import TranslateOptions from '../../../components/dashboard/TranslateOptions';
 import { useRouter } from 'next/router';
+import Arrowback from '../../../public/img/icons/arrow-back.svg';
+import Link from 'next/link';
 
 const SocialMedia = () => {
   const router = useRouter();
@@ -70,6 +72,12 @@ const SocialMedia = () => {
   return (
     <>
       <PageTitle title="Social Media Servicing" />
+
+      <Link href={'/playground'} className="mb-s4 flex items-center text-lg">
+        <Image src={Arrowback} alt="" width={18} height={18} />
+        <span className="pl-s2">Back</span>
+      </Link>
+
       <div className="flex">
         <div className="mr-10 flex-1">
           <div className="h-12">

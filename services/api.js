@@ -133,24 +133,15 @@ export const getSupportedLanguages = async () => {
   return response.data;
 };
 
-export const uploadManualSrtTranslation = async (
-  srt,
-  langugageCode,
-  languageName
-) => {
+export const uploadManualSrtTranslation = async (srt, langugageCode) => {
   let formData = new FormData();
   formData.append('srt', srt);
   formData.append('langugageCode', langugageCode);
-  formData.append('languageName', languageName);
-  const response = await axiosInstance({
-    method: 'POST',
-    url: baseUrl + 'admin/manual-translation',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: formData,
+  const res = axiosInstance.post('admin/manual-translation', formData, {
+    responseType: 'blob',
+    headers: { 'Content-Type': 'multipart/form-data' },
   });
-  return response.data;
+  return res;
 };
 
 export const uploadManualSrtDubbing = async ({ srt, voiceId, multiVoice }) => {

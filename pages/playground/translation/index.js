@@ -10,6 +10,8 @@ import {
 } from '../../../services/api';
 import PageTitle from '../../../components/SEO/PageTitle';
 import ErrorHandler from '../../../utils/errorHandler';
+import Arrowback from '../../../public/img/icons/arrow-back.svg';
+import Link from 'next/link';
 
 const ManualTranslation = () => {
   const [file, setFile] = useState(null);
@@ -36,13 +38,20 @@ const ManualTranslation = () => {
   const handleUpload = async () => {
     try {
       setIsLoading(true);
-      const res = await uploadManualSrtTranslation(
-        file,
-        lang.code,
-        lang.languageName
-      );
+      const res = await uploadManualSrtTranslation(file, lang.code);
+      const filename = `${lang.code}-${file.name}`;
+
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link); // Clean up
+      window.URL.revokeObjectURL(url);
+
       setIsLoading(false);
-      window.open(res, '_blank');
     } catch (error) {
       ErrorHandler(error);
     }
@@ -51,7 +60,10 @@ const ManualTranslation = () => {
   return (
     <>
       <PageTitle title="Manual Translation" />
-
+      <Link href={'/playground'} className='flex items-center text-lg mb-s4'>
+        <Image src={Arrowback} alt="" width={18}  height={18}/>
+        <span className='pl-s2'>Back</span>
+      </Link>
       <div className="w-11/12 text-white">
         <DottedBorder classes="relative block md:inline-block w-full">
           {file && (
