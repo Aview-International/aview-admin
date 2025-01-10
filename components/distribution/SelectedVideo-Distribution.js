@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Button from '../UI/Button';
 import { downloadS3Object } from '../../services/api';
 import Check from '../../public/img/icons/check-circle-green.svg';
-import Download from '../../public/img/icons/download.svg';ß
+import Download from '../../public/img/icons/download.svg';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { getUserProfile } from '../../services/firebase';
