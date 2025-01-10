@@ -38,8 +38,8 @@ const ManualTranslation = () => {
   const handleUpload = async () => {
     try {
       setIsLoading(true);
-      const res = await uploadManualSrtTranslation(file, lang.code);
-      const filename = `${lang.code}-${file.name}`;
+      const res = await uploadManualSrtTranslation(file, lang.translateCode);
+      const filename = `${lang.translateCode}-${file.name}`;
 
       const url = window.URL.createObjectURL(new Blob([res.data]));
       const link = document.createElement('a');
@@ -60,16 +60,16 @@ const ManualTranslation = () => {
   return (
     <>
       <PageTitle title="Manual Translation" />
-      <Link href={'/playground'} className='flex items-center text-lg mb-s4'>
-        <Image src={Arrowback} alt="" width={18}  height={18}/>
-        <span className='pl-s2'>Back</span>
+      <Link href={'/playground'} className="mb-s4 flex items-center text-lg">
+        <Image src={Arrowback} alt="" width={18} height={18} />
+        <span className="pl-s2">Back</span>
       </Link>
       <div className="w-11/12 text-white">
         <DottedBorder classes="relative block md:inline-block w-full">
           {file && (
             <button
               onClick={() => setFile(null)}
-              className={`gradient-2 absolute top-4 right-4 z-50 mx-auto block w-[80px] cursor-pointer rounded-full pt-1 pb-1 text-center text-sm`}
+              className={`gradient-2 absolute right-4 top-4 z-50 mx-auto block w-[80px] cursor-pointer rounded-full pb-1 pt-1 text-center text-sm`}
             >
               Remove
             </button>
@@ -91,7 +91,7 @@ const ManualTranslation = () => {
               <label className="mt-s5 cursor-pointer" htmlFor="srt_upload">
                 <Border borderRadius="full">
                   <span
-                    className={`transition-300 mx-auto block rounded-full bg-black px-s3 pt-s1.5 pb-s1 text-center text-white`}
+                    className={`transition-300 mx-auto block rounded-full bg-black px-s3 pb-s1 pt-s1.5 text-center text-white`}
                   >
                     Upload Srt File
                   </span>
@@ -118,7 +118,7 @@ const ManualTranslation = () => {
         {file && (
           <button
             onClick={handleUpload}
-            className={`gradient-2 z-50 mx-auto block w-[140px] cursor-pointer rounded-full pt-s1.5 pb-s1 text-center`}
+            className={`gradient-2 z-50 mx-auto block w-[140px] cursor-pointer rounded-full pb-s1 pt-s1.5 text-center`}
           >
             Proceed
           </button>
