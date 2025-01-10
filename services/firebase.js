@@ -2,7 +2,6 @@ import { initializeApp } from 'firebase/app';
 import { GoogleAuthProvider, signInWithPopup, getAuth } from 'firebase/auth';
 import {
   getDatabase,
-  set,
   ref,
   child,
   get,
@@ -161,4 +160,24 @@ export const subscribeToAllJobs = (subscriptionCallback) => {
     subscriptionCallback(data);
   });
   return unsubscribe; // Return the unsubscribe function
+};
+
+export const getAllPendingDistribution = async () => {
+  const res = await get(ref(database, `admin-jobs/pending/video-edit`)).then(
+    (snapshot) => {
+      if (snapshot.exists()) return snapshot.val();
+      else return null;
+    }
+  );
+  return res;
+};
+
+export const getSingleVideoData = async (id) => {
+  const res = await get(
+    ref(database, `admin-jobs/pending/video-edit/${id}`)
+  ).then((snapshot) => {
+    if (snapshot.exists()) return snapshot.val();
+    else return null;
+  });
+  return res;
 };

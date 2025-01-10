@@ -7,7 +7,7 @@ import Border from '../../../components/UI/Border';
 import { useState } from 'react';
 import { uploadManualTranscription } from '../../../services/api';
 import PageTitle from '../../../components/SEO/PageTitle';
-import { ErrorHandler } from '../../../utils/errorHandler';
+import ErrorHandler from '../../../utils/errorHandler';
 import Arrowback from '../../../public/img/icons/arrow-back.svg';
 
 const ManualTranscription = () => {
@@ -41,7 +41,7 @@ const ManualTranscription = () => {
           {file && (
             <button
               onClick={() => setFile(null)}
-              className={`gradient-2 pt-s0 pb-s0 absolute top-4 right-4 z-50 mx-auto block w-[80px] cursor-pointer rounded-full text-center text-sm`}
+              className={`gradient-2 pt-s0 pb-s0 absolute right-4 top-4 z-50 mx-auto block w-[80px] cursor-pointer rounded-full text-center text-sm`}
             >
               Remove
             </button>
@@ -49,7 +49,7 @@ const ManualTranscription = () => {
           {file && (
             <button
               onClick={handleUpload}
-              className={`gradient-2 absolute bottom-4 right-1/2 left-1/2 z-50 mx-auto block w-[140px] -translate-x-1/2 cursor-pointer rounded-full pt-s1.5 pb-s1 text-center`}
+              className={`gradient-2 absolute bottom-4 left-1/2 right-1/2 z-50 mx-auto block w-[140px] -translate-x-1/2 cursor-pointer rounded-full pb-s1 pt-s1.5 text-center`}
             >
               Proceed
             </button>
@@ -86,7 +86,7 @@ const ManualTranscription = () => {
               <label className="mt-s5 cursor-pointer" htmlFor="video_upload">
                 <Border borderRadius="full">
                   <span
-                    className={`transition-300 mx-auto block rounded-full bg-black px-s3 pt-s1.5 pb-s1 text-center text-white`}
+                    className={`transition-300 mx-auto block rounded-full bg-black px-s3 pb-s1 pt-s1.5 text-center text-white`}
                   >
                     Select Video/Audio
                   </span>

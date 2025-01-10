@@ -126,12 +126,8 @@ export const uploadCreatorVideo = async (
   return;
 };
 
-export const getSupportedLanguages = async () => {
-  const response = await axiosInstance.get(
-    baseUrl + 'admin/supported-languages'
-  );
-  return response.data;
-};
+export const getSupportedLanguages = async () =>
+  (await axiosInstance.get('admin/supported-languages')).data;
 
 export const uploadManualSrtTranslation = async (srt, langugageCode) => {
   let formData = new FormData();
@@ -188,14 +184,87 @@ export const markTicketAsResolved = async (id) =>
 export const rerunStuckJobs = async (
   stage,
   creatorId,
-  timestamp,
+  jobId,
   translatedLanguage
 ) => {
   let url = `transcription/rerun/${stage}?`;
-  url += `s3Path=dubbing-tasks/${creatorId}/${timestamp}&`;
+  url += `s3Path=dubbing-tasks/${creatorId}/${jobId}&`;
   url += `translatedLanguage=${translatedLanguage}&`;
   await axiosInstance.get(url);
 };
 
 export const approveReviewerAccount = async (uid) =>
   (await axiosInstance.patch('admin/verify-translator-account/' + uid)).data;
+
+export const getRegionCategory = async (language) => {
+  const response = await axiosInstance.post('admin/youtube-categories', {
+    language,
+  });
+
+  const categories = response.data
+    .map((category) => {
+      if (category.snippet.assignable)
+        return {
+          name: category.snippet.title,
+          id: category.id,
+        };
+      else return;
+    })
+    .filter((item) => item !== undefined);
+
+  return categories;
+};
+
+export const getYoutubePlaylistData = async (videoId) => {
+  const response = await axiosInstance.post('admin/get-youtube-playlist', {
+    videoId,
+  });
+
+  const playlists = response.data.items.map((playlist) => ({
+    name: playlist.snippet.title,
+    id: playlist.id,
+  }));
+
+  return playlists;
+};
+
+export const getYoutubeVideoData = async (videoId) => {
+  const res = await axiosInstance.post('admin/get-youtube-data', {
+    videoId,
+  });
+  return res.data;
+};
+
+export const postToYouTube = async (
+  filePath,
+  creatorId,
+  date,
+  youtubePayload
+) => {
+  const response = await axiosInstance.post('admin/post-to-youtube', {
+    filePath,
+    creatorId,
+    date,
+    youtubePayload,
+  });
+
+  console.log(response);
+};
+
+export const translateText = async (text, target_lang) => {
+  const response = await axiosInstance.post('admin/translate-text', {
+    text,
+    target_lang,
+  });
+  return response.data;
+};
+
+export const getS3DownloadLink = async ({ userId, timestamp, lang }) =>
+  (await axiosInstance.get(`admin/download/${userId}/${timestamp}/${lang}`))
+    .data;
+
+export const downloadS3Object = async (s3Path) => {
+  await axiosInstance.post('admin/download-object', {
+    s3Path,
+  });
+};

@@ -54,13 +54,13 @@ const CreatorJobData = ({ creator, pendingJobs }) => {
   const handleRerunJobs = async (
     stage,
     creatorId,
-    timestamp,
+    jobId,
     translatedLanguage
   ) => {
-    setLoading(timestamp);
+    setLoading(jobId);
     try {
-      // console.log(stage, creatorId, timestamp, translatedLanguage);
-      await rerunStuckJobs(stage, creatorId, timestamp, translatedLanguage);
+      // console.log(stage, creatorId, jobId, translatedLanguage);
+      await rerunStuckJobs(stage, creatorId, jobId, translatedLanguage);
       setLoading(null);
     } catch (error) {
       ErrorHandler(error, 'Something went wrong');
@@ -102,7 +102,7 @@ const CreatorJobData = ({ creator, pendingJobs }) => {
                 : handleRerunJobs(
                     job.status,
                     job.creatorId,
-                    job.timestamp,
+                    job.jobId,
                     job.translatedLanguage
                   )
             }
