@@ -116,9 +116,9 @@ const AccountDetails = ({ account, setModal }) => {
   };
 
   return (
-    <div className="fixed top-0 left-0 z-10 h-screen w-screen items-center justify-center bg-black/90">
+    <div className="fixed left-0 top-0 z-10 h-screen w-screen items-center justify-center bg-black/90">
       <OutsideClickHandler onOutsideClick={() => setModal(false)}>
-        <div className="z-100 fixed top-1/2 left-1/2 max-w-2xl -translate-x-1/2 -translate-y-1/2 rounded-lg bg-gray-1 p-s4">
+        <div className="z-100 fixed left-1/2 top-1/2 max-w-2xl -translate-x-1/2 -translate-y-1/2 rounded-lg bg-gray-1 p-s4">
           <div>
             <Image
               width={100}
@@ -135,6 +135,11 @@ const AccountDetails = ({ account, setModal }) => {
 
           <div className="my-s3">
             Country: <span className="pl-s2">{account.country}</span>
+          </div>
+
+          <div className="my-s3">
+            Language{'(s)'}:{' '}
+            <span className="pl-s2">{account.nativeLanguage.toString()}</span>
           </div>
 
           <div className="flex justify-between">
