@@ -46,17 +46,6 @@ export const signInWithGoogle = async () => {
   return response;
 };
 
-// get all user data from the database
-export const getAdminProfile = async (uid) => {
-  const res = await get(ref(database, `super-admins/${uid}`)).then(
-    (snapshot) => {
-      if (snapshot.exists()) return snapshot.val();
-      else return null;
-    }
-  );
-  return res;
-};
-
 // update user preferences
 export const updateRequiredServices = async (payload, uid) => {
   get(child(ref(database), `users/${uid}`)).then(async (snapshot) => {

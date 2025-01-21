@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import DashboardLayout from '../../components/dashboard/DashboardLayout';
 import PageTitle from '../../components/SEO/PageTitle';
 import { getUserProfile, subscribeToAllJobs } from '../../services/firebase';
@@ -7,10 +7,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import ErrorHandler from '../../utils/errorHandler';
 import Image from 'next/image';
 import Avatar from '../../public/img/icons/avatar.webp';
-import { rerunStuckJobs } from '../../services/api';
+import { deleteJob, rerunStuckJobs } from '../../services/api';
+import DashboardButton from '../../components/UI/DashboardButton';
+import Modal from '../../components/UI/Modal';
 
 const DashboardHome = () => {
   const dispatch = useDispatch();
+  const [selectedJob, setSelectedJob] = useState(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const pendingJobs = useSelector((el) => el.jobs.pendingJobs);
   useEffect(() => {
     try {
@@ -24,19 +28,58 @@ const DashboardHome = () => {
     }
   }, []);
 
+  const handleDeleteJob = async () => {
+    try {
+      setDeleteLoading(true);
+      await deleteJob(selectedJob.creatorId, selectedJob.jobId);
+    } catch (error) {
+      ErrorHandler(error);
+    } finally {
+      setDeleteLoading(false);
+      setSelectedJob(null);
+    }
+  };
+
   return (
     <>
       <PageTitle title="Dashboard" />
+      {selectedJob && (
+        <Modal closeModal={() => setSelectedJob(null)}>
+          <p className="mb-s3">Delete this job?</p>
+          <div className="flex w-64 items-center justify-between">
+            <div className="w-28">
+              <DashboardButton onClick={() => setSelectedJob(null)}>
+                Cancel
+              </DashboardButton>
+            </div>
+            <div className="w-28">
+              <DashboardButton
+                onClick={handleDeleteJob}
+                theme="error"
+                isLoading={deleteLoading}
+              >
+                Delete
+              </DashboardButton>
+            </div>
+          </div>
+        </Modal>
+      )}
       <h2 className="text-6xl">Creator Running Jobs</h2>
-
       {Object.keys(pendingJobs).map((creator, i) => (
-        <CreatorJobData key={i} creator={creator} pendingJobs={pendingJobs} />
+        <Fragment key={i}>
+          <CreatorJobData
+            creator={creator}
+            pendingJobs={pendingJobs}
+            setSelectedJob={setSelectedJob}
+          />
+          {/* <hr className="my-s2" /> */}
+        </Fragment>
       ))}
     </>
   );
 };
 
-const CreatorJobData = ({ creator, pendingJobs }) => {
+const CreatorJobData = ({ creator, pendingJobs, setSelectedJob }) => {
   const [creatorProfile, setCreatorProfile] = useState(null);
   const [loading, setLoading] = useState(null);
 
@@ -69,7 +112,7 @@ const CreatorJobData = ({ creator, pendingJobs }) => {
   };
 
   return (
-    <div className="border-b border-[rgba(252,252,252,0.2)] py-s2">
+    <div className="py-s2">
       <p className="pb-s4">
         <Image
           src={creatorProfile?.picture ?? Avatar}
@@ -81,7 +124,7 @@ const CreatorJobData = ({ creator, pendingJobs }) => {
         {creatorProfile?.firstName} {creatorProfile?.lastName}
       </p>
       {Object.values(pendingJobs[creator]).map((job, idx) => (
-        <div key={idx} className="my-s3">
+        <div key={idx} className="my-s3 pl-s12">
           <p>Status : {job.status}</p>
           <p>Caption : {job.videoData?.caption}</p>
           <p>
@@ -110,6 +153,12 @@ const CreatorJobData = ({ creator, pendingJobs }) => {
           >
             {loading === job.timestamp ? 'Loading...' : 'Rerun current stage'}
           </button>
+          <div className="mt-s3 w-28">
+            <DashboardButton onClick={() => setSelectedJob(job)} theme="error">
+              Delete Job
+            </DashboardButton>
+          </div>
+          <hr className="my-s3" />
         </div>
       ))}
     </div>

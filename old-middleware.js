@@ -25,6 +25,7 @@ export const config = {
     '/inquiries',
     '/creator-enquiries',
     '/history',
+    '/jobs',
     '/playground/:path*',
   ],
 };

@@ -1,13 +1,21 @@
 /** @type {import('next').NextConfig} */
+
+const hostnames = [
+  'lh3.googleusercontent.com',
+  'res.cloudinary.com',
+  'aview-public.s3.amazonaws.com',
+];
+
 const nextConfig = {
   reactStrictMode: false,
-  swcMinify: true,
+  output: 'export',
+  distDir: 'dist',
   images: {
-    domains: [
-      'lh3.googleusercontent.com',
-      'res.cloudinary.com',
-      'aview-public.s3.amazonaws.com',
-    ],
+    unoptimized: true,
+    remotePatterns: hostnames.map((hostname) => ({
+      protocol: 'https',
+      hostname,
+    })),
   },
 };
 

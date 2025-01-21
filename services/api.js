@@ -268,3 +268,6 @@ export const downloadS3Object = async (s3Path) => {
     s3Path,
   });
 };
+
+export const deleteJob = async (creatorId, jobId) =>
+  (await axiosInstance.delete(`admin/job/${creatorId}/${jobId}`)).data;
