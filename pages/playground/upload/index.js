@@ -20,6 +20,7 @@ const Upload = () => {
     languages: [],
     saveSettings: false,
     additionalNote: '',
+    requestHumanReview: false,
   });
 
   const handleSubmit = async () => {

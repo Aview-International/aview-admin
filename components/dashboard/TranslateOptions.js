@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-// import CheckBox from '../FormComponents/CheckBox';
+import CheckBox from '../FormComponents/CheckBox';
 import ToggleButton from '../FormComponents/ToggleButton';
 import DashboardButton from '../UI/DashboardButton';
 
@@ -45,12 +45,14 @@ const TranslateOptions = ({
         ))}
       </div>
       <br />
-      {/* <CheckBox
+      <br />
+      <CheckBox
         onChange={(e) =>
-          setPayload({ ...payload, saveSettings: e.target.checked })
+          setPayload({ ...payload, requestHumanReview: e.target.checked })
         }
-        label="Save these settings for future translations"
-      /> */}
+        isChecked={payload.requestHumanReview}
+        label="Request human review"
+      />
       <br />
       {isLoading &&
         (uploadProgress < 100 ? (

@@ -26,6 +26,7 @@ const SocialMedia = () => {
     link,
     languages: [],
     saveSettings: false,
+    requestHumanReview: false,
   });
 
   const pasteFromClipboard = async () => {
@@ -54,7 +55,7 @@ const SocialMedia = () => {
     try {
       await submitAdminTranscriptionLink({ ...payload, link });
       setIsLoading(false);
-      // router.push('/history');
+      router.push('/history');
     } catch (error) {
       setIsLoading(false);
       ErrorHandler(error);

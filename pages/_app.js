@@ -30,10 +30,10 @@ const MyApp = ({ Component, pageProps }) => {
             position="top-right"
             autoClose={5000}
             hideProgressBar={false}
-            newestOnTop={true}
+            newestOnTop={false}
             closeOnClick
             rtl={false}
-            pauseOnFocusLoss={false}
+            pauseOnFocusLoss
             draggable
             pauseOnHover
             theme="dark"
