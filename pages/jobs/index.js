@@ -102,7 +102,6 @@ const CreatorJobData = ({ creator, pendingJobs, setSelectedJob }) => {
   ) => {
     setLoading(jobId);
     try {
-      // console.log(stage, creatorId, jobId, translatedLanguage);
       await rerunStuckJobs(stage, creatorId, jobId, translatedLanguage);
       setLoading(null);
     } catch (error) {
@@ -151,7 +150,7 @@ const CreatorJobData = ({ creator, pendingJobs, setSelectedJob }) => {
             }
             className="cursor-pointer text-blue underline"
           >
-            {loading === job.timestamp ? 'Loading...' : 'Rerun current stage'}
+            {loading === job.jobId ? 'Loading...' : 'Rerun current stage'}
           </button>
           <div className="mt-s3 w-28">
             <DashboardButton onClick={() => setSelectedJob(job)} theme="error">
