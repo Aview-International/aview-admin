@@ -7,10 +7,12 @@ import signout from '../../public/img/icons/signout.svg';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../services/firebase';
 import Cookies from 'js-cookie';
+import { useSelector } from 'react-redux';
 
 const DashboardSidebar = () => {
+  const userData = useSelector((state) => state.user);
   return (
-    <aside className="fixed top-0 left-0 flex max-h-screen w-[170px] flex-col items-center overflow-y-auto py-s4 text-white">
+    <aside className="fixed left-0 top-0 flex max-h-screen w-[170px] flex-col items-center overflow-y-auto py-s4 text-white">
       <div>
         <Link href="/dashboard">
           <Image
@@ -21,16 +23,20 @@ const DashboardSidebar = () => {
           />
         </Link>
       </div>
-      <Profile />
+      <Profile userData={userData} />
       <Navlink />
       <Signout />
     </aside>
   );
 };
 
-const Profile = () => {
+const Profile = ({ userData }) => {
   return (
-    <div className="justify-content mt-s8 mb-s5">
+    <div className="justify-content mb-s5 mt-s8 text-center">
+      <p className="my-2 text-lg font-bold">
+        {userData.firstName} {userData?.lastName}
+      </p>
+      <p className="text-sm">{userData.email || ''}</p>
       <p className="text-sm">Super Admin</p>
     </div>
   );
@@ -45,7 +51,7 @@ const Navlink = () => {
         <Link
           href={link.route}
           key={`sidebar-link-${index}`}
-          className={`hover:gradient-dark group relative mb-s2 flex items-center py-s1 px-s3 ${
+          className={`hover:gradient-dark group relative mb-s2 flex items-center px-s3 py-s1 ${
             route === link.route && 'gradient-dark'
           }`}
         >

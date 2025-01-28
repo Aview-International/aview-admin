@@ -61,6 +61,7 @@ const Layout = ({ Component, pageProps }) => {
           })
         );
         dispatch(setAuthState(true));
+        Cookies.set('token', user.accessToken);
       } else {
         Cookies.remove('uid');
         Cookies.remove('token');
