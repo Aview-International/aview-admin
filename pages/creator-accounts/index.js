@@ -3,14 +3,14 @@ import { useEffect, useState } from 'react';
 import DashboardLayout from '../../components/dashboard/DashboardLayout';
 import DashboardButton from '../../components/UI/DashboardButton';
 import Youtube from '../../public/img/icons/youtube.svg';
-import { getAllCreators } from '../../services/firebase';
+import { getAllCreators } from '../../services/api';
 
 const CreatorAccounts = () => {
   const [accounts, setAccounts] = useState([]);
 
   const getAdminAccount = async () => {
     const res = await getAllCreators();
-    setAccounts(Object.values(res));
+    setAccounts(res);
   };
 
   useEffect(() => {
@@ -31,13 +31,12 @@ const CreatorAccounts = () => {
 
 const AccountInfo = ({ account }) => {
   const [modal, setModal] = useState(false);
+
   return (
     <div className="my-s4 flex w-4/5 items-center gap-12">
       {modal && <AccountDetails account={account} setModal={setModal} />}
       <div>
         <Image
-          loader={() => user.picture}
-          unoptimized
           width={100}
           height={100}
           className="rounded-full"
@@ -66,7 +65,7 @@ const AccountInfo = ({ account }) => {
 
 const AccountDetails = ({ account, setModal }) => {
   return (
-    <div className="place-contents-center fixed top-0 left-0 z-10 flex h-screen w-screen items-center justify-center bg-black text-lg">
+    <div className="place-contents-center fixed left-0 top-0 z-10 flex h-screen w-screen items-center justify-center bg-black text-lg">
       <div>
         <div
           className="cursor-pointer text-right text-8xl"
