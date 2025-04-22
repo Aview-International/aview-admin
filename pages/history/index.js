@@ -8,7 +8,7 @@ import { subscribeToHistory } from '../../services/firebase';
 
 const History = () => {
   const dispatch = useDispatch();
-  const { completedJobs, pendingJobs } = useSelector((el) => el.history);
+  const { pendingJobs } = useSelector((el) => el.history);
 
   useEffect(() => {
     const unsubscribe = subscribeToHistory((data) => {
@@ -27,12 +27,12 @@ const History = () => {
     <>
       <PageTitle title="History" />
       <h2 className="mt-s2 text-4xl">History</h2>
-      <Container pendingJobs={pendingJobs} completedJobs={completedJobs} />
+      <Container pendingJobs={pendingJobs} />
     </>
   );
 };
 
-const Container = ({ pendingJobs, completedJobs }) => {
+const Container = ({ pendingJobs }) => {
   const handleDownload = async (job) => {
     const downloadLink = await downloadVideoFromS3(
       job.timestamp,
@@ -60,44 +60,45 @@ const Container = ({ pendingJobs, completedJobs }) => {
         <p>Download Link</p>
       </div>
       <hr className="my-s2 border-[rgba(255,255,255,0.6)]" />
-      {[...pendingJobs, ...completedJobs].map((job, i) => (
-        <div
-          className="grid grid-cols-[23%_19%_22%_10%_13%_13%] border-b border-[rgba(252,252,252,0.2)] py-s2"
-          key={i}
-        >
-          <div>{job.videoData?.caption.replace(/\.mp4$/i, '')}</div>
-          <p>{new Date(+job.timestamp).toDateString()}</p>
-          <div>
-            {job?.translatedLanguage
-              ? job.translatedLanguage
-              : typeof job?.languages === 'string'
-              ? job.languages
-              : job?.languages?.map((lang, idx) => (
-                  <p key={idx} className="mb-s1">
-                    {lang}
-                  </p>
-                ))}
+      {pendingJobs.length > 0 &&
+        pendingJobs.map((job, i) => (
+          <div
+            className="grid grid-cols-[23%_19%_22%_10%_13%_13%] border-b border-[rgba(252,252,252,0.2)] py-s2"
+            key={i}
+          >
+            <div>{job.videoData?.caption.replace(/\.mp4$/i, '')}</div>
+            <p>{new Date(+job.timestamp).toDateString()}</p>
+            <div>
+              {job?.translatedLanguage
+                ? job.translatedLanguage
+                : typeof job?.languages === 'string'
+                ? job.languages
+                : job?.languages?.map((lang, idx) => (
+                    <p key={idx} className="mb-s1">
+                      {lang}
+                    </p>
+                  ))}
+            </div>
+            <p>{job.videoData.type}</p>
+            <div className="text-center text-[#eab221]">
+              {job.status === 'complete' || job.status === 'under review'
+                ? 'complete'
+                : job.status}
+            </div>
+            <div>
+              {job.status === 'complete' || job.status === 'under review' ? (
+                <button
+                  onClick={() => handleDownload(job)}
+                  className="cursor-pointer text-blue underline"
+                >
+                  Download
+                </button>
+              ) : (
+                'Processing...'
+              )}
+            </div>
           </div>
-          <p>{job.videoData.type}</p>
-          <div className="text-center text-[#eab221]">
-            {job.status === 'complete' || job.status === 'under review'
-              ? 'complete'
-              : job.status}
-          </div>
-          <div>
-            {job.status === 'complete' || job.status === 'under review' ? (
-              <button
-                onClick={() => handleDownload(job)}
-                className="cursor-pointer text-blue underline"
-              >
-                Download
-              </button>
-            ) : (
-              'Processing...'
-            )}
-          </div>
-        </div>
-      ))}
+        ))}
     </div>
   );
 };

@@ -42,6 +42,12 @@ const ManualJobs = () => {
         >
           Go to Audio Separation
         </Link>
+        <Link
+          href="/playground/speaker-identification"
+          className="my-s2 block hover:underline"
+        >
+          Go to Speaker Identification
+        </Link>
       </div>
     </div>
   );

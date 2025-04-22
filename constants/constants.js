@@ -1,5 +1,6 @@
 // dashboard sidebar icons
 import home from '../public/img/icons/home.svg';
+import distribution from '../public/img/icons/distribution.svg';
 
 //onBoardingLanguages Icons
 import English from '../public/img/icons/english.svg';
@@ -75,6 +76,11 @@ export const DASHBOARD_NAVLINKS = [
     text: 'Playground',
     image: home,
     route: '/playground',
+  },
+  {
+    text: 'Distribution',
+    image: distribution,
+    route: '/distribution',
   },
   {
     text: 'All Jobs',

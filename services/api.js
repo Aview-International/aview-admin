@@ -267,3 +267,9 @@ export const downloadS3Object = async (s3Path) => {
 
 export const deleteJob = async (creatorId, jobId) =>
   (await axiosInstance.delete(`admin/job/${creatorId}/${jobId}`)).data;
+
+export const getAllAdminJobs = async () =>
+  (await axiosInstance.get('admin/get-all-admin-jobs')).data;
+
+export const getSingleVideoData = async (videoId) =>
+  (await axiosInstance.get('admin/get-single-video-data/' + videoId)).data;

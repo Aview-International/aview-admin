@@ -63,3 +63,13 @@ export const subscribeToAllJobs = (subscriptionCallback) => {
   });
   return unsubscribe; // Return the unsubscribe function
 };
+
+export const getSingleVideoData = async (id) => {
+  const res = await get(
+    ref(database, `admin-jobs/pending/video-edit/${id}`)
+  ).then((snapshot) => {
+    if (snapshot.exists()) return snapshot.val();
+    else return null;
+  });
+  return res;
+};

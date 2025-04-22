@@ -13,7 +13,7 @@
 const RadioInput = ({ chosenValue, onChange, name, value, label }) => {
   return (
     <label
-      className={`flex cursor-pointer items-center rounded-full text-sm text-white`}
+      className={`flex cursor-pointer items-center rounded-full text-white`}
     >
       <span
         className={`mr-4 flex h-5 w-5 items-center justify-center rounded-full ${

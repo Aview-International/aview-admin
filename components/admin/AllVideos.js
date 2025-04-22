@@ -3,12 +3,7 @@ import { useEffect, useState } from 'react';
 import { getUserProfile } from '../../services/firebase';
 import { getS3DownloadLink } from '../../services/api';
 
-const AllVideos = ({
-  job,
-  setSelectedJob,
-  selectedJob,
-  setVideoDownloadLink,
-}) => {
+const AllVideos = ({ job, setSelectedJob, selectedJob }) => {
   const [creatorData, setCreatorData] = useState({
     name: '',
     picture: '',
@@ -33,13 +28,6 @@ const AllVideos = ({
       }`}
       onClick={async () => {
         setSelectedJob(job);
-        setVideoDownloadLink(
-          await getS3DownloadLink({
-            userId: job.creatorId,
-            timestamp: job.timestamp,
-            lang: job.translatedLanguage,
-          })
-        );
       }}
     >
       <div className="flex flex-row items-center">

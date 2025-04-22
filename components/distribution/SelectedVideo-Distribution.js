@@ -41,57 +41,66 @@ const SelectedVideo = ({ selectedJob, setReloadTrigger }) => {
     window.open(data, '_blank');
   };
 
-  const handleApproval = async (videoId, date, key) => {
+  const handleApproval = async () => {
     router.push(
-      `/distribution/${selectedJob.jobId}?video-id=${videoId}&date=${date}&${key}`
+      `/distribution/${selectedJob.jobId}?video-id=${selectedJob.videoData.id}&date=${selectedJob.timestamp}&lang=${selectedJob.translatedLanguage}&creator=${selectedJob.creatorId}`
     );
   };
 
   return (
     <div className="rounded-md bg-white-transparent p-s2">
-      {selectedJob.videoData.map((vid, i) => (
-        <div key={i}>
-          <h2 className="text-2xl font-semibold">{vid.caption}</h2>
-          <p className="my-s2 text-lg font-medium">{creatorData.name}</p>
+      <div>
+        <h2 className="text-2xl font-semibold">
+          {selectedJob.videoData.caption}
+        </h2>
+        <p className="my-s2 text-lg font-medium">{creatorData.name}</p>
+        <iframe
+          width="100%"
+          height="300"
+          src={`https://www.youtube.com/embed/${selectedJob.videoData.id}`}
+          title="YouTube video player"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
+        ></iframe>
+        <div className="my-s3">
+          <p>
+            {selectedJob.translatedLanguage.split('-')[0].substring(5)} - Video
+          </p>
+          <div className="flex justify-center gap-s2">
+            <Button
+              theme="light"
+              classes="flex justify-center items-center"
+              onClick={() =>
+                handleDownload(
+                  selectedJob.videoData.timestamp,
+                  selectedJob.translatedLanguage
+                )
+              }
+              isLoading={
+                loader === 'download' &&
+                button === selectedJob.translatedLanguage
+              }
+            >
+              <span className="mr-2">Download</span>
+              <Image src={Download} alt="" width={22} height={22} />
+            </Button>
 
-          <iframe
-            width="100%"
-            height="300"
-            src={`https://www.youtube.com/embed/${vid.id}`}
-            title="YouTube video player"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-          ></iframe>
-
-          {vid.finalVideoKeys &&
-            vid.finalVideoKeys.map((lang, i) => (
-              <div className="my-s3" key={i}>
-                <p>{lang.split('-')[0].substring(5)} - Video</p>
-                <div className="flex justify-center gap-s2">
-                  <Button
-                    theme="light"
-                    classes="flex justify-center items-center"
-                    onClick={() => handleDownload(vid.date, lang)}
-                    isLoading={loader === 'download' && button === lang}
-                  >
-                    <span className="mr-2">Download</span>
-                    <Image src={Download} alt="" width={22} height={22} />
-                  </Button>
-
-                  <Button
-                    theme="success"
-                    classes="flex justify-center items-center"
-                    onClick={() => handleApproval(vid.id, vid.date, lang)}
-                    isLoading={loader === 'approve' && button === lang}
-                  >
-                    <span className="mr-2">Post to youtube</span>
-                    <Image src={Check} alt="" width={24} height={24} />
-                  </Button>
-                </div>
-              </div>
-            ))}
+            <Button
+              theme="success"
+              purpose="onClick"
+              classes="flex justify-center items-center"
+              onClick={handleApproval}
+              isLoading={
+                loader === 'approve' &&
+                button === selectedJob.translatedLanguage
+              }
+            >
+              <span className="mr-2">Post to youtube</span>
+              <Image src={Check} alt="" width={24} height={24} />
+            </Button>
+          </div>
         </div>
-      ))}
+      </div>
     </div>
   );
 };

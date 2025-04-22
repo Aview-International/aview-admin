@@ -77,7 +77,7 @@ const ManualTranslation = () => {
           <input
             type="file"
             className="hidden"
-            accept=".srt"
+            accept=".srt,.txt"
             onChange={(e) => setFile(e.target.files[0])}
             id="srt_upload"
           />

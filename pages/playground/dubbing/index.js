@@ -9,7 +9,7 @@ import {
   uploadManualSrtDubbing,
 } from '../../../services/api';
 import ErrorHandler from '../../../utils/errorHandler';
-import RadioInput from '../../../components/FormComponents/RadioContent';
+import RadioInput from '../../../components/FormComponents/RadioInput';
 import PlayIcon from '../../../public/img/icons/play.svg';
 import ToggleButton from '../../../components/FormComponents/ToggleButton';
 import PageTitle from '../../../components/SEO/PageTitle';

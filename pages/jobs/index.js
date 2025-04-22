@@ -125,6 +125,7 @@ const CreatorJobData = ({ creator, pendingJobs, setSelectedJob }) => {
       {Object.values(pendingJobs[creator]).map((job, idx) => (
         <div key={idx} className="my-s3 pl-s12">
           <p>Status : {job.status}</p>
+          <p>Task Id : {job.jobId}</p>
           <p>Caption : {job.videoData?.caption}</p>
           <p>
             Date :{' '}
