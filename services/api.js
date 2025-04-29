@@ -273,3 +273,6 @@ export const getAllAdminJobs = async () =>
 
 export const getSingleVideoData = async (videoId) =>
   (await axiosInstance.get('admin/get-single-video-data/' + videoId)).data;
+
+export const generateEditorLink = async (jobId) =>
+  (await axiosInstance.get(`admin/create-editor-job/${jobId}`)).data;

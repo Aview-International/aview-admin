@@ -7,9 +7,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import ErrorHandler from '../../utils/errorHandler';
 import Image from 'next/image';
 import Avatar from '../../public/img/icons/avatar.webp';
-import { deleteJob, rerunStuckJobs } from '../../services/api';
+import {
+  deleteJob,
+  generateEditorLink,
+  rerunStuckJobs,
+} from '../../services/api';
 import DashboardButton from '../../components/UI/DashboardButton';
 import Modal from '../../components/UI/Modal';
+import { toast } from 'react-toastify';
 
 const DashboardHome = () => {
   const dispatch = useDispatch();
@@ -110,6 +115,22 @@ const CreatorJobData = ({ creator, pendingJobs, setSelectedJob }) => {
     }
   };
 
+  const getEditLink = async (jobId) => {
+    try {
+      const link = await generateEditorLink(jobId);
+      navigator.clipboard
+        .writeText(link.link)
+        .then(() => {
+          toast.success('Copied editor link to clipboard');
+        })
+        .catch((e) => {
+          throw e;
+        });
+    } catch (error) {
+      ErrorHandler(error, 'Something went wrong');
+    }
+  };
+
   return (
     <div className="py-s2">
       <p className="pb-s4">
@@ -153,10 +174,32 @@ const CreatorJobData = ({ creator, pendingJobs, setSelectedJob }) => {
           >
             {loading === job.jobId ? 'Loading...' : 'Rerun current stage'}
           </button>
-          <div className="mt-s3 w-28">
-            <DashboardButton onClick={() => setSelectedJob(job)} theme="error">
-              Delete Job
-            </DashboardButton>
+          <div className="flex gap-8">
+            <div className="mt-s3 w-28">
+              <DashboardButton
+                onClick={() => setSelectedJob(job)}
+                theme="error"
+              >
+                Delete Job
+              </DashboardButton>
+            </div>
+            {![
+              'retrieving video',
+              'queued',
+              'audio-separation',
+              'transcription',
+              'translation',
+            ].includes(job.status) && (
+              <div className="mt-s3 w-40">
+                <DashboardButton
+                  onClick={() => getEditLink(job.jobId)}
+                  theme="light"
+                  extraClasses="text-sm"
+                >
+                  Generator Editor Link
+                </DashboardButton>
+              </div>
+            )}
           </div>
           <hr className="my-s3" />
         </div>
