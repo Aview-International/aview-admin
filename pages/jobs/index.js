@@ -188,7 +188,7 @@ const CreatorJobData = ({ creator, pendingJobs, setSelectedJob }) => {
               'queued',
               'audio-separation',
               'transcription',
-              // 'translation',
+              // 'translation',ççç
             ].includes(job.status) && (
               <div className="mt-s3 w-40">
                 <DashboardButton
