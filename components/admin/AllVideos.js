@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { getUserProfile } from '../../services/firebase';
-import { getS3DownloadLink } from '../../services/api';
 
 const AllVideos = ({ job, setSelectedJob, selectedJob }) => {
   const [creatorData, setCreatorData] = useState({

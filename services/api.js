@@ -161,16 +161,6 @@ export const getElevenLabsVoices = async () =>
 export const submitAdminTranscriptionLink = async (data) =>
   (await axiosInstance.post('/transcription/admin-social-link', data)).data;
 
-export const downloadVideoFromS3 = async (timestamp, title, lang) =>
-  (
-    await axiosInstance.post(`admin/download`, {
-      timestamp,
-      title,
-      language: lang,
-      admin: true,
-    })
-  ).data;
-
 export const sendEnquiryMessage = async (message, id) =>
   axiosInstance.post(`messages/admin/${id}`, { message });
 
@@ -255,15 +245,24 @@ export const translateText = async (text, target_lang) => {
   return response.data;
 };
 
-export const getS3DownloadLink = async ({ userId, timestamp, lang }) =>
-  (await axiosInstance.get(`admin/download/${userId}/${timestamp}/${lang}`))
-    .data;
-
 export const downloadS3Object = async (s3Path) => {
   await axiosInstance.post('admin/download-object', {
     s3Path,
   });
 };
+
+export const downloadVideoFromS3 = async (timestamp, title, lang) =>
+  (
+    await axiosInstance.post(`admin/download`, {
+      timestamp,
+      title,
+      language: lang,
+      admin: true,
+    })
+  ).data;
+
+export const getJobsHistory = async () =>
+  (await axiosInstance.get('admin/history')).data;
 
 export const deleteJob = async (creatorId, jobId) =>
   (await axiosInstance.delete(`admin/job/${creatorId}/${jobId}`)).data;

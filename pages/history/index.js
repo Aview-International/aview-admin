@@ -1,23 +1,27 @@
 import { useEffect } from 'react';
 import DashboardLayout from '../../components/dashboard/DashboardLayout';
-import { downloadVideoFromS3 } from '../../services/api';
+import { downloadVideoFromS3, getJobsHistory } from '../../services/api';
 import { useDispatch, useSelector } from 'react-redux';
-import { setPendingJobs } from '../../store/reducers/history.reducer';
+import {
+  setCompletedJobs,
+  setPendingJobs,
+} from '../../store/reducers/history.reducer';
 import PageTitle from '../../components/SEO/PageTitle';
 import { subscribeToHistory } from '../../services/firebase';
 
 const History = () => {
   const dispatch = useDispatch();
-  const { pendingJobs } = useSelector((el) => el.history);
+  const { pendingJobs, completedJobs } = useSelector((el) => el.history);
 
   useEffect(() => {
-    const unsubscribe = subscribeToHistory((data) => {
+    const unsubscribe = subscribeToHistory(async (data) => {
       const pendingArray = data
         ? Object.values(data).sort(
             (a, b) => parseInt(b.timestamp) - parseInt(a.timestamp)
           )
         : [];
       dispatch(setPendingJobs(pendingArray));
+      dispatch(setCompletedJobs(await getJobsHistory()));
     });
 
     return () => unsubscribe(); // cleanup
@@ -27,12 +31,12 @@ const History = () => {
     <>
       <PageTitle title="History" />
       <h2 className="mt-s2 text-4xl">History</h2>
-      <Container pendingJobs={pendingJobs} />
+      <Container pendingJobs={pendingJobs} completedJobs={completedJobs} />
     </>
   );
 };
 
-const Container = ({ pendingJobs }) => {
+const Container = ({ pendingJobs, completedJobs }) => {
   const handleDownload = async (job) => {
     const downloadLink = await downloadVideoFromS3(
       job.timestamp,
@@ -60,8 +64,8 @@ const Container = ({ pendingJobs }) => {
         <p>Download Link</p>
       </div>
       <hr className="my-s2 border-[rgba(255,255,255,0.6)]" />
-      {pendingJobs.length > 0 &&
-        pendingJobs.map((job, i) => (
+      {(pendingJobs.length > 0 || completedJobs.length > 0) &&
+        [...pendingJobs, ...completedJobs].map((job, i) => (
           <div
             className="grid grid-cols-[23%_19%_22%_10%_13%_13%] border-b border-[rgba(252,252,252,0.2)] py-s2"
             key={i}
