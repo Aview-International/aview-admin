@@ -11,7 +11,7 @@ const DashboardButton = ({
 }) => {
   return disabled ? (
     <button
-      className={`transition-300 w-full cursor-not-allowed rounded-full bg-gray-1 pt-s1.5 pb-s1 text-lg font-medium text-black ${extraClasses}`}
+      className={`transition-300 w-full cursor-not-allowed rounded-full bg-gray-1 pb-s1 pt-s1.5 text-lg font-medium text-black ${extraClasses}`}
       onClick={null}
       disabled
     >
@@ -33,9 +33,11 @@ const DashboardButton = ({
       >
         <button
           id="opener"
-          className={`transition-300 w-full cursor-pointer rounded-full pt-s1.5 pb-s1 text-lg font-medium ${extraClasses} ${
+          className={`transition-300 w-full cursor-pointer rounded-full pb-s1 pt-s1.5 text-lg font-medium ${extraClasses} ${
             theme === 'light' && 'text-black'
           } ${theme === 'dark' && 'bg-black text-white'} ${
+            theme === 'success' && 'bg-green text-white'
+          }  ${
             theme === 'white' &&
             'border-[3px] border-solid border-white bg-black text-white hover:bg-white hover:text-black'
           }`}

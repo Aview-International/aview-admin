@@ -10,6 +10,7 @@ import Avatar from '../../public/img/icons/avatar.webp';
 import {
   deleteJob,
   generateEditorLink,
+  markAdminJobAsCompleted,
   rerunStuckJobs,
 } from '../../services/api';
 import DashboardButton from '../../components/UI/DashboardButton';
@@ -131,6 +132,17 @@ const CreatorJobData = ({ creator, pendingJobs, setSelectedJob }) => {
     }
   };
 
+  const handleMarkAsCompleted = async (jobId) => {
+    try {
+      await markAdminJobAsCompleted(jobId);
+    } catch (error) {
+      ErrorHandler(error);
+    } finally {
+      setDeleteLoading(false);
+      setSelectedJob(null);
+    }
+  };
+
   return (
     <div className="py-s2">
       <p className="pb-s4">
@@ -159,23 +171,8 @@ const CreatorJobData = ({ creator, pendingJobs, setSelectedJob }) => {
               year: 'numeric',
             })}
           </p>
-          <button
-            onClick={() =>
-              loading
-                ? null
-                : handleRerunJobs(
-                    job.status,
-                    job.creatorId,
-                    job.jobId,
-                    job.translatedLanguage
-                  )
-            }
-            className="cursor-pointer text-blue underline"
-          >
-            {loading === job.jobId ? 'Loading...' : 'Rerun current stage'}
-          </button>
-          <div className="flex gap-8">
-            <div className="mt-s3 w-28">
+          <div className="font-xs mt-s3 flex gap-8">
+            <div className="w-28">
               <DashboardButton
                 onClick={() => setSelectedJob(job)}
                 theme="error"
@@ -183,14 +180,39 @@ const CreatorJobData = ({ creator, pendingJobs, setSelectedJob }) => {
                 Delete Job
               </DashboardButton>
             </div>
+            <div className="w-26">
+              <DashboardButton
+                onClick={() =>
+                  loading
+                    ? null
+                    : handleRerunJobs(
+                        job.status,
+                        job.creatorId,
+                        job.jobId,
+                        job.translatedLanguage
+                      )
+                }
+                isLoading={loading === job.jobId}
+              >
+                Rerun
+              </DashboardButton>
+            </div>
+            <div className="w-28">
+              <DashboardButton
+                onClick={() => handleMarkAsCompleted(job.jobId)}
+                theme="success"
+              >
+                Complete
+              </DashboardButton>
+            </div>
             {![
               'retrieving video',
               'queued',
               'audio-separation',
               'transcription',
-              // 'translation',
+              'translation',
             ].includes(job.status) && (
-              <div className="mt-s3 w-40">
+              <div className="w-40">
                 <DashboardButton
                   onClick={() => getEditLink(job.jobId)}
                   theme="light"
