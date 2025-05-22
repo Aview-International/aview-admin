@@ -14,6 +14,7 @@ import Arrowback from '../../../public/img/icons/arrow-back.svg';
 import Link from 'next/link';
 
 const ManualTranslation = () => {
+
   const [file, setFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [languages, setLanguages] = useState([]);
@@ -21,6 +22,7 @@ const ManualTranslation = () => {
 
   const getLang = async () => {
     const res = await getSupportedLanguages();
+    setAllLanguages()
     setLanguages(res);
   };
 

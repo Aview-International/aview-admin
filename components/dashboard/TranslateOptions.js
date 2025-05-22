@@ -8,51 +8,56 @@ const TranslateOptions = ({
   payload,
   setPayload,
   isLoading,
-  disabled,
   uploadProgress,
+  disabled,
 }) => {
-  const languages = useSelector((state) => state.aview.allLanguages);
+  const allLanguages = useSelector((state) => state.aview.allLanguages);
 
-  const handleChange = (language) => {
+  const findLangData = (lang) =>
+    allLanguages.find((el) => el.languageName === lang);
+
+  const handleChange = (lang) => {
+    const code = findLangData(lang).translateCode;
     let allLanguages = [...payload.languages];
-    if (allLanguages.includes(language))
-      allLanguages.splice(allLanguages.indexOf(language), 1);
-    else allLanguages.push(language);
+    if (allLanguages.includes(code))
+      allLanguages.splice(allLanguages.indexOf(code), 1);
+    else allLanguages.push(code);
     setPayload({ ...payload, languages: allLanguages });
   };
 
   return (
     <>
-      <h3 className="mb-s3 text-2xl font-bold">Servicing</h3>
+      <h3 className="mb-s3 text-2xl font-bold">Distribution</h3>
       <p className="mb-s4 text-lg">
-        Which languages do you want these videos serviced in?
+        Which channels do you want these videos posted on? Want to post in an
+        additional language? You can create more international channels.
       </p>
-      <div className="max-h-[378px] overflow-y-auto overflow-x-hidden pr-s1.5">
-        {languages.map((language, index) => (
-          <div
-            className="min-w-max(100%,360px) gradient-dark mb-s2 flex items-center justify-between rounded-md p-s1.5"
-            key={index}
-          >
-            <div className="ml-3">
-              <h2 className="text-lg">{language.dialect}</h2>
-              <p className="text-sm">{language.language}</p>
+      <div className="max-h-[368px] overflow-y-auto overflow-x-hidden pr-s1.5">
+        {allLanguages
+          ?.map((el) => el.languageName)
+          .map((lang, index) => (
+            <div
+              className="min-w-max(100%,360px) gradient-dark mb-s2 flex items-center justify-between rounded-md p-s1.5"
+              key={index}
+            >
+              <div className="flex items-center justify-between">
+                <div className="ml-3">
+                  <h2 className="text-lg">
+                    {findLangData(lang)['localDialect']}
+                  </h2>
+                  <p className="text-sm">{lang}</p>
+                </div>
+              </div>
+              <ToggleButton
+                isChecked={payload.languages.includes(
+                  findLangData(lang).translateCode
+                )}
+                handleChange={() => handleChange(lang)}
+              />
             </div>
-            <ToggleButton
-              isChecked={payload.languages.includes(language.language)}
-              handleChange={() => handleChange(language.language)}
-            />
-          </div>
-        ))}
+          ))}
       </div>
-      <br />
-      <br />
-      <CheckBox
-        onChange={(e) =>
-          setPayload({ ...payload, requestHumanReview: e.target.checked })
-        }
-        isChecked={payload.requestHumanReview}
-        label="Request human review"
-      />
+
       <br />
       {isLoading &&
         (uploadProgress < 100 ? (
@@ -63,8 +68,9 @@ const TranslateOptions = ({
             ></div>
           </div>
         ) : (
-          <p>Processing video please wait</p>
+          <p>Processing media please wait</p>
         ))}
+
       {!isLoading && (
         <div className="w-full md:w-36">
           <DashboardButton

@@ -11,6 +11,7 @@ import Cookies from 'js-cookie';
 import { setAuthState, setUser } from '../store/reducers/user.reducer';
 import { setAllLanguages } from '../store/reducers/aview.reducer';
 import { auth } from '../services/firebase';
+import useUserProfile from '../hooks/useUserProfile';
 
 const MyApp = ({ Component, pageProps }) => {
   useEffect(() => {
@@ -46,6 +47,7 @@ const MyApp = ({ Component, pageProps }) => {
 };
 
 const Layout = ({ Component, pageProps }) => {
+  useUserProfile();
   const dispatch = useDispatch();
   useEffect(() => {
     // handle auth

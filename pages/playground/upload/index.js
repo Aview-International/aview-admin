@@ -25,6 +25,8 @@ const Upload = () => {
 
   const handleSubmit = async () => {
     try {
+      console.log(payload);
+      return;
       setIsLoading(true);
       await uploadCreatorVideo(
         video,
