@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { SUPPORTED_REGIONS } from '../../constants/constants';
 
 const initialState = {
   allLanguages: [],

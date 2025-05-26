@@ -3,45 +3,25 @@ import DottedBorder from '../../../components/UI/DottedBorder';
 import DashboardLayout from '../../../components/dashboard/DashboardLayout';
 import UploadIcon from '../../../public/img/icons/upload-icon1.svg';
 import Border from '../../../components/UI/Border';
-import { useEffect, useState } from 'react';
-import {
-  getSupportedLanguages,
-  uploadManualSrtTranslation,
-} from '../../../services/api';
+import { useState } from 'react';
+import { uploadManualSrtTranslation } from '../../../services/api';
 import PageTitle from '../../../components/SEO/PageTitle';
 import ErrorHandler from '../../../utils/errorHandler';
 import Arrowback from '../../../public/img/icons/arrow-back.svg';
 import Link from 'next/link';
+import { useSelector } from 'react-redux';
 
 const ManualTranslation = () => {
-
   const [file, setFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [languages, setLanguages] = useState([]);
-  const [lang, setLang] = useState(undefined);
-
-  const getLang = async () => {
-    const res = await getSupportedLanguages();
-    setAllLanguages()
-    setLanguages(res);
-  };
-
-  const handleLangSelect = (e) => {
-    const selection = languages.find(
-      (lang) => lang.languageName === e.target.value
-    );
-    setLang(selection);
-  };
-
-  useEffect(() => {
-    getLang();
-  }, []);
+  const [lang, setLang] = useState('en-US'); // Default language set to 'en-US'
+  const languages = useSelector((state) => state.aview.allLanguages);
 
   const handleUpload = async () => {
     try {
       setIsLoading(true);
-      const res = await uploadManualSrtTranslation(file, lang.translateCode);
-      const filename = `${lang.translateCode}-${file.name}`;
+      const res = await uploadManualSrtTranslation(file, lang);
+      const filename = `${lang}-${file.name}`;
 
       const url = window.URL.createObjectURL(new Blob([res.data]));
       const link = document.createElement('a');
@@ -108,11 +88,15 @@ const ManualTranslation = () => {
             <p className="text-xl">Select Language</p>
             <select
               className="border bg-transparent"
-              onChange={handleLangSelect}
+              onChange={(e) => setLang(e.target.value)}
             >
               {languages.map(
                 (el, i) =>
-                  el.translation && <option key={i}>{el.languageName}</option>
+                  el.translation && (
+                    <option key={i} value={el?.translateCode}>
+                      {el?.languageName}
+                    </option>
+                  )
               )}
             </select>
           </div>

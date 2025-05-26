@@ -33,29 +33,26 @@ const TranslateOptions = ({
         additional language? You can create more international channels.
       </p>
       <div className="max-h-[368px] overflow-y-auto overflow-x-hidden pr-s1.5">
-        {allLanguages
-          ?.map((el) => el.languageName)
-          .map((lang, index) => (
-            <div
-              className="min-w-max(100%,360px) gradient-dark mb-s2 flex items-center justify-between rounded-md p-s1.5"
-              key={index}
-            >
-              <div className="flex items-center justify-between">
-                <div className="ml-3">
-                  <h2 className="text-lg">
-                    {findLangData(lang)['localDialect']}
-                  </h2>
-                  <p className="text-sm">{lang}</p>
-                </div>
+        {/* // ?.map((el) => el.languageName) */}
+        {allLanguages.map((lang, index) => (
+          <div
+            className="min-w-max(100%,360px) gradient-dark mb-s2 flex items-center justify-between rounded-md p-s1.5"
+            key={index}
+          >
+            <div className="flex items-center justify-between">
+              <div className="ml-3">
+                <h2 className="text-lg">{lang?.localDialect}</h2>
+                <p className="text-sm">{lang?.languageName}</p>
               </div>
-              <ToggleButton
-                isChecked={payload.languages.includes(
-                  findLangData(lang).translateCode
-                )}
-                handleChange={() => handleChange(lang)}
-              />
             </div>
-          ))}
+            <ToggleButton
+              isChecked={payload.languages.includes(
+                findLangData(lang).translateCode
+              )}
+              handleChange={() => handleChange(lang)}
+            />
+          </div>
+        ))}
       </div>
 
       <br />

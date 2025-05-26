@@ -8,7 +8,6 @@ const useUserProfile = () => {
   const isLoggedIn = useSelector((el) => el.user?.isLoggedIn);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
-  const [trigger, setTrigger] = useState(0);
 
   const getLang = async () => {
     const res = await getSupportedLanguages();
@@ -27,9 +26,7 @@ const useUserProfile = () => {
     })();
   }, [isLoggedIn]);
 
-  const sidebarTrigger = () => setTrigger(Math.random());
-
-  return { sidebarTrigger, isLoading };
+  return { isLoading };
 };
 
 export default useUserProfile;
