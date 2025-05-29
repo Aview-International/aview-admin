@@ -47,7 +47,7 @@ const TranslateOptions = ({
             </div>
             <ToggleButton
               isChecked={payload.languages.includes(
-                findLangData(lang).translateCode
+                findLangData(lang)?.translateCode
               )}
               handleChange={() => handleChange(lang)}
             />
