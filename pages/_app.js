@@ -9,7 +9,6 @@ import { Provider, useDispatch } from 'react-redux';
 import { onAuthStateChanged } from 'firebase/auth';
 import Cookies from 'js-cookie';
 import { setAuthState, setUser } from '../store/reducers/user.reducer';
-import { setAllLanguages } from '../store/reducers/aview.reducer';
 import { auth } from '../services/firebase';
 import useUserProfile from '../hooks/useUserProfile';
 
@@ -51,7 +50,6 @@ const Layout = ({ Component, pageProps }) => {
   const dispatch = useDispatch();
   useEffect(() => {
     // handle auth
-    dispatch(setAllLanguages());
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         dispatch(
