@@ -16,8 +16,7 @@ const TranslateOptions = ({
   const findLangData = (lang) =>
     allLanguages.find((el) => el.languageName === lang);
 
-  const handleChange = (lang) => {
-    const code = findLangData(lang).translateCode;
+  const handleChange = (code) => {
     let allLanguages = [...payload.languages];
     if (allLanguages.includes(code))
       allLanguages.splice(allLanguages.indexOf(code), 1);
@@ -46,10 +45,8 @@ const TranslateOptions = ({
               </div>
             </div>
             <ToggleButton
-              isChecked={payload.languages.includes(
-                findLangData(lang)?.translateCode
-              )}
-              handleChange={() => handleChange(lang)}
+              isChecked={payload.languages.includes(lang?.translateCode)}
+              handleChange={() => handleChange(lang?.translateCode)}
             />
           </div>
         ))}
