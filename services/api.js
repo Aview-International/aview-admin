@@ -275,3 +275,6 @@ export const getSingleVideoData = async (videoId) =>
 
 export const generateEditorLink = async (jobId) =>
   (await axiosInstance.get(`admin/create-editor-job/${jobId}`)).data;
+
+export const markAdminJobAsCompleted = async (jobId) =>
+  (await axiosInstance.patch(`admin/mark-admin-job-complete/${jobId}`)).data;
