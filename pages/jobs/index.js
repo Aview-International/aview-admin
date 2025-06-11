@@ -138,7 +138,6 @@ const CreatorJobData = ({ creator, pendingJobs, setSelectedJob }) => {
     } catch (error) {
       ErrorHandler(error);
     } finally {
-      setDeleteLoading(false);
       setSelectedJob(null);
     }
   };
@@ -160,6 +159,7 @@ const CreatorJobData = ({ creator, pendingJobs, setSelectedJob }) => {
           <p>Status : {job.status}</p>
           <p>Task Id : {job.jobId}</p>
           <p>Caption : {job.videoData?.caption}</p>
+          <p>Language : {job.translatedLanguage}</p>
           <p>
             Date :{' '}
             {new Date(+job.timestamp).toLocaleString('en-US', {
