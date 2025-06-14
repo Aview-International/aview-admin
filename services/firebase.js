@@ -47,9 +47,10 @@ export const subscribeToDB = (timestamp, subscriptionCallback) => {
 };
 
 export const subscribeToHistory = (subscriptionCallback) => {
-  const pathRef = ref(database, `user-jobs/pending/admin`);
+  const pathRef = ref(database, `admin-jobs/pending`);
   const unsubscribe = onValue(pathRef, (snapshot) => {
     const data = snapshot.val();
+    console.log(data)
     subscriptionCallback(data);
   });
   return unsubscribe; // Return the unsubscribe function

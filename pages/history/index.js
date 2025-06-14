@@ -15,6 +15,7 @@ const History = () => {
 
   useEffect(() => {
     const unsubscribe = subscribeToHistory(async (data) => {
+      console.log(data);
       const pendingArray = data
         ? Object.values(data).sort(
             (a, b) => parseInt(b.timestamp) - parseInt(a.timestamp)
@@ -85,7 +86,7 @@ const Container = ({ pendingJobs, completedJobs }) => {
                   ))}
             </div>
             <p>{job.jobId}</p>
-            <p>{job.videoData.type}</p>
+            <p>{job.videoData?.type}</p>
             <div className="text-center text-[#eab221]">
               {job.status === 'complete' || job.status === 'under review'
                 ? 'complete'
