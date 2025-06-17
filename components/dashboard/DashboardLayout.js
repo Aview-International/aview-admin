@@ -3,11 +3,11 @@ import DashboardSidebar from './Sidebar';
 
 const DashboardStructure = ({ children }) => {
   return (
-    <main className="gradient-dark flex min-h-screen w-full text-white">
+    <main className="flex h-screen w-full overflow-y-auto bg-white-transparent">
       <DashboardSidebar />
-      <div className="ml-auto w-[calc(100%-170px)]">
+      <div className="ml-auto flex w-full flex-col items-stretch lg:w-[calc(100%-190px)]">
         <DashBoardHeader />
-        <div className="h-full max-h-full overflow-y-auto bg-black p-s4">
+        <div className="mx-auto h-screen w-full self-stretch overflow-y-auto bg-black/60 p-s3 text-white md:p-s3">
           {children}
         </div>
       </div>
