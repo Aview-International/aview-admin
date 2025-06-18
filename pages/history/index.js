@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { use, useEffect, useState } from 'react';
 import DashboardLayout from '../../components/dashboard/DashboardLayout';
 import { downloadVideoFromS3, getJobsHistory } from '../../services/api';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,15 +7,18 @@ import {
   setPendingJobs,
 } from '../../store/reducers/history.reducer';
 import PageTitle from '../../components/SEO/PageTitle';
-import { subscribeToHistory } from '../../services/firebase';
+import {
+  subscribeToHistory,
+  subscribeToPodcast,
+} from '../../services/firebase';
 
 const History = () => {
   const dispatch = useDispatch();
   const { pendingJobs, completedJobs } = useSelector((el) => el.history);
+  const [podcast, setPodcast] = useState([]);
 
   useEffect(() => {
     const unsubscribe = subscribeToHistory(async (data) => {
-      console.log(data);
       const pendingArray = data
         ? Object.values(data).sort(
             (a, b) => parseInt(b.timestamp) - parseInt(a.timestamp)
@@ -28,16 +31,33 @@ const History = () => {
     return () => unsubscribe(); // cleanup
   }, []);
 
+  useEffect(() => {
+    const unsubscribe = subscribeToPodcast(async (data) => {
+      const pendingArray = data
+        ? Object.values(data).sort(
+            (a, b) => parseInt(b.timestamp) - parseInt(a.timestamp)
+          )
+        : [];
+      setPodcast(pendingArray);
+    });
+
+    return () => unsubscribe(); // cleanup
+  }, []);
+
   return (
     <>
       <PageTitle title="History" />
       <h2 className="mt-s2 text-4xl">History</h2>
-      <Container pendingJobs={pendingJobs} completedJobs={completedJobs} />
+      <Container
+        pendingJobs={pendingJobs}
+        completedJobs={completedJobs}
+        podcast={podcast}
+      />
     </>
   );
 };
 
-const Container = ({ pendingJobs, completedJobs }) => {
+const Container = ({ pendingJobs, completedJobs, podcast }) => {
   const handleDownload = async (job) => {
     const downloadLink = await downloadVideoFromS3(
       job.timestamp,
@@ -67,7 +87,7 @@ const Container = ({ pendingJobs, completedJobs }) => {
       </div>
       <hr className="my-s2 border-[rgba(255,255,255,0.6)]" />
       {(pendingJobs.length > 0 || completedJobs.length > 0) &&
-        [...pendingJobs, ...completedJobs].map((job, i) => (
+        [...podcast, ...pendingJobs, ...completedJobs].map((job, i) => (
           <div
             className="grid grid-cols-[20%_15%_15%_23%_9%_9%_9%] border-b border-[rgba(252,252,252,0.2)] py-s2"
             key={i}

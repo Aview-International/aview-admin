@@ -56,6 +56,16 @@ export const subscribeToHistory = (subscriptionCallback) => {
   return unsubscribe; // Return the unsubscribe function
 };
 
+export const subscribeToPodcast = (subscriptionCallback) => {
+  const pathRef = ref(database, `user-jobs/pending/pablo-srugo`);
+  const unsubscribe = onValue(pathRef, (snapshot) => {
+    const data = snapshot.val();
+    console.log(data)
+    subscriptionCallback(data);
+  });
+  return unsubscribe; // Return the unsubscribe function
+};
+
 export const subscribeToAllJobs = (subscriptionCallback) => {
   const pathRef = ref(database, `user-jobs/pending`);
   const unsubscribe = onValue(pathRef, (snapshot) => {
