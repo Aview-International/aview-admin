@@ -2,10 +2,7 @@ import { use, useEffect, useState } from 'react';
 import DashboardLayout from '../../components/dashboard/DashboardLayout';
 import { downloadVideoFromS3, getJobsHistory } from '../../services/api';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  setCompletedJobs,
-  setPendingJobs,
-} from '../../store/reducers/history.reducer';
+import { setCompletedJobs } from '../../store/reducers/history.reducer';
 import PageTitle from '../../components/SEO/PageTitle';
 import {
   subscribeToHistory,
@@ -14,8 +11,9 @@ import {
 
 const History = () => {
   const dispatch = useDispatch();
-  const { pendingJobs, completedJobs } = useSelector((el) => el.history);
+  const { completedJobs } = useSelector((el) => el.history);
   const [podcast, setPodcast] = useState([]);
+  const [pendingJobs, setPendingJobs] = useState([]);
 
   useEffect(() => {
     const unsubscribe = subscribeToHistory(async (data) => {
@@ -24,7 +22,7 @@ const History = () => {
             (a, b) => parseInt(b.timestamp) - parseInt(a.timestamp)
           )
         : [];
-      dispatch(setPendingJobs(pendingArray));
+      setPendingJobs(pendingArray);
       dispatch(setCompletedJobs(await getJobsHistory()));
     });
 
