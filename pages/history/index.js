@@ -58,7 +58,7 @@ const History = () => {
 const Container = ({ pendingJobs, completedJobs, podcast }) => {
   const handleDownload = async (job) => {
     const downloadLink = await downloadVideoFromS3(
-      job.timestamp,
+      job.jobId,
       job.videoData.caption,
       job.translatedLanguage
     );
