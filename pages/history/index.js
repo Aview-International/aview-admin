@@ -95,14 +95,7 @@ const Container = ({ pendingJobs, completedJobs, podcast }) => {
               {new Date(+job.timestamp).toDateString()}
             </p>
             <p className="text-center">{job?.translatedLanguage}</p>
-            {/* <div>
-              {job?.translatedLanguage
-                ? job.translatedLanguage
-                : typeof job?.languages === 'string'
-                ? job.languages
-                : job?.languages?.map((lang, idx) => (
-                  ))}
-            </div> */}
+
             <p className="text-center text-xs">{job.jobId}</p>
             <p>{job.videoData?.type}</p>
             <div className="text-center text-[#eab221]">
