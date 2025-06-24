@@ -13,31 +13,33 @@ const axiosInstance = axios.create({
 
 const isTokenExpired = (token) => {
   try {
-    if (!token) return false;
-    else {
-      const data = decodeJwt(token);
-      if (!data) return false;
-      const newDate = new Date(data.exp) * 1000;
-      if (newDate < new Date().getTime()) return true;
-      else {
-        return data;
-      }
-    }
+    if (!token) return true;
+    const { exp } = decodeJwt(token);
+    if (!exp) return true;
+    return Date.now() >= exp * 1000;
   } catch (error) {
-    return false;
+    return true;
   }
 };
 
 axiosInstance.interceptors.request.use(
   async (config) => {
     let token = Cookies.get('token');
-    if (!isTokenExpired(token)) {
-      const newToken = await auth.currentUser.getIdToken(true); // force token refresh
-      Cookies.set('token', newToken);
-      token = newToken;
+    if (isTokenExpired(token)) {
+      if (auth.currentUser) {
+        const newToken = await auth.currentUser.getIdToken(true);
+        Cookies.set('token', newToken);
+        token = newToken;
+      } else {
+        token = null;
+      }
     }
 
-    config.headers.Authorization = `Bearer ${token}`;
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    } else {
+      delete config.headers.Authorization;
+    }
     return config;
   },
   (error) => {

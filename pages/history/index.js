@@ -74,11 +74,11 @@ const Container = ({ pendingJobs, completedJobs, podcast }) => {
 
   return (
     <div className="w-full rounded-2xl bg-gradient-to-b from-[#ffffff26] to-[#ffffff0D] p-s3">
-      <div className="grid grid-cols-[20%_15%_15%_23%_9%_9%_9%]">
+      <div className="grid grid-cols-[35%_10%_5%_25%_7%_7%_6%]">
         <p>Name</p>
-        <p>Date</p>
+        <p className="text-center">Date</p>
         <p>Languages</p>
-        <p>ID</p>
+        <p className="text-center">ID</p>
         <p>Type</p>
         <p className="text-center">Status</p>
         <p>Download Link</p>
@@ -87,23 +87,23 @@ const Container = ({ pendingJobs, completedJobs, podcast }) => {
       {(pendingJobs.length > 0 || completedJobs.length > 0) &&
         [...podcast, ...pendingJobs, ...completedJobs].map((job, i) => (
           <div
-            className="grid grid-cols-[20%_15%_15%_23%_9%_9%_9%] border-b border-[rgba(252,252,252,0.2)] py-s2"
+            className="grid grid-cols-[35%_10%_5%_25%_7%_7%_6%] justify-between border-b border-[rgba(252,252,252,0.2)] py-s2 text-sm"
             key={i}
           >
             <div>{job.videoData?.caption.replace(/\.mp4$/i, '')}</div>
-            <p>{new Date(+job.timestamp).toDateString()}</p>
-            <div>
+            <p className="text-center">
+              {new Date(+job.timestamp).toDateString()}
+            </p>
+            <p className="text-center">{job?.translatedLanguage}</p>
+            {/* <div>
               {job?.translatedLanguage
                 ? job.translatedLanguage
                 : typeof job?.languages === 'string'
                 ? job.languages
                 : job?.languages?.map((lang, idx) => (
-                    <p key={idx} className="mb-s1">
-                      {lang}
-                    </p>
                   ))}
-            </div>
-            <p>{job.jobId}</p>
+            </div> */}
+            <p className="text-center text-xs">{job.jobId}</p>
             <p>{job.videoData?.type}</p>
             <div className="text-center text-[#eab221]">
               {job.status === 'complete' || job.status === 'under review'
