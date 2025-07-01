@@ -87,6 +87,11 @@ export const DASHBOARD_NAVLINKS = [
     image: home,
     route: '/jobs',
   },
+  {
+    text: 'Text to Speech',
+    image: home,
+    route: '/text-to-speech',
+  },
 ];
 
 export const DAHSHBOARD_SERVICES = [
