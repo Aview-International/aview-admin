@@ -281,7 +281,8 @@ const Creators = () => {
                       text="Playlists"
                       name="playlists"
                       onChange={handleInputChange}
-                      options={playlists.map((el) => el.name)}
+                      options={[]}
+                      // options={playlists.map((el) => el.name)}
                     />
                   </div>
 
@@ -398,9 +399,8 @@ const Creators = () => {
                     onChange={(val) => {
                       handleInputChange('snippet', 'categoryId', val);
                     }}
-                    options={categories.map((el) => el.name)}
-
-                    // options={categories}
+                    options={[]}
+                    // options={categories.map((el) => el.name)}
                   />
                 </div>
               </VideoSubTitle>
