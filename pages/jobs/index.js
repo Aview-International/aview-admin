@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 import DashboardLayout from '../../components/dashboard/DashboardLayout';
 import PageTitle from '../../components/SEO/PageTitle';
 import { getUserProfile, subscribeToAllJobs } from '../../services/firebase';
@@ -27,17 +27,39 @@ const DashboardHome = () => {
   const dispatch = useDispatch();
   const [selectedJob, setSelectedJob] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
-  const pendingJobs = useSelector((el) => el.jobs.pendingJobs);
+  const [allJobs, setAllJobs] = useState({});
+
   useEffect(() => {
     try {
       const unsubscribe = subscribeToAllJobs(async (data) => {
-        dispatch(setPendingJobs([...data, ...(await getJobsHistory())]));
+        setAllJobs((prev) => ({ ...prev, ...data }));
       });
-
       return () => unsubscribe(); // cleanup
     } catch (error) {
       ErrorHandler(error);
     }
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const completed = await getJobsHistory();
+        const groupedCompleted = completed.reduce((acc, job) => {
+          if (!acc[job.creatorId]) {
+            acc[job.creatorId] = {};
+          }
+          acc[job.creatorId][job.jobId] = job;
+          return acc;
+        }, {});
+
+        setAllJobs((prev) => ({
+          ...prev,
+          ...groupedCompleted,
+        }));
+      } catch (error) {
+        ErrorHandler(error);
+      }
+    })();
   }, []);
 
   useEffect(() => {
@@ -62,6 +84,28 @@ const DashboardHome = () => {
       setSelectedJob(null);
     }
   };
+
+  // const { pendingJobs, completedJobs } = useMemo(() => {
+  //   const pending = {};
+  //   const completed = {};
+  //   for (const creatorId in allJobs) {
+  //     for (const jobId in allJobs[creatorId]) {
+  //       const job = allJobs[creatorId][jobId];
+  //       if (job.status === 'complete') {
+  //         if (!completed[creatorId]) {
+  //           completed[creatorId] = {};
+  //         }
+  //         completed[creatorId][jobId] = job;
+  //       } else {
+  //         if (!pending[creatorId]) {
+  //           pending[creatorId] = {};
+  //         }
+  //         pending[creatorId][jobId] = job;
+  //       }
+  //     }
+  //   }
+  //   return { pendingJobs: pending, completedJobs: completed };
+  // }, [allJobs]);
 
   return (
     <>
@@ -88,11 +132,11 @@ const DashboardHome = () => {
         </Modal>
       )}
       <h2 className="text-6xl">Creator Running Jobs</h2>
-      {Object.keys(pendingJobs).map((creator, i) => (
+      {Object.keys(allJobs).map((creator, i) => (
         <Fragment key={i}>
           <CreatorJobData
             creator={creator}
-            pendingJobs={pendingJobs}
+            jobs={allJobs}
             setSelectedJob={setSelectedJob}
           />
           {/* <hr className="my-s2" /> */}
@@ -102,7 +146,7 @@ const DashboardHome = () => {
   );
 };
 
-const CreatorJobData = ({ creator, pendingJobs, setSelectedJob }) => {
+const CreatorJobData = ({ creator, jobs, setSelectedJob }) => {
   const [creatorProfile, setCreatorProfile] = useState(null);
   const [loading, setLoading] = useState(null);
   const [assignCreator, setAssignCreator] = useState(false);
@@ -172,7 +216,7 @@ const CreatorJobData = ({ creator, pendingJobs, setSelectedJob }) => {
         />
         {creatorProfile?.firstName} {creatorProfile?.lastName}
       </p>
-      {Object.values(pendingJobs[creator]).map((job, idx) => (
+      {Object.values(jobs[creator]).map((job, idx) => (
         <div key={idx} className="my-s3 pl-s12">
           <p>Status : {job.status}</p>
           <p>Task Id : {job.jobId}</p>
@@ -190,45 +234,52 @@ const CreatorJobData = ({ creator, pendingJobs, setSelectedJob }) => {
             })}
           </p>
           <div className="font-xs mt-s3 flex items-end gap-8">
-            <div className="w-28">
-              <DashboardButton
-                onClick={() => setSelectedJob(job)}
-                theme="error"
-              >
-                Delete Job
-              </DashboardButton>
-            </div>
-            <div className="w-26">
-              <DashboardButton
-                onClick={() =>
-                  loading
-                    ? null
-                    : handleRerunJobs(
-                        job.status,
-                        job.creatorId,
-                        job.jobId,
-                        job.translatedLanguage
-                      )
-                }
-                isLoading={loading === job.jobId}
-              >
-                Rerun
-              </DashboardButton>
-            </div>
-            <div className="w-28">
-              <DashboardButton
-                onClick={() => handleMarkAsCompleted(job.jobId)}
-                theme="success"
-              >
-                Complete
-              </DashboardButton>
-            </div>
+            {job.status !== 'complete' && (
+              <div className="w-28">
+                <DashboardButton
+                  onClick={() => setSelectedJob(job)}
+                  theme="error"
+                >
+                  Delete Job
+                </DashboardButton>
+              </div>
+            )}
+            {job.status !== 'complete' && (
+              <div className="w-26">
+                <DashboardButton
+                  onClick={() =>
+                    loading
+                      ? null
+                      : handleRerunJobs(
+                          job.status,
+                          job.creatorId,
+                          job.jobId,
+                          job.translatedLanguage
+                        )
+                  }
+                  isLoading={loading === job.jobId}
+                >
+                  Rerun
+                </DashboardButton>
+              </div>
+            )}
+            {job.status !== 'complete' && (
+              <div className="w-28">
+                <DashboardButton
+                  onClick={() => handleMarkAsCompleted(job.jobId)}
+                  theme="success"
+                >
+                  Complete
+                </DashboardButton>
+              </div>
+            )}
             {![
               'retrieving video',
               'queued',
               'audio-separation',
               'transcription',
               'translation',
+              'complete',
             ].includes(job.status) && (
               <div className="w-40">
                 <DashboardButton
