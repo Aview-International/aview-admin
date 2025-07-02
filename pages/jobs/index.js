@@ -10,12 +10,17 @@ import Avatar from '../../public/img/icons/avatar.webp';
 import {
   deleteJob,
   generateEditorLink,
+  getAllContentCreators,
   markAdminJobAsCompleted,
   rerunStuckJobs,
+  updateVideoContentCreator,
 } from '../../services/api';
 import DashboardButton from '../../components/UI/DashboardButton';
 import Modal from '../../components/UI/Modal';
 import { toast } from 'react-toastify';
+import { setContentCreators } from '../../store/reducers/content-creator.reducer';
+import CustomSelectInput from '../../components/FormComponents/CustomSelectInput';
+import ButtonLoader from '../../public/loaders/ButtonLoader';
 
 const DashboardHome = () => {
   const dispatch = useDispatch();
@@ -32,6 +37,17 @@ const DashboardHome = () => {
     } catch (error) {
       ErrorHandler(error);
     }
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const allCreators = await getAllContentCreators();
+        dispatch(setContentCreators(allCreators));
+      } catch (error) {
+        ErrorHandler(error, 'Error fetching all creators');
+      }
+    })();
   }, []);
 
   const handleDeleteJob = async () => {
@@ -88,6 +104,7 @@ const DashboardHome = () => {
 const CreatorJobData = ({ creator, pendingJobs, setSelectedJob }) => {
   const [creatorProfile, setCreatorProfile] = useState(null);
   const [loading, setLoading] = useState(null);
+  const [assignCreator, setAssignCreator] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -171,7 +188,7 @@ const CreatorJobData = ({ creator, pendingJobs, setSelectedJob }) => {
               year: 'numeric',
             })}
           </p>
-          <div className="font-xs mt-s3 flex gap-8">
+          <div className="font-xs mt-s3 flex items-end gap-8">
             <div className="w-28">
               <DashboardButton
                 onClick={() => setSelectedJob(job)}
@@ -222,6 +239,11 @@ const CreatorJobData = ({ creator, pendingJobs, setSelectedJob }) => {
                 </DashboardButton>
               </div>
             )}
+            <MultiSelect
+              assignCreator={assignCreator}
+              setAssignCreator={setAssignCreator}
+              jobId={job.jobId}
+            />
           </div>
           <hr className="my-s3" />
         </div>
@@ -230,6 +252,55 @@ const CreatorJobData = ({ creator, pendingJobs, setSelectedJob }) => {
   );
 };
 
+const MultiSelect = ({ jobId, assignCreator, setAssignCreator }) => {
+  const [loading, setLoading] = useState(false);
+  const creators = useSelector(
+    (state) => state.contentCreators.contentCreators
+  );
+
+  const handleChangeCreator = async (selected) => {
+    try {
+      setLoading(true);
+      await updateVideoContentCreator({ jobId, username: selected });
+      toast.success('Content creator updated successfully');
+    } catch (error) {
+      ErrorHandler(error, 'Failed to assign content creator');
+    } finally {
+      setLoading(false);
+      setAssignCreator(false);
+    }
+    // Optionally, also refresh the content creators list here
+    // const allCreators = await getAllContentCreators();
+    // dispatch(setContentCreators(allCreators));
+  };
+
+  return (
+    <div className="w-40">
+      {assignCreator === jobId ? (
+        loading ? (
+          <div className="mx-auto mb-s2">
+            <ButtonLoader />
+          </div>
+        ) : (
+          <CustomSelectInput
+            onChange={(selected) => handleChangeCreator(selected)}
+            extraClasses="w-full"
+            text="Creator"
+            options={creators.map((creator) => creator.username)}
+          />
+        )
+      ) : (
+        <DashboardButton
+          onClick={() => setAssignCreator(jobId)}
+          theme="dark"
+          extraClasses="text-sm"
+        >
+          Asssign Creator
+        </DashboardButton>
+      )}
+    </div>
+  );
+};
 DashboardHome.getLayout = DashboardLayout;
 
 export default DashboardHome;

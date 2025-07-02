@@ -6,6 +6,7 @@ import userReducer from './reducers/user.reducer';
 import aviewReducer from './reducers/aview.reducer';
 import historyReducer from './reducers/history.reducer';
 import jobsReducer from './reducers/jobs.reducer';
+import contentCreatorsReducer from './reducers/content-creator.reducer';
 
 const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ const store = configureStore({
     aview: aviewReducer,
     history: historyReducer,
     jobs: jobsReducer,
+    contentCreators: contentCreatorsReducer,
   },
   middleware: (getDefaultMiddleware) => {
     const middleware = getDefaultMiddleware({});

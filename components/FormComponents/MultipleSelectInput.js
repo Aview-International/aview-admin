@@ -13,8 +13,8 @@ const MultipleSelectInput = ({ answer, text, options, onChange }) => {
   return (
     <OutsideClickHandler onOutsideClick={() => setIsOpen(false)}>
       <p className="mb-s1 text-xl text-white">{text}</p>
-      <div className="relative mb-s4 text-xl text-white">
-        <Border borderRadius="[5px] w-full">
+      <div className="relative text-lg text-white">
+        <Border borderRadius="[5px]" classes="w-full">
           <div
             className="flex w-full cursor-pointer items-center justify-between rounded-[5px] bg-black p-s1"
             onClick={() => setIsOpen(!isOpen)}
@@ -37,7 +37,15 @@ const MultipleSelectInput = ({ answer, text, options, onChange }) => {
   );
 };
 
-const OPTIONS = ({ isOpen, options, onChange }) => {
+const OPTIONS = ({ isOpen, options, onChange, selectedOptions }) => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const filteredOptions = useMemo(
+    () =>
+      options.filter((option) =>
+        option.toLowerCase().includes(searchQuery.toLowerCase())
+      ),
+    [options, searchQuery]
+  );
   return (
     <Border
       borderRadius="[5px]"
@@ -45,29 +53,37 @@ const OPTIONS = ({ isOpen, options, onChange }) => {
         isOpen ? 'visible opacity-1' : 'invisible opacity-0'
       }`}
     >
-      <div className="gradient-1 max-h-48 overflow-scroll rounded-[5px]">
-        {options.map((option, i) => (
-          <CHECKBOX
-            option={option}
-            onChange={onChange}
-            key={`checkbox-option-${i}`}
+      <div className="gradient-1 rounded-[5px] bg-black">
+        <div className="mb-s1">
+          <input
+            type="text"
+            placeholder="Search..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full rounded-[5px] border-white bg-black p-s1 text-white focus:outline-none"
           />
-        ))}
+        </div>
+        <div className="max-h-48 overflow-scroll rounded-[5px]">
+          {filteredOptions.map((option) => (
+            <CHECKBOX
+              option={option}
+              onChange={onChange}
+              key={option}
+              isChecked={selectedOptions?.includes(option)}
+            />
+          ))}
+        </div>
       </div>
     </Border>
   );
 };
 
-const CHECKBOX = ({ option, onChange }) => {
-  const [isChecked, setIschecked] = useState(false);
+const CHECKBOX = ({ option, onChange, isChecked }) => {
   return (
     <>
       <div
-        onClick={() => {
-          setIschecked(!isChecked);
-          onChange(option);
-        }}
-        className={`flex cursor-pointer items-center bg-black p-s1 text-xl text-white`}
+        onClick={() => onChange(option)}
+        className={`flex cursor-pointer items-center bg-black p-s1 text-lg text-white`}
       >
         <span
           className={`mr-4 flex h-5 w-5 items-center justify-center ${
