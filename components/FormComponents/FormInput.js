@@ -33,6 +33,7 @@ const FormInput = ({
   handleFocus,
   type,
   extraClasses = 'mb-s1',
+  autoComplete,
 }) => {
   return (
     <div className="relative w-full text-xl text-white">
@@ -52,12 +53,13 @@ const FormInput = ({
             } ${textBlack ? 'text-black' : 'text-white'}`}
             onChange={onChange}
             value={value}
+            autoComplete={autoComplete}
           />
           <div
             className={`gradient-1 transition-300 absolute inset-0 -z-10 h-[calc(100%+3px)] w-[calc(100%+3px)] rounded-2xl opacity-0 blur-lg peer-focus:opacity-80`}
           ></div>
         </Border>
-        <span className="absolute right-[10px] bottom-[2px]">
+        <span className="absolute bottom-[2px] right-[10px]">
           {isValid && (
             <Image src={Correct} alt="Correct" width={30} height={30} />
           )}

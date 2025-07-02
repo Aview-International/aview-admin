@@ -83,6 +83,11 @@ export const DASHBOARD_NAVLINKS = [
     route: '/distribution',
   },
   {
+    text: 'Content Creators',
+    image: home,
+    route: '/content-creators',
+  },
+  {
     text: 'All Jobs',
     image: home,
     route: '/jobs',

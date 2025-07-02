@@ -289,3 +289,11 @@ export const tts = async (text) => {
   );
   return response.data;
 };
+export const getAllContentCreators = async () =>
+  (await axiosInstance.get('admin/content-creators')).data;
+
+export const createContentCreator = async ({ name, username }) =>
+  (await axiosInstance.post('admin/content-creator', { name, username })).data;
+
+export const updateVideoContentCreator = async ({ jobId, username }) =>
+  (await axiosInstance.patch('admin/content-creator', { jobId, username })).data;
