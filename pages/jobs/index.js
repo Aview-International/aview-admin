@@ -11,6 +11,7 @@ import {
   deleteJob,
   generateEditorLink,
   getAllContentCreators,
+  getJobsHistory,
   markAdminJobAsCompleted,
   rerunStuckJobs,
   updateVideoContentCreator,
@@ -29,8 +30,8 @@ const DashboardHome = () => {
   const pendingJobs = useSelector((el) => el.jobs.pendingJobs);
   useEffect(() => {
     try {
-      const unsubscribe = subscribeToAllJobs((data) => {
-        dispatch(setPendingJobs(data));
+      const unsubscribe = subscribeToAllJobs(async (data) => {
+        dispatch(setPendingJobs([...data, ...(await getJobsHistory())]));
       });
 
       return () => unsubscribe(); // cleanup
