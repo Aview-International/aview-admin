@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import DashboardLayout from '../../components/dashboard/DashboardLayout';
 import { downloadVideoFromS3, getJobsHistory } from '../../services/api';
 import { useDispatch, useSelector } from 'react-redux';

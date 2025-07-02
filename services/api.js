@@ -280,3 +280,12 @@ export const generateEditorLink = async (jobId) =>
 
 export const markAdminJobAsCompleted = async (jobId) =>
   (await axiosInstance.patch(`admin/mark-admin-job-complete/${jobId}`)).data;
+
+export const getAllContentCreators = async () =>
+  (await axiosInstance.get('admin/content-creators')).data;
+
+export const createContentCreator = async ({ name, username }) =>
+  (await axiosInstance.post('admin/content-creator', { name, username })).data;
+
+export const updateVideoContentCreator = async ({ jobId, username }) =>
+  (await axiosInstance.patch('admin/content-creator', { jobId, username })).data;

@@ -1,7 +1,7 @@
 import Border from '../UI/Border';
 import Arrow from '../../public/img/icons/dropdown-arrow.svg';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import OutsideClickHandler from 'react-outside-click-handler';
 import Correct from '../../public/img/icons/green-check-circle.svg';
 import Incorrect from '../../public/img/icons/incorrect.svg';
@@ -19,7 +19,7 @@ const CustomSelectInput = ({
 
   return (
     <OutsideClickHandler onOutsideClick={() => setIsOpen(false)}>
-      <div className="relative mb-s4 text-xl text-white">
+      <div className="text-md relative text-white">
         <p className="mb-s1">{text}</p>
         <Border borderRadius="[5px] w-full">
           <div
@@ -32,7 +32,7 @@ const CustomSelectInput = ({
             </span>
           </div>
         </Border>
-        <span className="absolute right-[30px] bottom-[7px]">
+        <span className="absolute bottom-[7px] right-[30px]">
           {isValid && (
             <Image src={Correct} alt="Correct" width={20} height={20} />
           )}
@@ -53,6 +53,14 @@ const CustomSelectInput = ({
 };
 
 const Options = ({ isOpen, setData, options, setIsOpen, onChange }) => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const filteredOptions = useMemo(
+    () =>
+      options.filter((option) =>
+        option.toLowerCase().includes(searchQuery.toLowerCase())
+      ),
+    [options, searchQuery]
+  );
   return (
     <Border
       borderRadius="[5px]"
@@ -60,20 +68,31 @@ const Options = ({ isOpen, setData, options, setIsOpen, onChange }) => {
         isOpen ? 'visible opacity-1' : 'invisible opacity-0'
       }`}
     >
-      <div className="gradient-1 rounded-[5px]">
-        {options.map((option, i) => (
-          <p
-            className="my-[2px] cursor-pointer bg-black p-s1"
-            key={`option-${i}`}
-            onClick={() => {
-              onChange(option);
-              setData(option);
-              setIsOpen(false);
-            }}
-          >
-            {option}
-          </p>
-        ))}
+      <div className="gradient-1 rounded-[5px] bg-black">
+        <div className="mb-0.5">
+          <input
+            type="text"
+            placeholder="Search..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full rounded-[5px] border-white bg-black p-s1 text-white focus:outline-none"
+          />
+        </div>
+        <div className="max-h-48 overflow-scroll">
+          {filteredOptions.map((option, i) => (
+            <p
+              className="my-[2px] cursor-pointer bg-black p-s1"
+              key={`option-${i}`}
+              onClick={() => {
+                onChange(option);
+                setData(option);
+                setIsOpen(false);
+              }}
+            >
+              {option}
+            </p>
+          ))}
+        </div>
       </div>
     </Border>
   );
