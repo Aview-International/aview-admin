@@ -11,7 +11,10 @@ import {
   deleteJob,
   generateEditorLink,
   getAllContentCreators,
+<<<<<<< HEAD
   getJobsHistory,
+=======
+>>>>>>> 4ebb3ef (Feat: Assign creator username to videos)
   markAdminJobAsCompleted,
   rerunStuckJobs,
   updateVideoContentCreator,
@@ -44,6 +47,7 @@ const DashboardHome = () => {
   useEffect(() => {
     (async () => {
       try {
+<<<<<<< HEAD
         const completed = await getJobsHistory();
         setCompletedJobs(completed);
       } catch (error) {
@@ -55,6 +59,8 @@ const DashboardHome = () => {
   useEffect(() => {
     (async () => {
       try {
+=======
+>>>>>>> 4ebb3ef (Feat: Assign creator username to videos)
         const allCreators = await getAllContentCreators();
         dispatch(setContentCreators(allCreators));
       } catch (error) {
@@ -206,6 +212,7 @@ const CreatorJobData = ({ creator, jobs, setSelectedJob }) => {
             })}
           </p>
           <div className="font-xs mt-s3 flex items-end gap-8">
+<<<<<<< HEAD
             {job.status !== 'complete' && (
               <div className="w-28">
                 <DashboardButton
@@ -245,6 +252,41 @@ const CreatorJobData = ({ creator, jobs, setSelectedJob }) => {
                 </DashboardButton>
               </div>
             )}
+=======
+            <div className="w-28">
+              <DashboardButton
+                onClick={() => setSelectedJob(job)}
+                theme="error"
+              >
+                Delete Job
+              </DashboardButton>
+            </div>
+            <div className="w-26">
+              <DashboardButton
+                onClick={() =>
+                  loading
+                    ? null
+                    : handleRerunJobs(
+                        job.status,
+                        job.creatorId,
+                        job.jobId,
+                        job.translatedLanguage
+                      )
+                }
+                isLoading={loading === job.jobId}
+              >
+                Rerun
+              </DashboardButton>
+            </div>
+            <div className="w-28">
+              <DashboardButton
+                onClick={() => handleMarkAsCompleted(job.jobId)}
+                theme="success"
+              >
+                Complete
+              </DashboardButton>
+            </div>
+>>>>>>> 4ebb3ef (Feat: Assign creator username to videos)
             {![
               'retrieving video',
               'queued',
@@ -276,6 +318,7 @@ const CreatorJobData = ({ creator, jobs, setSelectedJob }) => {
   );
 };
 
+<<<<<<< HEAD
 const CompletedJobData = ({ job }) => {
   const [assignCreator, setAssignCreator] = useState(false);
 
@@ -310,6 +353,8 @@ const CompletedJobData = ({ job }) => {
   );
 };
 
+=======
+>>>>>>> 4ebb3ef (Feat: Assign creator username to videos)
 const MultiSelect = ({ jobId, assignCreator, setAssignCreator }) => {
   const [loading, setLoading] = useState(false);
   const creators = useSelector(

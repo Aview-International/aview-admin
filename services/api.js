@@ -281,14 +281,6 @@ export const generateEditorLink = async (jobId) =>
 export const markAdminJobAsCompleted = async (jobId) =>
   (await axiosInstance.patch(`admin/mark-admin-job-complete/${jobId}`)).data;
 
-export const tts = async (text) => {
-  const response = await axiosInstance.post(
-    'dubbing/tts',
-    { text },
-    { responseType: 'blob' }
-  );
-  return response.data;
-};
 export const getAllContentCreators = async () =>
   (await axiosInstance.get('admin/content-creators')).data;
 
