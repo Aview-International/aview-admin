@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import DashboardLayout from '../../components/dashboard/DashboardLayout';
 import PageTitle from '../../components/SEO/PageTitle';
 import { getUserProfile, subscribeToAllJobs } from '../../services/firebase';
@@ -27,12 +27,13 @@ const DashboardHome = () => {
   const dispatch = useDispatch();
   const [selectedJob, setSelectedJob] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
-  const [allJobs, setAllJobs] = useState({});
+  const pendingJobs = useSelector((state) => state.jobs.pendingJobs);
+  const [completedJobs, setCompletedJobs] = useState([]);
 
   useEffect(() => {
     try {
       const unsubscribe = subscribeToAllJobs(async (data) => {
-        setAllJobs((prev) => ({ ...prev, ...data }));
+        dispatch(setPendingJobs(data));
       });
       return () => unsubscribe(); // cleanup
     } catch (error) {
@@ -44,18 +45,7 @@ const DashboardHome = () => {
     (async () => {
       try {
         const completed = await getJobsHistory();
-        const groupedCompleted = completed.reduce((acc, job) => {
-          if (!acc[job.creatorId]) {
-            acc[job.creatorId] = {};
-          }
-          acc[job.creatorId][job.jobId] = job;
-          return acc;
-        }, {});
-
-        setAllJobs((prev) => ({
-          ...prev,
-          ...groupedCompleted,
-        }));
+        setCompletedJobs(completed);
       } catch (error) {
         ErrorHandler(error);
       }
@@ -85,28 +75,6 @@ const DashboardHome = () => {
     }
   };
 
-  // const { pendingJobs, completedJobs } = useMemo(() => {
-  //   const pending = {};
-  //   const completed = {};
-  //   for (const creatorId in allJobs) {
-  //     for (const jobId in allJobs[creatorId]) {
-  //       const job = allJobs[creatorId][jobId];
-  //       if (job.status === 'complete') {
-  //         if (!completed[creatorId]) {
-  //           completed[creatorId] = {};
-  //         }
-  //         completed[creatorId][jobId] = job;
-  //       } else {
-  //         if (!pending[creatorId]) {
-  //           pending[creatorId] = {};
-  //         }
-  //         pending[creatorId][jobId] = job;
-  //       }
-  //     }
-  //   }
-  //   return { pendingJobs: pending, completedJobs: completed };
-  // }, [allJobs]);
-
   return (
     <>
       <PageTitle title="Dashboard" />
@@ -132,15 +100,19 @@ const DashboardHome = () => {
         </Modal>
       )}
       <h2 className="text-6xl">Creator Running Jobs</h2>
-      {Object.keys(allJobs).map((creator, i) => (
+      {Object.keys(pendingJobs).map((creator, i) => (
         <Fragment key={i}>
           <CreatorJobData
             creator={creator}
-            jobs={allJobs}
+            jobs={pendingJobs}
             setSelectedJob={setSelectedJob}
           />
           {/* <hr className="my-s2" /> */}
         </Fragment>
+      ))}
+
+      {completedJobs.map((job, i) => (
+        <CompletedJobData job={job} setSelectedJob={setSelectedJob} key={i} />
       ))}
     </>
   );
@@ -300,6 +272,40 @@ const CreatorJobData = ({ creator, jobs, setSelectedJob }) => {
           <hr className="my-s3" />
         </div>
       ))}
+    </div>
+  );
+};
+
+const CompletedJobData = ({ job }) => {
+  const [assignCreator, setAssignCreator] = useState(false);
+
+  return (
+    <div className="py-s2">
+      <div className="my-s3 pl-s12">
+        <p>Status : {job.status}</p>
+        <p>Task Id : {job.jobId}</p>
+        <p>Caption : {job.videoData?.caption}</p>
+        <p>Language : {job.translatedLanguage}</p>
+        <p>
+          Date :{' '}
+          {new Date(+job.timestamp).toLocaleString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true,
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+          })}
+        </p>
+        <div className="font-xs mt-s3 flex items-end gap-8">
+          <MultiSelect
+            assignCreator={assignCreator}
+            setAssignCreator={setAssignCreator}
+            jobId={job.jobId}
+          />
+        </div>
+        <hr className="my-s3" />
+      </div>
     </div>
   );
 };
