@@ -21,12 +21,14 @@ import Link from 'next/link';
 const SocialMedia = () => {
   const router = useRouter();
   const [link, setLink] = useState('');
+  const [timeInSec, setTimeInSec] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [payload, setPayload] = useState({
     link,
     languages: [],
     saveSettings: false,
     requestHumanReview: false,
+    time: '',
   });
 
   const pasteFromClipboard = async () => {
@@ -53,7 +55,7 @@ const SocialMedia = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await submitAdminTranscriptionLink({ ...payload, link });
+      await submitAdminTranscriptionLink({ ...payload, link, time: timeInSec });
       setIsLoading(false);
       router.push('/history');
     } catch (error) {
@@ -97,6 +99,16 @@ const SocialMedia = () => {
             value={link}
             onChange={(e) => setLink(e.target.value)}
           />
+
+          <div className="mt-4 flex items-center">
+            <FormInput
+              extraClasses="flex-1"
+              placeholder="Enter time for video in minutes or seconds"
+              value={timeInSec}
+              onChange={(e) => setTimeInSec(e.target.value)}
+            />
+          </div>
+
           <button className="relative ml-2 mt-4" onClick={pasteFromClipboard}>
             <span className="absolute -bottom-8 -left-2 w-40">
               click here to paste
@@ -110,7 +122,7 @@ const SocialMedia = () => {
             payload={payload}
             setPayload={setPayload}
             isLoading={isLoading}
-            disabled={payload.languages.length < 1 || !linkType}
+            disabled={payload.languages.length < 1 || !linkType || !time}
           />
         </div>
       </div>
