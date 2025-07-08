@@ -55,7 +55,11 @@ const SocialMedia = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await submitAdminTranscriptionLink({ ...payload, link, time: timeInSec });
+      await submitAdminTranscriptionLink({
+        ...payload,
+        link,
+        secondsToProcess: timeInSec,
+      });
       setIsLoading(false);
       router.push('/history');
     } catch (error) {
