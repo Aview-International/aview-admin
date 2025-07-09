@@ -296,4 +296,14 @@ export const createContentCreator = async ({ name, username }) =>
   (await axiosInstance.post('admin/content-creator', { name, username })).data;
 
 export const updateVideoContentCreator = async ({ jobId, username }) =>
-  (await axiosInstance.patch('admin/content-creator', { jobId, username })).data;
+  (await axiosInstance.patch('admin/content-creator', { jobId, username }))
+    .data;
+
+export const tts = async (text) => {
+  const response = await axiosInstance.post(
+    'dubbing/tts',
+    { text },
+    { responseType: 'blob' }
+  );
+  return response.data;
+};
