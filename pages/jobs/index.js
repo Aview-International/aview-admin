@@ -206,45 +206,39 @@ const CreatorJobData = ({ creator, jobs, setSelectedJob }) => {
             })}
           </p>
           <div className="font-xs mt-s3 flex items-end gap-8">
-            {job.status !== 'complete' && (
-              <div className="w-28">
-                <DashboardButton
-                  onClick={() => setSelectedJob(job)}
-                  theme="error"
-                >
-                  Delete Job
-                </DashboardButton>
-              </div>
-            )}
-            {job.status !== 'complete' && (
-              <div className="w-26">
-                <DashboardButton
-                  onClick={() =>
-                    loading
-                      ? null
-                      : handleRerunJobs(
-                          job.status,
-                          job.creatorId,
-                          job.jobId,
-                          job.translatedLanguage
-                        )
-                  }
-                  isLoading={loading === job.jobId}
-                >
-                  Rerun
-                </DashboardButton>
-              </div>
-            )}
-            {job.status !== 'complete' && (
-              <div className="w-28">
-                <DashboardButton
-                  onClick={() => handleMarkAsCompleted(job.jobId)}
-                  theme="success"
-                >
-                  Complete
-                </DashboardButton>
-              </div>
-            )}
+            <div className="w-28">
+              <DashboardButton
+                onClick={() => setSelectedJob(job)}
+                theme="error"
+              >
+                Delete Job
+              </DashboardButton>
+            </div>
+            <div className="w-26">
+              <DashboardButton
+                onClick={() =>
+                  loading
+                    ? null
+                    : handleRerunJobs(
+                        job.status,
+                        job.creatorId,
+                        job.jobId,
+                        job.translatedLanguage
+                      )
+                }
+                isLoading={loading === job.jobId}
+              >
+                Rerun
+              </DashboardButton>
+            </div>
+            <div className="w-28">
+              <DashboardButton
+                onClick={() => handleMarkAsCompleted(job.jobId)}
+                theme="success"
+              >
+                Complete
+              </DashboardButton>
+            </div>
             {![
               'retrieving video',
               'queued',
