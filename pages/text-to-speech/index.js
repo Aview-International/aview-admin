@@ -5,6 +5,7 @@ import TextArea from '../../components/FormComponents/Textarea';
 import DropdownArrow from '../../public/img/icons/dropdown-arrow.svg';
 import Image from 'next/image';
 import Button from '../../components/UI/Button';
+import { tts } from '../../services/api';
 
 const TestSpeakerTranslate = () => {
   return (
@@ -20,6 +21,7 @@ const Container = () => {
   const [openDropdown, setOpenDropdown] = useState(false);
   const [dropDownValue, setDropDownValue] = useState('aview');
   const [speech, setSpeech] = useState('');
+  const [audioURL, setAudioURL] = useState(null);
   const [activeSpeaker, setActiveSpeaker] = useState(0);
   const [speakers, setSpeakers] = useState([
     { id: 0, name: 'Speaker 1', text: '', avatar: '👤' },
@@ -61,6 +63,20 @@ const Container = () => {
     );
   };
 
+  const handleGenerateSpeech = async () => {
+    try {
+      console.log('Generating:', speech);
+      const res = await tts(speech);
+      const url = URL.createObjectURL(res);
+      setAudioURL(url);
+      console.log(res);
+      // Here you would typically call your TTS service with the current speech text
+      console.log('Generating speech');
+    } catch (error) {
+      console.log(error);
+    }
+    // For now, we just log it to the console
+  };
   return (
     <div className="w-full rounded-2xl bg-gradient-to-b from-[#ffffff26] to-[#ffffff0D] px-s3 py-s1">
       <div className="flex h-full w-full justify-end py-2">
@@ -81,7 +97,7 @@ const Container = () => {
             <div className="absolute top-10 z-20 flex h-32 w-full flex-col items-center justify-center overflow-y-scroll rounded-sm border-2 border-white bg-black">
               <div className="flex w-full flex-col">
                 {[
-                  'aview',
+                  'Chatterbox',
                   'google',
                   'grok',
                   'openai',
@@ -181,10 +197,25 @@ const Container = () => {
         </div>
       </div>
       <div className="flex w-full justify-end">
-        <Button theme="dark" className="w-20">
+        <Button
+          theme="dark"
+          className="w-20"
+          purpose={'onClick'}
+          onClick={handleGenerateSpeech}
+        >
           Generate Speech
         </Button>
       </div>
+      {audioURL && (
+        <div className="mt-s2 flex items-center gap-s2">
+          <audio controls autoPlay src={audioURL}>
+            Your browser does not support the audio element.
+          </audio>
+          <a href={audioURL} download="speech.wav">
+            <Button theme="dark">Download</Button>
+          </a>
+        </div>
+      )}
     </div>
   );
 };
