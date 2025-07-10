@@ -21,14 +21,14 @@ import Link from 'next/link';
 const SocialMedia = () => {
   const router = useRouter();
   const [link, setLink] = useState('');
-  const [timeInSec, setTimeInSec] = useState(0);
+  const [timeInSec, setTimeInSec] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [payload, setPayload] = useState({
     link,
     languages: [],
     saveSettings: false,
     requestHumanReview: false,
-    time: '',
+    secondsToProcess: '',
   });
 
   const pasteFromClipboard = async () => {
@@ -126,7 +126,9 @@ const SocialMedia = () => {
             payload={payload}
             setPayload={setPayload}
             isLoading={isLoading}
-            disabled={payload.languages.length < 1 || !linkType || !time}
+            disabled={
+              payload.languages.length < 1 || !linkType
+            }
           />
         </div>
       </div>
