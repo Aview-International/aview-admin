@@ -17,18 +17,19 @@ import TranslateOptions from '../../../components/dashboard/TranslateOptions';
 import { useRouter } from 'next/router';
 import Arrowback from '../../../public/img/icons/arrow-back.svg';
 import Link from 'next/link';
+import CustomSelectInput from '../../../components/FormComponents/CustomSelectInput';
 
 const SocialMedia = () => {
   const router = useRouter();
   const [link, setLink] = useState('');
-  const [timeInSec, setTimeInSec] = useState('');
+  const [timeOption, setTimeOption] = useState('seconds');
   const [isLoading, setIsLoading] = useState(false);
   const [payload, setPayload] = useState({
     link,
     languages: [],
     saveSettings: false,
     requestHumanReview: false,
-    secondsToProcess: '',
+    secondsToProcess: 0,
   });
 
   const pasteFromClipboard = async () => {
@@ -53,12 +54,15 @@ const SocialMedia = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    let seconds = parseInt(payload.secondsToProcess);
+    if (timeOption === 'minutes') seconds *= 60;
+
     setIsLoading(true);
     try {
       await submitAdminTranscriptionLink({
         ...payload,
         link,
-        secondsToProcess: timeInSec,
+        secondsToProcess: seconds,
       });
       setIsLoading(false);
       router.push('/history');
@@ -76,6 +80,18 @@ const SocialMedia = () => {
     x: X,
   };
 
+  const timeInSec = useMemo(() => {
+    let val = payload.secondsToProcess;
+    if (timeOption === 'seconds') return val;
+    if (timeOption === 'minutes') return (val *= 60);
+  }, [timeOption, payload.secondsToProcess]);
+
+  const timeInMin = useMemo(() => {
+    let val = payload.secondsToProcess;
+    if (timeOption === 'seconds') return (val /= 60).toFixed(1);
+    if (timeOption === 'minutes') return val;
+  }, [timeOption, payload.secondsToProcess]);
+
   return (
     <>
       <PageTitle title="Social Media Servicing" />
@@ -85,8 +101,8 @@ const SocialMedia = () => {
         <span className="pl-s2">Back</span>
       </Link>
 
-      <div className="flex">
-        <div className="mr-10 flex-1">
+      <div className="flex px-6">
+        <div className="mr-10 w-7/12">
           <div className="h-12">
             {link && (
               <Image
@@ -97,38 +113,65 @@ const SocialMedia = () => {
               />
             )}
           </div>
-          <FormInput
-            extraClasses="mt-4"
-            placeholder="Paste social media url"
-            value={link}
-            onChange={(e) => setLink(e.target.value)}
-          />
-
-          <div className="mt-4 flex items-center">
+          <div className="mt-4 flex">
             <FormInput
-              extraClasses="flex-1"
-              placeholder="Enter time for video in minutes or seconds"
-              value={timeInSec}
-              onChange={(e) => setTimeInSec(e.target.value)}
+              extraClasses=""
+              placeholder="Paste social media url"
+              value={link}
+              onChange={(e) => setLink(e.target.value)}
+            />
+            <button
+              className="relative ml-2 w-fit"
+              onClick={pasteFromClipboard}
+            >
+              <Image src={PasteIcon} alt="" width={50} height={50} />
+              <span className="">
+                click here <br />
+                to paste
+              </span>
+            </button>
+          </div>
+          <br />
+          <br />
+          <p>Cut specific part of video &#40;optional&#41;</p>
+          <div className="mt-4 flex items-center">
+            <div className="mr-8 w-1/2">
+              <FormInput
+                extraClasses=""
+                placeholder={`Enter ${timeOption}`}
+                value={payload['']}
+                type={'number'}
+                min="0"
+                onChange={(e) =>
+                  setPayload((prev) => ({
+                    ...prev,
+                    secondsToProcess: Number(e.target.value),
+                  }))
+                }
+              />
+            </div>
+            <CustomSelectInput
+              text=""
+              defaultData={timeOption}
+              options={['seconds', 'minutes']}
+              onChange={(e) => setTimeOption(e)}
             />
           </div>
-
-          <button className="relative ml-2 mt-4" onClick={pasteFromClipboard}>
-            <span className="absolute -bottom-8 -left-2 w-40">
-              click here to paste
-            </span>
-            <Image src={PasteIcon} alt="" width={50} height={50} />
-          </button>
+          {!!payload.secondsToProcess && (
+            <div className="mt-4 flex text-lg">
+              <p>Part of video selected</p>
+              <p className="mx-4">{timeInSec} seconds</p>
+              <p>{timeInMin} minutes</p>
+            </div>
+          )}
         </div>
-        <div className="flex-1">
+        <div className="w-5/12">
           <TranslateOptions
             handleSubmit={handleSubmit}
             payload={payload}
             setPayload={setPayload}
             isLoading={isLoading}
-            disabled={
-              payload.languages.length < 1 || !linkType
-            }
+            // disabled={payload.languages.length < 1 || !linkType}
           />
         </div>
       </div>
